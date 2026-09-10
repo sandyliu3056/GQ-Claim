@@ -39,7 +39,7 @@
   --elev-1:0 3px 0 #B9C6D3;
   --elev-2:0 4px 0 #A9B8C8, 0 10px 18px rgba(18,35,58,.14);
   --elev-3:0 6px 0 #90A2B5, 0 22px 40px rgba(18,35,58,.28);
-  --rad:10px; --rad-sm:7px; --titleh:60px; --statush:32px;
+  --rad:10px; --rad-sm:7px; --titleh:70px; --statush:32px;
   /* handwriting first, with the fonts Windows / mac already ship as backup */
   --sans:"Patrick Hand","Segoe Print","Chalkboard SE","Comic Sans MS",
          "Microsoft JhengHei UI","PingFang TC",sans-serif;
@@ -85,6 +85,10 @@ main{
   background-size:30px 18px;background-repeat:repeat-x;
 }
 .brick-logo{width:46px;height:38px;flex:0 0 auto;filter:drop-shadow(0 3px 0 rgba(0,0,0,.22))}
+.deskset{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.deskset svg{filter:drop-shadow(0 3px 0 rgba(0,0,0,.22))}
+.deskset .cal{width:46px;height:48px}
+.deskset .clk{width:48px;height:48px}
 .titlebar b{font-family:var(--hand);font-size:29px;letter-spacing:.02em;font-weight:700;
   text-shadow:0 2px 0 rgba(0,0,0,.22);line-height:1}
 .titlebar .sub{font-size:13px;letter-spacing:.1em;color:var(--chrome-mut);text-transform:uppercase}
@@ -182,12 +186,21 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
 
 /* ---------------------------------------------------------- buttons */
 .btn{
-  appearance:none;cursor:pointer;font:inherit;font-weight:400;font-size:15px;
-  padding:0 17px;height:38px;display:inline-flex;align-items:center;gap:6px;
+  position:relative;appearance:none;cursor:pointer;font:inherit;font-weight:400;font-size:15px;
+  padding:11px 17px 0;height:44px;display:inline-flex;align-items:center;gap:6px;
   border-radius:9px;border:none;white-space:nowrap;
   background:linear-gradient(180deg,#FFFFFF 0%,#E7EDF3 100%);color:var(--head);
   box-shadow:0 4px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9);
   transition:transform .07s, box-shadow .07s, filter .12s;
+}
+/* a row of studs across the top — every button is a brick */
+.btn::before{
+  content:"";position:absolute;top:5px;left:12px;right:12px;height:10px;
+  background-image:radial-gradient(circle at 11px 5px, rgba(18,35,58,.13) 0 6px, transparent 6.6px);
+  background-size:22px 10px;background-repeat:repeat-x;pointer-events:none;
+}
+.btn.pri::before,.btn.run::before,.btn.ok::before,.btn.dgr::before{
+  background-image:radial-gradient(circle at 11px 5px, rgba(255,255,255,.30) 0 6px, transparent 6.6px);
 }
 .btn:hover{filter:brightness(1.03)}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9)}
@@ -203,7 +216,16 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
 .btn.dgr{background:linear-gradient(180deg,#DD3138 0%,var(--lego-red) 100%);color:#fff;
   box-shadow:0 4px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
 .btn.dgr:active{box-shadow:0 1px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
-.btn.sm{padding:0 12px;height:30px;font-size:12.5px;box-shadow:0 3px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9)}
+.btn.sm{
+  padding:9px 12px 0;height:34px;font-size:13px;
+  box-shadow:0 3px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9);
+}
+.btn.sm::before{
+  top:4px;left:8px;right:8px;height:8px;
+  background-image:radial-gradient(circle at 9px 4px, rgba(18,35,58,.13) 0 5px, transparent 5.6px);
+  background-size:18px 8px;
+}
+.btn.sm.dgr::before{background-image:radial-gradient(circle at 9px 4px, rgba(255,255,255,.30) 0 5px, transparent 5.6px)}
 .btn.sm:active{box-shadow:0 1px 0 #B0BECD}
 .btn.sm.dgr{box-shadow:0 3px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
@@ -310,6 +332,45 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 .logobox{display:flex;align-items:center;gap:12px}
 .logobox img{max-width:170px;max-height:66px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:4px}
 
+/* ---------------------------------------------------------- photos */
+.drop{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border:2px dashed #BCC9D7;border-radius:11px;padding:12px 14px;background:var(--stripe);
+}
+.drop.over{border-color:var(--accent);background:#E7F0FC}
+.shots{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.shot{
+  position:relative;margin:0;width:132px;height:100px;border-radius:10px;overflow:hidden;
+  border:2px solid #C6D2DF;background:var(--stripe);box-shadow:var(--elev-1);cursor:zoom-in;
+}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.shot .x{
+  position:absolute;top:4px;right:4px;width:24px;height:24px;border:none;border-radius:7px;
+  background:rgba(196,22,28,.92);color:#fff;font-size:13px;line-height:1;cursor:pointer;
+  box-shadow:0 2px 0 var(--lego-red-d);
+}
+.shot .x:hover{background:var(--lego-red)}
+.pcount{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:7px;cursor:pointer;
+  background:var(--lego-yellow);color:#4A3300;border:none;font:inherit;font-size:13px;
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,.13);
+}
+.pcount:hover{filter:brightness(1.05)}
+#lightbox{flex-direction:row;background:rgba(10,20,34,.9);z-index:140}  /* above the edit dialog */
+#lbImg{max-width:88vw;max-height:82vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.6);background:#fff}
+.lbx{
+  position:absolute;top:18px;right:22px;width:42px;height:42px;border:none;border-radius:11px;
+  background:rgba(255,255,255,.16);color:#fff;font-size:19px;cursor:pointer;
+}
+.lbnav{
+  border:none;background:rgba(255,255,255,.16);color:#fff;font-size:30px;line-height:1;
+  width:52px;height:78px;border-radius:12px;cursor:pointer;margin:0 14px;flex:0 0 auto;
+}
+.lbx:hover,.lbnav:hover{background:rgba(255,255,255,.3)}
+.lbcap{
+  position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#fff;
+  font-size:14px;text-shadow:0 2px 6px rgba(0,0,0,.6);
+}
 /* ---------------------------------------------------------- modal */
 .mask{
   position:fixed;inset:0;background:rgba(18,35,58,.58);z-index:120;
@@ -335,6 +396,18 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 }
 .dlghead h3{margin:0;flex:1}
 .formActions{margin:0 0 26px}
+/* fields that only make sense once the claim exists */
+.editOnly{display:none !important}
+#editHost .editOnly{display:flex !important}
+#editHost .grid.editOnly{display:grid !important}
+h4.sub{
+  margin:0 0 12px;font-family:var(--hand);font-size:19px;font-weight:700;color:var(--head);
+  display:flex;align-items:center;gap:8px;
+}
+h4.sub::before{
+  content:"";width:16px;height:16px;border-radius:5px;background:var(--lego-yellow);
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,.14);
+}
 #editHost .formActions{
   position:sticky;bottom:-14px;z-index:5;margin:0 -20px -14px;padding:14px 20px;
   background:linear-gradient(180deg,rgba(255,255,255,.75),#fff 40%);
@@ -405,7 +478,34 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
   <b>GQ CLAIM CENTER</b>
   <span class="sub">UPS · USPS · FEDEX CLAIM MANAGEMENT</span>
   <span class="sp"></span>
-  <span class="clock" id="clk">--:--</span>
+  <div class="deskset">
+    <svg class="cal" viewBox="0 0 46 48" aria-hidden="true">
+      <rect x="2" y="6" width="42" height="40" rx="6" fill="#FFFDF6" stroke="#B8452C" stroke-width="2"/>
+      <path d="M2 12a6 6 0 0 1 6-6h30a6 6 0 0 1 6 6v4H2z" fill="#C4161C"/>
+      <rect x="12" y="1"  width="5" height="9" rx="2.5" fill="#F2CD37"/>
+      <rect x="29" y="1"  width="5" height="9" rx="2.5" fill="#F2CD37"/>
+      <text id="calMon" x="23" y="15" text-anchor="middle" font-size="8"
+            font-weight="700" fill="#FFF0E4" letter-spacing="1">SEP</text>
+      <text id="calDay" x="23" y="35" text-anchor="middle" font-size="20"
+            font-weight="700" fill="#2A1B14">10</text>
+      <text id="calDow" x="23" y="43" text-anchor="middle" font-size="7"
+            fill="#8A6A5C" letter-spacing=".6">THU</text>
+    </svg>
+    <svg class="clk" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="22" fill="#FFFDF6" stroke="#B8452C" stroke-width="2"/>
+      <circle cx="24" cy="24" r="18" fill="none" stroke="#EADFCB" stroke-width="1"/>
+      <g stroke="#2A1B14" stroke-width="1.8" stroke-linecap="round">
+        <line x1="24" y1="5"  x2="24" y2="9"/>
+        <line x1="43" y1="24" x2="39" y2="24"/>
+        <line x1="24" y1="43" x2="24" y2="39"/>
+        <line x1="5"  y1="24" x2="9"  y2="24"/>
+      </g>
+      <line id="hH" x1="24" y1="24" x2="24" y2="14" stroke="#2A1B14" stroke-width="3.2" stroke-linecap="round"/>
+      <line id="hM" x1="24" y1="24" x2="24" y2="9"  stroke="#2A1B14" stroke-width="2.4" stroke-linecap="round"/>
+      <line id="hS" x1="24" y1="27" x2="24" y2="8"  stroke="#C4161C" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="24" cy="24" r="2.2" fill="#C4161C"/>
+    </svg>
+  </div>
 </div>
 
 <div class="tabstrip" role="tablist" id="tabs">
@@ -420,89 +520,93 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 <!-- ==================================================== new / edit -->
 <section class="page on" id="p-new">
 <div id="formWrap">
+
   <div class="card">
-    <h3><span class="em">📦</span>Shipment &amp; reference numbers<span class="tail" id="edMeta"></span></h3>
+    <h3><span class="em">📦</span>Claim<span class="tail" id="edMeta"></span></h3>
     <div class="grid g4">
       <div class="f"><label>Carrier <span class="req">*</span></label>
         <select id="e_carrier"><option>UPS</option><option>USPS</option><option>FedEx</option></select></div>
       <div class="f"><label>Seller profile (letterhead / Market)</label><select id="e_profile"></select></div>
       <div class="f"><label>Tracking # <span class="req">*</span></label><input id="e_tracking" class="mono"></div>
-      <div class="f"><label>Carrier Claim # <span class="tag">after filing</span></label><input id="e_claimNo" class="mono"></div>
+      <div class="f"><label>Reason for claim</label><select id="e_type"></select></div>
       <div class="f"><label>Order #</label><input id="e_orderNo" class="mono"></div>
       <div class="f"><label>Reference #</label><input id="e_refNo"></div>
+      <div class="f editOnly"><label>Carrier Claim # <span class="tag">after filing</span></label>
+        <input id="e_claimNo" class="mono"></div>
+      <div class="f editOnly"><label>Status</label><select id="e_status"></select></div>
+      <div class="f editOnly"><label>File date (claim filed)</label><input type="date" id="e_fileDate"></div>
+      <div class="f editOnly"><label>Claim amount (USD)</label><input id="e_claimAmt" class="num"></div>
+      <div class="f editOnly"><label>Paid amount (USD)</label><input id="e_paidAmt" class="num"></div>
+      <div class="f editOnly"><label>Paid date (payment received)</label><input type="date" id="e_paidDate"></div>
     </div>
     <p class="hint" id="trkNote"></p>
-  </div>
-
-  <div class="card">
-    <h3><span class="em">🚦</span>Claim status &amp; amounts</h3>
-    <div class="grid g4">
-      <div class="f"><label>Claim type</label><select id="e_type"></select></div>
-      <div class="f"><label>Status</label><select id="e_status"></select></div>
-      <div class="f"><label>File date (claim filed)</label><input type="date" id="e_fileDate"></div>
-      <div class="f"><label>Claim amount (USD)</label><input id="e_claimAmt" class="num"></div>
-      <div class="f"><label>Paid amount (USD)</label><input id="e_paidAmt" class="num"></div>
-      <div class="f"><label>Paid date (payment received)</label><input type="date" id="e_paidDate"></div>
-    </div>
-    <div class="grid" style="margin-top:10px">
+    <div class="grid editOnly" style="margin-top:14px">
       <div class="f"><label>Notes</label><textarea id="e_notes"></textarea></div>
     </div>
   </div>
 
-  <div class="grid g2">
-    <div class="card">
-      <h3><span class="em">🧾</span>Bill to</h3>
-      <div class="grid g2">
-        <div class="f"><label>Name <span class="req">*</span></label><input id="b_name"></div>
-        <div class="f" style="grid-column:1/-1"><label>Address</label><input id="b_addr1"></div>
-        <div class="f"><label>City</label><input id="b_city"></div>
-        <div class="f"><label>State</label><input id="b_state"></div>
-        <div class="f"><label>ZIP</label><input id="b_zip" class="mono"></div>
-        <div class="f"><label>Phone</label><input id="b_phone" class="mono"></div>
+  <div class="card">
+    <h3><span class="em">🧾</span>Customer</h3>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <h4 class="sub">Bill to</h4>
+        <div class="grid g2">
+          <div class="f" style="grid-column:1/-1"><label>Name <span class="req">*</span></label><input id="b_name"></div>
+          <div class="f" style="grid-column:1/-1"><label>Address</label><input id="b_addr1"></div>
+          <div class="f"><label>ZIP</label><input id="b_zip" class="mono"></div>
+          <div class="f"><label>City</label><input id="b_city"></div>
+          <div class="f"><label>State</label><input id="b_state"></div>
+          <div class="f"><label>Phone</label><input id="b_phone" class="mono"></div>
+        </div>
       </div>
-    </div>
-
-    <div class="card">
-      <h3><span class="em">📮</span>Ship to</h3>
-      <label class="chkline" style="margin-bottom:10px">
-        <input type="checkbox" id="s_same" checked> Same as Bill to — print <b>SAME AS BILL TO</b> on the invoice
-      </label>
-      <div class="grid g2" id="shipFields">
-        <div class="f"><label>Name</label><input id="s_name"></div>
-        <div class="f" style="grid-column:1/-1"><label>Address</label><input id="s_addr1"></div>
-        <div class="f"><label>City</label><input id="s_city"></div>
-        <div class="f"><label>State</label><input id="s_state"></div>
-        <div class="f"><label>ZIP</label><input id="s_zip" class="mono"></div>
-        <div class="f"><label>Phone</label><input id="s_phone" class="mono"></div>
+      <div>
+        <h4 class="sub">Ship to</h4>
+        <label class="chkline" style="margin-bottom:12px">
+          <input type="checkbox" id="s_same" checked> Same as Bill to — print <b>SAME AS BILL TO</b>
+        </label>
+        <div class="grid g2" id="shipFields">
+          <div class="f" style="grid-column:1/-1"><label>Name</label><input id="s_name"></div>
+          <div class="f" style="grid-column:1/-1"><label>Address</label><input id="s_addr1"></div>
+          <div class="f"><label>ZIP</label><input id="s_zip" class="mono"></div>
+          <div class="f"><label>City</label><input id="s_city"></div>
+          <div class="f"><label>State</label><input id="s_state"></div>
+          <div class="f"><label>Phone</label><input id="s_phone" class="mono"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h3><span class="em">📋</span>Line items</h3>
+    <h3><span class="em">📋</span>Items &amp; totals</h3>
     <table class="items" id="tItems">
       <thead><tr>
-        <th style="width:70px">Qty.</th><th style="width:130px">SKU</th><th>Title</th>
-        <th style="width:110px">Price</th><th style="width:110px">Net Price</th><th style="width:44px"></th>
+        <th style="width:74px">Qty.</th><th style="width:140px">SKU</th><th>Title</th>
+        <th style="width:116px">Price</th><th style="width:116px">Net Price</th><th style="width:46px"></th>
       </tr></thead>
       <tbody></tbody>
     </table>
-    <div class="row" style="margin-top:10px">
+    <div class="row" style="margin-top:12px">
       <button class="btn sm" id="bAddItem">+ Add row</button>
-      <span class="sp" style="flex:1"></span>
-      <span class="hint" id="itemSum"></span>
+      <span style="flex:1"></span>
+      <span class="hint" id="itemSum" style="margin:0"></span>
+    </div>
+    <div class="grid g4" style="margin-top:16px">
+      <div class="f"><label>Tax</label><input id="e_tax" class="num"></div>
+      <div class="f"><label>Shipping and handling</label><input id="e_ship" class="num"></div>
+      <div class="f"><label>Insurance</label><input id="e_ins" class="num"></div>
+      <div class="f"><label>Subtotal</label><input id="e_subtotal" class="num" readonly></div>
+      <div class="f"><label>Total</label><input id="e_total" class="num" readonly></div>
     </div>
   </div>
 
   <div class="card">
-    <h3><span class="em">💲</span>Invoice totals</h3>
-    <div class="grid g4">
-      <div class="f"><label>Subtotal</label><input id="e_subtotal" class="num" readonly></div>
-      <div class="f"><label>Tax</label><input id="e_tax" class="num"></div>
-      <div class="f"><label>Shipping and handling</label><input id="e_ship" class="num"></div>
-      <div class="f"><label>Insurance</label><input id="e_ins" class="num"></div>
-      <div class="f"><label>Total</label><input id="e_total" class="num" readonly></div>
+    <h3><span class="em">📷</span>Photos<span class="tail" id="shotCount"></span></h3>
+    <div class="drop" id="shotDrop">
+      <input type="file" id="shotFile" accept="image/*" multiple hidden>
+      <button class="btn sm" id="bShotPick">+ Add photos</button>
+      <span class="hint" style="margin:0">or drag them in — damage shots, the box, the label</span>
     </div>
+    <div class="shots" id="shots"></div>
   </div>
 
   <div class="card" id="histCard" style="display:none">
@@ -513,7 +617,6 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
   <div class="row end formActions">
     <button class="btn dgr" id="bDel">🗑 Delete</button>
     <span style="flex:1"></span>
-    <button class="btn" id="bReset">↺ Clear form</button>
     <button class="btn" id="bDup">⧉ Save as new</button>
     <button class="btn run" id="bSaveGo">💾 Save &amp; build invoice</button>
     <button class="btn pri" id="bSave">💾 Save</button>
@@ -538,13 +641,16 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
     <span class="sp"></span>
     <button class="btn pri" id="bNew">+ New Claim</button>
     <button class="btn" id="bCsv">⬇ Export CSV</button>
+    <button class="btn" id="bTpl">⬇ Template (.xlsx)</button>
+    <button class="btn" id="bBulk">⬆ Import claims</button>
+    <input type="file" id="bulkFile" accept=".xlsx,.xls,.csv" style="display:none">
   </div>
 
   <div class="tblwrap">
     <table class="data" id="tList">
       <thead><tr>
         <th>Status</th><th>Carrier</th><th>Tracking #</th><th>Claim #</th><th>Order #</th>
-        <th>Customer</th><th>Type</th><th style="text-align:right">Claim Amt</th><th style="text-align:right">Paid Amt</th>
+        <th>Customer</th><th>📷</th><th>Type</th><th style="text-align:right">Claim Amt</th><th style="text-align:right">Paid Amt</th>
         <th>File Date</th><th>Paid Date</th><th>Days</th><th>Actions</th>
       </tr></thead>
       <tbody></tbody>
@@ -640,6 +746,15 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
   <span id="stCount">0 claims</span>
   <span id="stSave">—</span>
 </div>
+<!-- ============ photo viewer ============ -->
+<div class="mask off" id="lightbox">
+  <button class="lbx" id="lbX" title="Close">✕</button>
+  <button class="lbnav prev" id="lbPrev" title="Previous">‹</button>
+  <img id="lbImg" alt="">
+  <button class="lbnav next" id="lbNext" title="Next">›</button>
+  <div class="lbcap" id="lbCap"></div>
+</div>
+
 <!-- ============ edit an existing claim, straight from the list ============ -->
 <div class="mask off" id="editModal">
   <div class="dlg wide">
@@ -675,6 +790,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 </div>
 <div id="toast"></div>
 
+<script src="xlsx-0.18.5.full.min.js"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -798,7 +914,7 @@ function newClaim(){
     paidDate:'', closeDate:'', notes:'',
     bill:blankAddr(), ship:blankAddr(), sameAs:true,
     items:[{qty:'1',sku:'',title:'',price:'',net:''}],
-    tax:'', shipping:'', insurance:'', invNo:'', invDate:'', fileOverride:'',
+    tax:'', shipping:'', insurance:'', invNo:'', invDate:'', fileOverride:'', photos:[],
     createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(),
     history:[]
   };
@@ -887,7 +1003,7 @@ function renderList(){
   const rows = filtered();
   const tb = $('#tList tbody');
   if (!rows.length){
-    tb.innerHTML = `<tr><td class="empty" colspan="13">`+
+    tb.innerHTML = `<tr><td class="empty" colspan="14">`+
       (DB.claims.length ? 'No claim matches these filters.' : 'No claims yet — hit “+ New Claim”, or load the sample data from Settings.')+
       `</td></tr>`;
   } else {
@@ -901,6 +1017,8 @@ function renderList(){
         <td class="mono">${esc(c.claimNo)||'—'}</td>
         <td class="mono">${esc(c.orderNo)||'—'}</td>
         <td>${esc(c.bill.name || c.bill.company)||'—'}</td>
+        <td class="ctr">${(c.photos&&c.photos.length)
+          ? `<button class="pcount" data-act="shots">📷 ${c.photos.length}</button>` : '—'}</td>
         <td>${esc(tyName(c.type))}</td>
         <td class="num">${DB.settings.cur}${comma(claimAmountOf(c))}</td>
         <td class="num">${c.paidAmt!=='' && c.paidAmt!=null ? DB.settings.cur+comma(num(c.paidAmt)) : '—'}</td>
@@ -937,7 +1055,6 @@ function setFormMode(mode){
   const edit = mode === 'edit';
   $('#bDel').style.display   = edit ? '' : 'none';
   $('#bDup').style.display   = edit ? '' : 'none';
-  $('#bReset').style.display = edit ? 'none' : '';
   $('#bSave').textContent    = edit ? '💾 Save & close' : '💾 Save claim';
 }
 function ensureNewForm(){
@@ -968,6 +1085,7 @@ function normalizeClaim(c){
   c.bill  = Object.assign(blankAddr(), c.bill  || {});
   c.ship  = Object.assign(blankAddr(), c.ship  || {});
   c.items = (c.items && c.items.length) ? c.items : [{qty:'1',sku:'',title:'',price:'',net:''}];
+  c.photos = c.photos || [];
   c.history = c.history || [];
   return c;
 }
@@ -993,7 +1111,7 @@ function openClaim(c){
   $$('#shipFields input').forEach(i=>i.disabled = !!c.sameAs);
   $('#edMeta').textContent = 'Created ' + new Date(c.createdAt).toLocaleString('en-US',{hour12:false});
   if (formMode === 'edit') $('#edTitle').textContent = `${c.carrier} · ${c.tracking || '(no tracking)'}`;
-  renderItems(); updateTotals(); renderHist(); trackHint();
+  renderItems(); updateTotals(); renderHist(); trackHint(); renderPhotos();
 }
 function syncForm(){
   if (!cur) return;
@@ -1023,10 +1141,10 @@ function applyAutoDates(c){
 }
 function autoDates(){
   applyAutoDates(cur);
-  $('#e_fileDate').value  = cur.fileDate  || '';
-  $('#e_paidDate').value  = cur.paidDate  || '';
-  $('#e_paidAmt').value   = cur.paidAmt   || '';
-  $('#e_closeDate').value = cur.closeDate || '';
+  const put = (id,v)=>{ const el = $(id); if (el) el.value = v || ''; };
+  put('#e_fileDate', cur.fileDate);
+  put('#e_paidDate', cur.paidDate);
+  put('#e_paidAmt',  cur.paidAmt);
 }
 function renderItems(){
   const tb = $('#tItems tbody');
@@ -1062,7 +1180,143 @@ function trackHint(){
 const saveSoon = (()=>{ let t=null; return ()=>{ clearTimeout(t); t=setTimeout(()=>{ save(); if($('#p-list').classList.contains('on')) renderList(); }, 250); }; })();
 function touch(){
   if (cur && !DB.claims.some(x=>x.id===cur.id)) DB.claims.unshift(cur);
-  syncForm(); updateTotals(); trackHint(); saveSoon();
+  syncForm(); updateTotals(); trackHint(); renderHist(); saveSoon();
+}
+
+/* =====================================================================
+   7a. Photos live in IndexedDB — localStorage is far too small for images
+   ===================================================================== */
+const IDB_NAME = 'gqclaim', IDB_STORE = 'photos';
+let idbP = null;
+function idb(){
+  if (!idbP) idbP = new Promise((res, rej)=>{
+    const r = indexedDB.open(IDB_NAME, 1);
+    r.onupgradeneeded = ()=>{ if (!r.result.objectStoreNames.contains(IDB_STORE)) r.result.createObjectStore(IDB_STORE); };
+    r.onsuccess = ()=> res(r.result);
+    r.onerror   = ()=> rej(r.error);
+  });
+  return idbP;
+}
+async function idbTx(mode, fn){
+  const db = await idb();
+  return new Promise((res, rej)=>{
+    const tx = db.transaction(IDB_STORE, mode);
+    const st = tx.objectStore(IDB_STORE);
+    let out;
+    try { out = fn(st); } catch(e){ rej(e); return; }
+    tx.oncomplete = ()=> res(out && out.result !== undefined ? out.result : out);
+    tx.onerror    = ()=> rej(tx.error);
+  });
+}
+const idbPut = (k, v) => idbTx('readwrite', st => st.put(v, k));
+const idbGet = k => idbTx('readonly',  st => st.get(k));
+const idbDel = k => idbTx('readwrite', st => st.delete(k));
+
+const shotCache = new Map();
+async function shotUrl(key){
+  if (shotCache.has(key)) return shotCache.get(key);
+  const v = await idbGet(key);
+  if (v) shotCache.set(key, v);
+  return v || '';
+}
+/* shrink before storing — a phone photo is 4MB, a claim needs 200KB */
+function shrink(file, maxSide, quality){
+  return new Promise(res=>{
+    const fr = new FileReader();
+    fr.onload = ()=>{
+      const im = new Image();
+      im.onload = ()=>{
+        const scale = Math.min(1, maxSide / Math.max(im.naturalWidth, im.naturalHeight));
+        const cv = document.createElement('canvas');
+        cv.width  = Math.max(1, Math.round(im.naturalWidth  * scale));
+        cv.height = Math.max(1, Math.round(im.naturalHeight * scale));
+        const g = cv.getContext('2d');
+        g.fillStyle = '#fff'; g.fillRect(0,0,cv.width,cv.height);
+        g.drawImage(im, 0, 0, cv.width, cv.height);
+        let out = '';
+        try { out = cv.toDataURL('image/jpeg', quality); } catch(e){ out = ''; }
+        res({url: out, w: cv.width, h: cv.height});
+      };
+      im.onerror = ()=> res(null);
+      im.src = fr.result;
+    };
+    fr.onerror = ()=> res(null);
+    fr.readAsDataURL(file);
+  });
+}
+async function addPhotos(files){
+  if (!cur || !files || !files.length) return;
+  cur.photos = cur.photos || [];
+  let n = 0;
+  for (const f of files){
+    if (!/^image\//.test(f.type)) continue;
+    const big = await shrink(f, 1400, 0.82);
+    if (!big || !big.url) continue;
+    const th  = await shrink(f, 320, 0.7);
+    const id  = 'ph' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+    try{
+      await idbPut(id, big.url);
+      await idbPut(id + ':t', (th && th.url) || big.url);
+    }catch(e){ toast('⚠ Could not store that photo: ' + e.message); continue; }
+    shotCache.set(id, big.url); shotCache.set(id + ':t', (th && th.url) || big.url);
+    cur.photos.push({id, name: f.name || 'photo.jpg', w: big.w, h: big.h});
+    n++;
+  }
+  if (!n) return;
+  logHist(cur, n + ' photo(s) attached');
+  cur.updatedAt = new Date().toISOString();
+  if (!DB.claims.some(x=>x.id===cur.id)) DB.claims.unshift(cur);
+  save(); renderPhotos(); renderList();
+  toast(n + ' photo(s) attached');
+}
+async function dropPhoto(id){
+  if (!cur) return;
+  cur.photos = (cur.photos||[]).filter(x=>x.id !== id);
+  try{ await idbDel(id); await idbDel(id + ':t'); }catch(e){}
+  shotCache.delete(id); shotCache.delete(id + ':t');
+  logHist(cur, 'Photo removed');
+  cur.updatedAt = new Date().toISOString();
+  save(); renderPhotos(); renderList();
+}
+async function dropAllPhotos(c){
+  for (const ph of (c.photos||[])){
+    try{ await idbDel(ph.id); await idbDel(ph.id + ':t'); }catch(e){}
+    shotCache.delete(ph.id); shotCache.delete(ph.id + ':t');
+  }
+}
+async function renderPhotos(){
+  const box = $('#shots'); if (!box || !cur) return;
+  const list = cur.photos || [];
+  $('#shotCount').textContent = list.length ? list.length + ' photo(s)' : '';
+  if (!list.length){ box.innerHTML = '<p class="hint" style="margin:0">No photos yet.</p>'; return; }
+  box.innerHTML = list.map(ph=>
+    `<figure class="shot" data-id="${esc(ph.id)}">
+       <img alt="${esc(ph.name)}">
+       <button class="x" data-act="delshot" title="Remove">✕</button>
+     </figure>`).join('');
+  for (const fig of $$('#shots .shot')){
+    const url = await shotUrl(fig.dataset.id + ':t');
+    const im = $('img', fig); if (im) im.src = url;
+  }
+}
+/* full-size viewer, also reachable from the claims list */
+let lbList = [], lbAt = 0;
+async function openLightbox(photos, i){
+  if (!photos || !photos.length) return;
+  lbList = photos; lbAt = i || 0;
+  $('#lightbox').classList.remove('off');
+  await lbShow();
+}
+async function lbShow(){
+  const ph = lbList[lbAt];
+  $('#lbCap').textContent = `${lbAt+1} / ${lbList.length} · ${ph.name || ''}`;
+  $('#lbImg').src = await shotUrl(ph.id);
+}
+function lbClose(){ $('#lightbox').classList.add('off'); lbList = []; }
+function lbStep(d){
+  if (!lbList.length) return;
+  lbAt = (lbAt + d + lbList.length) % lbList.length;
+  lbShow();
 }
 
 /* =====================================================================
@@ -1683,6 +1937,133 @@ function demoData(){
 }
 
 /* =====================================================================
+   11b. Bulk import — one CSV row per line item, rows sharing a tracking
+        number become one claim with several items
+   ===================================================================== */
+const TPL_HEAD = ['Carrier','Tracking #','Order #','Reference #','Reason','Name','Address',
+  'ZIP','City','State','Phone','Qty','SKU','Title','Price','Net Price','Tax','Shipping',
+  'Insurance','Notes'];
+function templateRows(){
+  return [
+    TPL_HEAD,
+    ['UPS','1Z586Y510305646419','KTWOIS6853184425','','Lost','James D Grace',
+     '181 Private Road 3013','72821','Altus','AR','479-440-5015',
+     '1','WV-1032','Window Visors for car','29.95','29.95','0','36.42','0','damage photos on file'],
+    ['FedEx','270347144982','KTWOIS7644263404','Acaia','Not received','Danny Nghieu',
+     '2313 S Hutchinson St','19148','Philadelphia','PA','(267)-809-3336',
+     '1','AL009','Acaia Lunar Coffee Scale 2021 Silver','250.00','250.00','0','0','0',''],
+    ['FedEx','270347144982','','','','','','','','','',
+     '2','AL010','Spare tray','12.50','25.00','','','',''],
+  ];
+}
+/* the template staff download and fill in */
+function downloadTemplate(){
+  if (typeof XLSX === 'undefined'){
+    const q = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+    download('GQ_Claim_import_template.csv', 'text/csv;charset=utf-8',
+             '\ufeff' + templateRows().map(r=>r.map(q).join(',')).join('\r\n'));
+    return toast('xlsx library missing — sent a CSV instead');
+  }
+  const ws = XLSX.utils.aoa_to_sheet(templateRows());
+  ws['!cols'] = [{wch:9},{wch:22},{wch:20},{wch:13},{wch:14},{wch:20},{wch:26},{wch:8},
+                 {wch:15},{wch:7},{wch:16},{wch:6},{wch:12},{wch:34},{wch:10},{wch:11},
+                 {wch:8},{wch:10},{wch:10},{wch:26}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Claims');
+  XLSX.writeFile(wb, 'GQ_Claim_import_template.xlsx');
+  toast('Template downloaded — one row per line item');
+}
+/* rows sharing a tracking number become one claim with several items */
+function readWorkbook(buf, name){
+  if (typeof XLSX === 'undefined'){
+    if (/\.csv$/i.test(name||'')) return parseCsv(new TextDecoder().decode(buf));
+    throw new Error('xlsx library not loaded');
+  }
+  const wb = XLSX.read(buf, {type:'array'});
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  if (!ws) throw new Error('the file has no sheet');
+  return XLSX.utils.sheet_to_json(ws, {header:1, raw:false, defval:''})
+                   .filter(r => r.some(x => String(x).trim() !== ''));
+}
+function parseCsv(text){
+  const rows = []; let row = [], cell = '', q = false;
+  text = String(text).replace(/^\ufeff/, '');
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){
+      if (c === '"'){ if (text[i+1] === '"'){ cell += '"'; i++; } else q = false; }
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === ','){ row.push(cell); cell = ''; }
+    else if (c === '\n'){ row.push(cell); rows.push(row); row = []; cell = ''; }
+    else if (c !== '\r') cell += c;
+  }
+  if (cell !== '' || row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(x => String(x).trim() !== ''));
+}
+function bulkImport(rows){
+  if (!rows || rows.length < 2) return toast('⚠ That file has no rows');
+  const head = rows[0].map(x => String(x==null?'':x).trim().toLowerCase());
+  const at = name => head.indexOf(name.toLowerCase());
+  const idx = {};
+  TPL_HEAD.forEach(k => idx[k] = at(k));
+  if (idx['Tracking #'] < 0) return toast('⚠ No "Tracking #" column — start from the template');
+  const stripe = s => String(s==null?'':s).trim();
+  const carrierOf = v => {
+    const s = String(v||'').trim().toLowerCase();
+    if (s.startsWith('f')) return 'FedEx';
+    if (s.startsWith('usp') || s === 'us') return 'USPS';
+    return 'UPS';
+  };
+  const typeOf = v => {
+    const s = String(v||'').trim().toLowerCase();
+    const hit = TYPES.find(t => t.t.toLowerCase() === s || t.k === s);
+    return hit ? hit.k : 'lost';
+  };
+  const get = (r, k) => idx[k] >= 0 ? String(r[idx[k]] == null ? '' : r[idx[k]]).trim() : '';
+  const made = new Map();
+  let dup = 0, items = 0;
+  for (let i = 1; i < rows.length; i++){
+    const r = rows[i];
+    const trk = get(r, 'Tracking #');
+    if (!trk) continue;
+    let c = made.get(trk);
+    if (!c){
+      if (DB.claims.some(x => (x.tracking||'').trim() === trk)){ dup++; continue; }
+      c = newClaim();
+      c.carrier = carrierOf(get(r,'Carrier'));
+      const want = c.carrier === 'USPS' ? 'k2motor' : 'geniqua';
+      if (DB.profiles.some(x => x.id === want)) c.profile = want;
+      c.tracking = trk;
+      c.orderNo  = get(r,'Order #');
+      c.refNo    = get(r,'Reference #');
+      c.type     = typeOf(get(r,'Reason'));
+      c.notes    = get(r,'Notes');
+      c.tax = get(r,'Tax'); c.shipping = get(r,'Shipping'); c.insurance = get(r,'Insurance');
+      c.bill = Object.assign(blankAddr(), {
+        name:  get(r,'Name'),  addr1: get(r,'Address'), zip: get(r,'ZIP'),
+        city:  get(r,'City'),  state: get(r,'State'),   phone: get(r,'Phone')
+      });
+      c.sameAs = true;
+      c.items = [];
+      logHist(c, 'Imported from CSV');
+      made.set(trk, c);
+    }
+    const title = get(r,'Title'), sku = get(r,'SKU'), price = get(r,'Price');
+    if (title || sku || price){
+      c.items.push({qty: get(r,'Qty') || '1', sku, title, price, net: get(r,'Net Price')});
+      items++;
+    }
+  }
+  const fresh = Array.from(made.values());
+  fresh.forEach(c => { if (!c.items.length) c.items = [{qty:'1',sku:'',title:'',price:'',net:''}]; });
+  if (!fresh.length) return toast(dup ? `Nothing new — ${dup} tracking number(s) already here` : '⚠ Nothing to import');
+  DB.claims.unshift(...fresh);
+  save(); renderList(); go('list');
+  toast(`Imported ${fresh.length} claim(s), ${items} item(s)` + (dup ? ` · skipped ${dup} duplicate(s)` : ''));
+}
+
+/* =====================================================================
    12. Events
    ===================================================================== */
 function bind(){
@@ -1707,6 +2088,7 @@ function bind(){
     const id = e.target.closest('tr').dataset.id;
     const c = DB.claims.find(x=>x.id===id); if (!c) return;
     if (b.dataset.act === 'edit'){ openEditDialog(c); }
+    if (b.dataset.act === 'shots'){ openLightbox(c.photos || [], 0); }
     if (b.dataset.act === 'inv'){ go('inv'); renderInvoicePage(c.id); }
   });
   $('#bNew').addEventListener('click', ()=>{
@@ -1715,6 +2097,19 @@ function bind(){
   $('#bCsv').addEventListener('click', ()=>{
     if (!DB.claims.length) return toast('Nothing to export yet');
     download('GQ_Claims_' + todayISO() + '.csv', 'text/csv;charset=utf-8', toCsv());
+  });
+
+  $('#bTpl').addEventListener('click', downloadTemplate);
+  $('#bBulk').addEventListener('click', ()=>$('#bulkFile').click());
+  $('#bulkFile').addEventListener('change', e=>{
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = ()=>{
+      try { bulkImport(readWorkbook(new Uint8Array(r.result), f.name)); }
+      catch(err){ toast('⚠ Import failed: ' + err.message); }
+      e.target.value = '';
+    };
+    r.readAsArrayBuffer(f);
   });
 
   /* --- edit form --- */
@@ -1785,17 +2180,10 @@ function bind(){
     $('#edTitle').textContent = `${c.carrier} · ${c.tracking || '(no tracking)'}`;
     toast('Copied to a new claim');
   });
-  $('#bReset').addEventListener('click', ()=>{
-    if (!confirm('Clear every field on this claim? (the claim itself stays)')) return;
-    const b = newClaim(); b.id = cur.id; b.createdAt = cur.createdAt; b.history = cur.history;
-    logHist(b, 'Form cleared');
-    const i = DB.claims.findIndex(x=>x.id===cur.id);
-    if (i>=0) DB.claims[i] = b;
-    save(); openClaim(b);
-  });
   $('#bDel').addEventListener('click', ()=>{
     if (!cur) return;
     if (!confirm(`Delete this claim?\n${cur.carrier} ${cur.tracking||'(no tracking)'}\nThis cannot be undone.`)) return;
+    dropAllPhotos(cur);
     DB.claims = DB.claims.filter(x=>x.id!==cur.id);
     save(); closeEditDialog(); renderList(); go('list'); toast('Claim deleted');
   });
@@ -1810,6 +2198,30 @@ function bind(){
     const c = invCurrent(); if (!c) return;
     await exportPdf(c); askClaimNo(c);
   });
+
+  /* --- photos --- */
+  $('#bShotPick').addEventListener('click', ()=>$('#shotFile').click());
+  $('#shotFile').addEventListener('change', async e=>{
+    await addPhotos(e.target.files); e.target.value = '';
+  });
+  const drop = $('#shotDrop');
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev, e=>{
+    e.preventDefault(); drop.classList.add('over');
+  }));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev, e=>{
+    e.preventDefault(); drop.classList.remove('over');
+  }));
+  drop.addEventListener('drop', async e=>{ await addPhotos(e.dataTransfer.files); });
+  $('#shots').addEventListener('click', async e=>{
+    const fig = e.target.closest('.shot'); if (!fig) return;
+    if (e.target.closest('[data-act="delshot"]')){ await dropPhoto(fig.dataset.id); return; }
+    const list = (cur && cur.photos) || [];
+    openLightbox(list, list.findIndex(x=>x.id === fig.dataset.id));
+  });
+  $('#lbX').addEventListener('click', lbClose);
+  $('#lbPrev').addEventListener('click', ()=>lbStep(-1));
+  $('#lbNext').addEventListener('click', ()=>lbStep(1));
+  $('#lightbox').addEventListener('click', e=>{ if (e.target.id === 'lightbox') lbClose(); });
 
   /* --- edit dialog --- */
   $('#edX').addEventListener('click', ()=>{ touch(); save(); closeEditDialog(); renderList(); });
@@ -1866,18 +2278,32 @@ function bind(){
     DB.settings.zero = $('#st_zero').value;
     save(); renderSettings(); toast('Settings saved');
   });
-  $('#bExpAll').addEventListener('click', ()=>
-    download('GQ_Claim_backup_' + todayISO() + '.json', 'application/json', JSON.stringify(DB, null, 2)));
+  $('#bExpAll').addEventListener('click', async ()=>{
+    const out = JSON.parse(JSON.stringify(DB));
+    out.photoData = {};
+    for (const c of out.claims){
+      for (const ph of (c.photos || [])){
+        const full = await shotUrl(ph.id), thumb = await shotUrl(ph.id + ':t');
+        if (full)  out.photoData[ph.id] = full;
+        if (thumb) out.photoData[ph.id + ':t'] = thumb;
+      }
+    }
+    download('GQ_Claim_backup_' + todayISO() + '.json', 'application/json', JSON.stringify(out));
+    toast('Backup includes the photos — it can be a big file');
+  });
   $('#bImp').addEventListener('click', ()=>$('#impFile').click());
   $('#impFile').addEventListener('change', e=>{
     const f = e.target.files[0]; if (!f) return;
     const r = new FileReader();
-    r.onload = ()=>{
+    r.onload = async ()=>{
       try{
         const d = JSON.parse(r.result);
         if (!d || !Array.isArray(d.claims)) throw new Error('no claims in that file');
         if (!confirm(`Import ${d.claims.length} claim(s)? This replaces everything currently stored.`)) return;
-        DB = d; load2(); save(); renderSettings(); renderList(); toast('Import complete');
+        const shots = d.photoData || {}; delete d.photoData;
+        DB = d; load2(); save();
+        for (const k in shots){ try{ await idbPut(k, shots[k]); shotCache.set(k, shots[k]); }catch(err){} }
+        renderSettings(); renderList(); toast('Import complete');
       }catch(err){ toast('⚠ Import failed: ' + err.message); }
       e.target.value = '';
     };
@@ -1892,6 +2318,12 @@ function bind(){
   });
 
   document.addEventListener('keydown', e=>{
+    if (!$('#lightbox').classList.contains('off')){
+      if (e.key === 'Escape') lbClose();
+      if (e.key === 'ArrowLeft')  lbStep(-1);
+      if (e.key === 'ArrowRight') lbStep(1);
+      if (e.key === 'Escape' || e.key.startsWith('Arrow')) return;
+    }
     if (e.key === 'Escape'){
       if (!$('#modal').classList.contains('off')) closeAsk();
       else if (editOpen()){ touch(); save(); closeEditDialog(); renderList(); }
@@ -1913,10 +2345,17 @@ function load2(){
   DB.settings = Object.assign({}, d.settings, DB.settings || {});
   DB.claims.forEach(normalizeClaim);
 }
+const MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const DOW = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 function clock(){
   const d = new Date();
-  $('#clk').textContent = d.toLocaleDateString('en-US') + '  ' +
-    d.toLocaleTimeString('en-US',{hour12:false});
+  $('#calMon').textContent = MON[d.getMonth()];
+  $('#calDay').textContent = d.getDate();
+  $('#calDow').textContent = DOW[d.getDay()];
+  const s = d.getSeconds(), m = d.getMinutes() + s/60, hr = (d.getHours()%12) + m/60;
+  const spin = (el, deg)=> el.setAttribute('transform', `rotate(${deg} 24 24)`);
+  spin($('#hH'), hr*30); spin($('#hM'), m*6); spin($('#hS'), s*6);
+  $('.titlebar').title = d.toLocaleString('en-US',{hour12:false});
 }
 function init(){
   load(); load2();
