@@ -385,11 +385,11 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       <div class="f"><label>Carrier <span class="req">*</span></label>
         <select id="e_carrier"><option>UPS</option><option>USPS</option><option>FedEx</option></select></div>
       <div class="f"><label>Seller profile (letterhead / Market)</label><select id="e_profile"></select></div>
-      <div class="f"><label>Tracking # <span class="req">*</span></label><input id="e_tracking" class="mono" placeholder="1Z586Y510305646419"></div>
-      <div class="f"><label>Carrier Claim # <span class="tag">after filing</span></label><input id="e_claimNo" class="mono" placeholder="C-0367907680"></div>
-      <div class="f"><label>Order #</label><input id="e_orderNo" class="mono" placeholder="KTWOIS7644263404"></div>
-      <div class="f"><label>Reference #</label><input id="e_refNo" placeholder="Acaia"></div>
-      <div class="f"><label>Market</label><input id="e_market" placeholder="GENIQUA"></div>
+      <div class="f"><label>Tracking # <span class="req">*</span></label><input id="e_tracking" class="mono"></div>
+      <div class="f"><label>Carrier Claim # <span class="tag">after filing</span></label><input id="e_claimNo" class="mono"></div>
+      <div class="f"><label>Order #</label><input id="e_orderNo" class="mono"></div>
+      <div class="f"><label>Reference #</label><input id="e_refNo"></div>
+      <div class="f"><label>Market</label><input id="e_market"></div>
       <div class="f"><label>Ship date</label><input type="date" id="e_shipDate"></div>
     </div>
     <p class="hint" id="trkNote"></p>
@@ -401,36 +401,36 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       <div class="f"><label>Claim type</label><select id="e_type"></select></div>
       <div class="f"><label>Status</label><select id="e_status"></select></div>
       <div class="f"><label>File date (claim filed)</label><input type="date" id="e_fileDate"></div>
-      <div class="f"><label>Claim amount (USD)</label><input id="e_claimAmt" class="num" placeholder="auto = invoice total"></div>
+      <div class="f"><label>Claim amount (USD)</label><input id="e_claimAmt" class="num"></div>
       <div class="f"><label>Approved amount (USD)</label><input id="e_apprAmt" class="num"></div>
       <div class="f"><label>Paid amount (USD)</label><input id="e_paidAmt" class="num"></div>
       <div class="f"><label>Paid date (payment received)</label><input type="date" id="e_paidDate"></div>
       <div class="f"><label>Closed date</label><input type="date" id="e_closeDate"></div>
     </div>
     <div class="grid" style="margin-top:10px">
-      <div class="f"><label>Notes</label><textarea id="e_notes" placeholder="e.g. 3 damage photos uploaded; carrier asked for proof of shipment…"></textarea></div>
+      <div class="f"><label>Notes</label><textarea id="e_notes"></textarea></div>
     </div>
   </div>
 
   <div class="grid g2">
     <div class="card">
-      <h3><span class="em">🧾</span>Bill to (customer)</h3>
+      <h3><span class="em">🧾</span>Bill to</h3>
       <div class="grid g2">
-        <div class="f"><label>Name <span class="req">*</span></label><input id="b_name" placeholder="Danny Nghieu"></div>
+        <div class="f"><label>Name <span class="req">*</span></label><input id="b_name"></div>
         <div class="f"><label>Company (optional)</label><input id="b_company"></div>
-        <div class="f" style="grid-column:1/-1"><label>Address</label><input id="b_addr1" placeholder="2313 S Hutchinson St"></div>
+        <div class="f" style="grid-column:1/-1"><label>Address</label><input id="b_addr1"></div>
         <div class="f" style="grid-column:1/-1"><label>Address line 2 (optional)</label><input id="b_addr2"></div>
-        <div class="f"><label>City</label><input id="b_city" placeholder="Philadelphia"></div>
-        <div class="f"><label>State</label><input id="b_state" placeholder="PA"></div>
-        <div class="f"><label>ZIP</label><input id="b_zip" class="mono" placeholder="19148"></div>
-        <div class="f"><label>Country</label><input id="b_country" placeholder="US"></div>
-        <div class="f"><label>Phone</label><input id="b_phone" class="mono" placeholder="(267)-809-3336"></div>
+        <div class="f"><label>City</label><input id="b_city"></div>
+        <div class="f"><label>State</label><input id="b_state"></div>
+        <div class="f"><label>ZIP</label><input id="b_zip" class="mono"></div>
+        <div class="f"><label>Country</label><input id="b_country"></div>
+        <div class="f"><label>Phone</label><input id="b_phone" class="mono"></div>
         <div class="f"><label>Email</label><input id="b_email"></div>
       </div>
     </div>
 
     <div class="card">
-      <h3><span class="em">📮</span>Ship to (delivery address)</h3>
+      <h3><span class="em">📮</span>Ship to</h3>
       <label class="chkline" style="margin-bottom:10px">
         <input type="checkbox" id="s_same" checked> Same as Bill to — print <b>SAME AS BILL TO</b> on the invoice
       </label>
@@ -450,7 +450,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
   </div>
 
   <div class="card">
-    <h3><span class="em">📋</span>Line items<span class="tail">Leave Net Price blank = Qty × Price</span></h3>
+    <h3><span class="em">📋</span>Line items</h3>
     <table class="items" id="tItems">
       <thead><tr>
         <th style="width:70px">Qty.</th><th style="width:130px">SKU</th><th>Title</th>
@@ -469,9 +469,9 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
     <h3><span class="em">💲</span>Invoice totals</h3>
     <div class="grid g4">
       <div class="f"><label>Subtotal</label><input id="e_subtotal" class="num" readonly></div>
-      <div class="f"><label>Tax</label><input id="e_tax" class="num" placeholder="0"></div>
-      <div class="f"><label>Shipping and handling</label><input id="e_ship" class="num" placeholder="0"></div>
-      <div class="f"><label>Insurance</label><input id="e_ins" class="num" placeholder="0"></div>
+      <div class="f"><label>Tax</label><input id="e_tax" class="num"></div>
+      <div class="f"><label>Shipping and handling</label><input id="e_ship" class="num"></div>
+      <div class="f"><label>Insurance</label><input id="e_ins" class="num"></div>
       <div class="f"><label>Total</label><input id="e_total" class="num" readonly></div>
       <div class="f"><label>Invoice #</label><input id="e_invNo" class="mono"></div>
       <div class="f"><label>Invoice date</label><input type="date" id="e_invDate"></div>
@@ -528,7 +528,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 <!-- ==================================================== Invoice -->
 <section class="page" id="p-inv">
   <div class="card noprint">
-    <h3><span class="em">🧾</span>Commercial Invoice builder<span class="tail">Layout matches the Word template</span></h3>
+    <h3><span class="em">🧾</span>Commercial Invoice builder</h3>
     <div class="row">
       <div class="f" style="min-width:340px;flex:1">
         <label>Claim</label>
@@ -542,10 +542,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
     <div class="row" style="margin-top:12px">
       <button class="btn run" id="bWord">⬇ Download Word (.doc)</button>
       <button class="btn" id="bPrint">🖨 Print / Save PDF</button>
-      <button class="btn" id="bHtml">⬇ Download HTML</button>
-      <button class="btn" id="bEditInv">✏️ Edit this claim</button>
     </div>
-    <p class="hint">The Word file is packed as MHTML, so the logo and table borders survive in Word. The file name follows the SOP — the template’s <code>xx</code> is replaced with the tracking number automatically.</p>
   </div>
 
   <div id="printArea">
@@ -628,7 +625,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
     </p>
     <div class="grid g2">
       <div class="f"><label>Carrier Claim #</label>
-        <input id="m_claimNo" class="mono" placeholder="C-0367907680"></div>
+        <input id="m_claimNo" class="mono"></div>
       <div class="f"><label>File date</label><input type="date" id="m_fileDate"></div>
       <div class="f"><label>Status</label><select id="m_status"></select></div>
       <div class="f"><label>Claim amount (USD)</label><input id="m_claimAmt" class="num"></div>
@@ -759,7 +756,7 @@ function newClaim(){
   return {
     id:uid(), carrier:'UPS', profile:p.id||'', market:p.market||'',
     tracking:'', claimNo:'', orderNo:'', refNo:'', shipDate:'',
-    type:'lost', status:'draft', fileDate:'', claimAmt:'', apprAmt:'', paidAmt:'',
+    type:'lost', status:'draft', fileDate:todayISO(), claimAmt:'', apprAmt:'', paidAmt:'',
     paidDate:'', closeDate:'', notes:'',
     bill:blankAddr(), ship:blankAddr(), sameAs:true,
     items:[{qty:'1',sku:'',title:'',price:'',net:''}],
@@ -971,7 +968,7 @@ function renderItems(){
     <td><input data-k="sku"   class="mono" value="${esc(it.sku)}"></td>
     <td><input data-k="title" value="${esc(it.title)}"></td>
     <td><input data-k="price" class="num" value="${esc(it.price)}"></td>
-    <td><input data-k="net"   class="num" value="${esc(it.net)}" placeholder="${fmt2(num(it.qty)*num(it.price))}"></td>
+    <td><input data-k="net"   class="num" value="${esc(it.net)}"></td>
     <td style="text-align:center"><button class="btn sm dgr" data-act="delitem" title="Remove row">✕</button></td>
   </tr>`).join('');
 }
@@ -979,7 +976,6 @@ function updateTotals(){
   const sub = subtotalOf(cur), tot = totalOf(cur);
   $('#e_subtotal').value = fmt2(sub);
   $('#e_total').value = fmt2(tot);
-  $('#e_claimAmt').placeholder = 'auto = ' + fmt2(tot);
   $('#itemSum').textContent = `${cur.items.length} item(s) · Subtotal ${money(sub)} · Total ${money(tot)}`;
 }
 function renderHist(){
@@ -991,10 +987,10 @@ function renderHist(){
 function trackHint(){
   const cr = CARRIERS[cur.carrier]; const t = (cur.tracking||'').replace(/\s+/g,'');
   const el = $('#trkNote');
-  if (!t){ el.textContent = cr ? `${cur.carrier} tracking format: ${cr.hint}` : ''; el.style.color=''; return; }
+  if (!t || !cr){ el.textContent = ''; return; }
   const ok = cr.re.some(r=>r.test(t));
-  el.textContent = ok ? `✓ Looks like a valid ${cur.carrier} tracking number` : `⚠ That does not look like a ${cur.carrier} number (${cr.hint}) — it still saves, just checking.`;
-  el.style.color = ok ? 'var(--ok)' : 'var(--warn)';
+  el.textContent = ok ? '' : `⚠ That does not look like a ${cur.carrier} tracking number (${cr.hint})`;
+  el.style.color = 'var(--warn)';
 }
 const saveSoon = (()=>{ let t=null; return ()=>{ clearTimeout(t); t=setTimeout(()=>{ save(); if($('#p-list').classList.contains('on')) renderList(); }, 250); }; })();
 function touch(){
@@ -1162,11 +1158,6 @@ function exportWord(c){
   download(fileName(c) + '.doc', 'application/msword', mht);
   logHist(c, 'Commercial Invoice generated: ' + fileName(c) + '.doc');
   save(); toast('Downloaded ' + fileName(c) + '.doc');
-}
-function exportHtmlFile(c){
-  const html = invoiceDoc(c, profileOf(c).logo || '');
-  download(fileName(c) + '.html', 'text/html;charset=utf-8', '\ufeff' + html);
-  toast('Downloaded ' + fileName(c) + '.html');
 }
 function renderInvoicePage(pick){
   const sel = $('#invPick');
@@ -1381,10 +1372,6 @@ function bind(){
     const inp = e.target.closest('input[data-k]'); if (!inp) return;
     const i = +e.target.closest('tr').dataset.i;
     cur.items[i][inp.dataset.k] = inp.value;
-    if (inp.dataset.k === 'qty' || inp.dataset.k === 'price'){
-      const net = $('input[data-k="net"]', e.target.closest('tr'));
-      net.placeholder = fmt2(num(cur.items[i].qty) * num(cur.items[i].price));
-    }
     updateTotals(); cur.updatedAt = new Date().toISOString(); saveSoon();
   });
   $('#tItems').addEventListener('click', e=>{
@@ -1433,7 +1420,6 @@ function bind(){
   /* --- Invoice --- */
   $('#invPick').addEventListener('change', ()=>renderInvoicePage($('#invPick').value));
   $('#bWord').addEventListener('click', ()=>{ const c = invCurrent(); if (c){ exportWord(c); askClaimNo(c); } });
-  $('#bHtml').addEventListener('click', ()=>{ const c = invCurrent(); if (c){ exportHtmlFile(c); askClaimNo(c); } });
   $('#bPrint').addEventListener('click', ()=>{ const c = invCurrent(); window.print(); askClaimNo(c); });
 
   /* --- carrier claim # dialog --- */
@@ -1441,7 +1427,6 @@ function bind(){
   $('#mLater').addEventListener('click', closeAsk);
   $('#modal').addEventListener('click', e=>{ if (e.target.id === 'modal') closeAsk(); });
   $('#m_claimNo').addEventListener('keydown', e=>{ if (e.key === 'Enter') saveAsk(); });
-  $('#bEditInv').addEventListener('click', ()=>{ const c = invCurrent(); if (c){ openClaim(c); go('edit'); } });
 
   /* --- settings --- */
   $('#pfPick').addEventListener('change', ()=>{ pfCur = $('#pfPick').value; loadProfile(); });
