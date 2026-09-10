@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GQ Claim Center — Shipping Claim Manager</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   GQ Claim Center — UPS / USPS / FedEx claim management
+   ---------------------------------------------------------------------
+   Navy chrome (title bar / tab strip / status bar) framing a light card
+   canvas. The Commercial Invoice reproduces the company Word template
+   exactly (Arial, grey rules, centred table) and exports as MHTML, so
+   Word opens it with the logo and table borders intact.
+   Everything lives in browser localStorage — no backend, no credentials.
+   ===================================================================== */
+:root{
+  /* LEGO palette — official brick colours */
+  --lego-red:#C4161C;  --lego-red-d:#8E0F14;
+  --lego-blue:#0055BF; --lego-blue-d:#003C87;
+  --lego-yellow:#F2CD37; --lego-yellow-d:#C9A417;
+  --lego-green:#237841; --lego-green-d:#17552E;
+  --lego-orange:#FE8A18; --lego-orange-d:#C86500;
+  --lego-grey:#A0A5A9;  --lego-grey-d:#6C6E68;
+
+  --chrome:#C4161C; --chrome-2:#D8262C; --chrome-ink:#FFF6E9;
+  --chrome-mut:rgba(255,246,233,.72); --chrome-line:rgba(0,0,0,.22);
+  --plate:#CBD5DE; --bg:#DCE4EA; --panel:#FFFFFF; --stripe:#F2F5F8; --line:#C3CEDA;
+  --text:#1B2A3D; --muted:#64768B; --head:#12233A;
+  --accent:#0055BF; --accent-2:#2A7BE0;
+  --run:#FE8A18; --run-hover:#C86500;
+  --ok:#237841; --warn:#C86500; --neg:#C4161C;
+  --fedex:#4D148C; --ups:#8A5B12; --usps:#0055BF;
+  --stud:rgba(18,35,58,.15);
+  --elev-1:0 3px 0 #B9C6D3;
+  --elev-2:0 4px 0 #A9B8C8, 0 10px 18px rgba(18,35,58,.14);
+  --elev-3:0 6px 0 #90A2B5, 0 22px 40px rgba(18,35,58,.28);
+  --rad:10px; --rad-sm:7px; --titleh:60px; --statush:32px;
+  --sans:"Fredoka","Segoe UI",-apple-system,"Microsoft JhengHei UI","PingFang TC",sans-serif;
+  --mono:"JetBrains Mono","Cascadia Mono",Consolas,"SF Mono",Menlo,monospace;
+}
+/* stud row — drawn inside the element so nothing clips it */
+.studs{position:relative}
+.studs::before{
+  content:"";position:absolute;top:6px;left:16px;width:96px;height:16px;
+  background-image:radial-gradient(circle at 12px 8px, var(--stud) 0 7px, transparent 7.6px);
+  background-size:24px 16px;background-repeat:repeat-x;pointer-events:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;max-width:100%}
+body{
+  display:flex;flex-direction:column;height:100%;overflow:hidden;
+  background:var(--bg);color:var(--text);font-family:var(--sans);
+  font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+/* work canvas = LEGO baseplate */
+main{
+  background-color:var(--plate);
+  background-image:
+    radial-gradient(circle at 16px 14px, rgba(255,255,255,.55) 0 8px, transparent 8.5px),
+    radial-gradient(circle at 16px 16px, rgba(18,35,58,.07) 0 9px, transparent 9.5px);
+  background-size:36px 36px,36px 36px;
+  background-position:0 0,0 0;
+}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"zero"}
+
+/* ---------------------------------------------------------- chrome */
+.titlebar{
+  flex:0 0 var(--titleh);display:flex;align-items:center;gap:14px;position:relative;
+  padding:0 18px;background:linear-gradient(180deg,var(--chrome-2) 0%,var(--chrome) 62%,var(--lego-red-d) 100%);
+  color:var(--chrome-ink);border-bottom:4px solid var(--lego-red-d);
+  box-shadow:0 6px 0 rgba(0,0,0,.12);z-index:20;
+}
+/* studs along the bottom-right of the title bar */
+.titlebar::after{
+  content:"";position:absolute;right:16px;bottom:5px;width:120px;height:18px;
+  background-image:radial-gradient(circle at 15px 9px, rgba(255,255,255,.26) 0 8px, transparent 8.6px);
+  background-size:30px 18px;background-repeat:repeat-x;
+}
+.brick-logo{width:44px;height:34px;flex:0 0 auto;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
+.titlebar b{font-size:19px;letter-spacing:.1em;font-weight:700;text-shadow:0 2px 0 rgba(0,0,0,.22)}
+.titlebar .sub{font-size:11px;letter-spacing:.16em;color:var(--chrome-mut);text-transform:uppercase}
+.titlebar .sp{flex:1}
+.titlebar .clock{font-family:var(--mono);font-size:13px;color:var(--chrome-mut)}
+.tabstrip{
+  flex:0 0 auto;display:flex;gap:9px;padding:11px 16px 12px;
+  background:#12233A;border-bottom:4px solid #0A1626;z-index:19;
+}
+.tabstrip button{
+  appearance:none;border:none;cursor:pointer;position:relative;
+  background:linear-gradient(180deg,#5D7burn 0%,#4A6480 100%);
+  background:linear-gradient(180deg,#5E7896 0%,#48607C 100%);
+  color:#EAF1F8;padding:15px 20px 10px;border-radius:8px;
+  font:inherit;font-weight:600;font-size:14px;letter-spacing:.01em;
+  box-shadow:0 4px 0 #33465C, inset 0 2px 0 rgba(255,255,255,.22);
+  transition:transform .08s, box-shadow .08s;
+}
+.tabstrip button::before{
+  content:"";position:absolute;top:3px;left:10px;right:10px;height:12px;
+  background-image:radial-gradient(circle at 10px 6px, rgba(255,255,255,.22) 0 5px, transparent 5.6px);
+  background-size:20px 12px;background-repeat:repeat-x;
+}
+.tabstrip button:hover{filter:brightness(1.08)}
+.tabstrip button:active{transform:translateY(3px);box-shadow:0 1px 0 #33465C, inset 0 2px 0 rgba(255,255,255,.22)}
+.tabstrip button[aria-selected="true"]{
+  background:linear-gradient(180deg,#F7DA5E 0%,var(--lego-yellow) 100%);
+  color:#3A2B00;box-shadow:0 4px 0 var(--lego-yellow-d), inset 0 2px 0 rgba(255,255,255,.5);
+}
+.tabstrip button[aria-selected="true"]::before{
+  background-image:radial-gradient(circle at 10px 6px, rgba(0,0,0,.14) 0 5px, transparent 5.6px);
+}
+main{flex:1;overflow:auto;padding:16px 18px 22px}
+.statusbar{
+  flex:0 0 var(--statush);display:flex;align-items:center;gap:16px;padding:0 16px;
+  background:#12233A;color:rgba(234,241,248,.78);font-size:12px;
+  font-family:var(--mono);border-top:4px solid var(--lego-yellow);
+}
+.statusbar .dot{width:9px;height:9px;border-radius:50%;background:var(--lego-yellow);display:inline-block;margin-right:6px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.22)}
+.page{display:none;max-width:1420px;margin:0 auto}
+.page.on{display:block}
+
+/* ---------------------------------------------------------- cards */
+.card{
+  position:relative;background:var(--panel);border:2px solid #B7C4D2;border-radius:var(--rad);
+  padding:28px 18px 16px;margin-bottom:15px;box-shadow:var(--elev-2);
+}
+.card::before{
+  content:"";position:absolute;top:6px;left:18px;width:96px;height:16px;
+  background-image:radial-gradient(circle at 12px 8px, var(--stud) 0 7px, transparent 7.6px);
+  background-size:24px 16px;background-repeat:repeat-x;pointer-events:none;
+}
+.card>h3{
+  margin:0 0 12px;font-size:15.5px;color:var(--head);letter-spacing:.01em;font-weight:700;
+  display:flex;align-items:center;gap:8px;padding-bottom:9px;border-bottom:3px solid var(--line);
+}
+.card>h3 .em{font-size:16px}
+.card>h3 .tail{margin-left:auto;font-weight:500;font-size:12px;color:var(--muted)}
+.hint{color:var(--muted);font-size:12.5px;margin:6px 0 0}
+
+/* ---------------------------------------------------------- forms */
+.grid{display:grid;gap:10px 14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f>label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.f>label .req{color:var(--neg)}
+.f>label .tag{
+  display:inline-block;margin-left:5px;padding:1px 7px;border-radius:5px;
+  background:var(--lego-yellow);color:#5A3F00;font-size:10.5px;font-weight:600;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.12);letter-spacing:0;text-transform:none;
+}
+input,select,textarea{
+  font:inherit;font-size:14px;color:var(--text);background:#fff;
+  border:2px solid #BCC9D7;border-radius:var(--rad-sm);padding:7px 9px;width:100%;
+  box-shadow:inset 0 2px 0 rgba(18,35,58,.05);
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,85,191,.20);
+}
+input[readonly]{background:var(--stripe);color:var(--muted)}
+textarea{resize:vertical;min-height:64px;line-height:1.5}
+input.num,td.num input{font-family:var(--mono);text-align:right}
+.chkline{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text)}
+.chkline input{width:auto}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row.end{justify-content:flex-end}
+
+/* ---------------------------------------------------------- buttons */
+.btn{
+  appearance:none;cursor:pointer;font:inherit;font-weight:600;font-size:13.5px;
+  padding:9px 16px;border-radius:var(--rad-sm);border:none;white-space:nowrap;
+  background:linear-gradient(180deg,#FFFFFF 0%,#E7EDF3 100%);color:var(--head);
+  box-shadow:0 4px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9);
+  transition:transform .07s, box-shadow .07s, filter .12s;
+}
+.btn:hover{filter:brightness(1.03)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9)}
+.btn.pri{background:linear-gradient(180deg,#2A7BE0 0%,var(--accent) 100%);color:#fff;
+  box-shadow:0 4px 0 var(--lego-blue-d), inset 0 2px 0 rgba(255,255,255,.32)}
+.btn.pri:active{box-shadow:0 1px 0 var(--lego-blue-d), inset 0 2px 0 rgba(255,255,255,.32)}
+.btn.run{background:linear-gradient(180deg,#FFA246 0%,var(--run) 100%);color:#3A2400;
+  box-shadow:0 4px 0 var(--run-hover), inset 0 2px 0 rgba(255,255,255,.45)}
+.btn.run:active{box-shadow:0 1px 0 var(--run-hover), inset 0 2px 0 rgba(255,255,255,.45)}
+.btn.ok{background:linear-gradient(180deg,#31955A 0%,var(--lego-green) 100%);color:#fff;
+  box-shadow:0 4px 0 var(--lego-green-d), inset 0 2px 0 rgba(255,255,255,.3)}
+.btn.ok:active{box-shadow:0 1px 0 var(--lego-green-d), inset 0 2px 0 rgba(255,255,255,.3)}
+.btn.dgr{background:linear-gradient(180deg,#DD3138 0%,var(--lego-red) 100%);color:#fff;
+  box-shadow:0 4px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
+.btn.dgr:active{box-shadow:0 1px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
+.btn.sm{padding:5px 11px;font-size:12.5px;box-shadow:0 3px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9)}
+.btn.sm:active{box-shadow:0 1px 0 #B0BECD}
+.btn.sm.dgr{box-shadow:0 3px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* ---------------------------------------------------------- stat tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.tile{
+  position:relative;background:var(--panel);border:2px solid #B7C4D2;border-radius:var(--rad);
+  padding:22px 14px 11px;box-shadow:var(--elev-1);border-top:7px solid var(--accent);
+}
+.tile::before{
+  content:"";position:absolute;top:4px;left:12px;width:66px;height:14px;
+  background-image:radial-gradient(circle at 11px 7px, rgba(18,35,58,.11) 0 6px, transparent 6.6px);
+  background-size:22px 14px;background-repeat:repeat-x;
+}
+.tile .k{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.tile .v{font-family:var(--mono);font-size:21px;font-weight:700;color:var(--head);line-height:1.3}
+.tile.warn{border-top-color:var(--lego-orange)} .tile.ok{border-top-color:var(--lego-green)}
+.tile.neg{border-top-color:var(--lego-red)}
+
+/* ---------------------------------------------------------- tables */
+.tblwrap{overflow-x:auto;border:2px solid #B7C4D2;border-radius:var(--rad);background:var(--panel);box-shadow:var(--elev-2)}
+table.data{border-collapse:collapse;width:100%;font-size:13px}
+table.data th{
+  background:linear-gradient(180deg,#2A7BE0 0%,var(--accent) 100%);color:#FFF;
+  font-size:12px;letter-spacing:.02em;border-bottom:3px solid var(--lego-blue-d);
+  text-align:left;padding:10px;white-space:nowrap;font-weight:600;position:sticky;top:0;
+}
+table.data td{padding:7px 10px;border-top:1px solid var(--line);vertical-align:middle}
+table.data tbody tr:nth-child(even){background:var(--stripe)}
+table.data tbody tr:hover{background:#E4EFFB}
+table.data td.num{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+table.data td.ctr{text-align:center}
+table.data .empty{text-align:center;color:var(--muted);padding:34px 10px}
+table.items{border-collapse:collapse;width:100%;font-size:13px}
+table.items th{background:var(--stripe);color:var(--head);font-size:11.5px;padding:6px 8px;border:1px solid var(--line)}
+table.items td{border:1px solid var(--line);padding:3px 4px}
+table.items input{border:none;border-radius:0;padding:5px 6px;background:transparent}
+table.items input:focus{box-shadow:none;background:#F0FAFB}
+
+/* ---------------------------------------------------------- chips */
+.chip{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:6px;
+  font-size:12px;font-weight:600;border:2px solid transparent;white-space:nowrap;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.55);
+}
+.chip.car-FedEx{background:#F1E9FA;color:var(--fedex);border-color:#DDCCF2}
+.chip.car-UPS{background:#FBF0D9;color:var(--ups);border-color:#EFDCAF}
+.chip.car-USPS{background:#E4EFF9;color:var(--usps);border-color:#C6DDF0}
+.st{display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:12px}
+.st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.st-draft{color:#7C8A9C} .st-filed{color:#1D6FB8} .st-review{color:#B26B00}
+.st-docs{color:#D2691E} .st-approved{color:#0F6E4F} .st-denied{color:var(--neg)}
+.st-paid{color:var(--ok)} .st-closed{color:#55657A}
+select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;min-width:104px;
+  border-left:4px solid currentColor}
+
+/* ---------------------------------------------------------- toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.toolbar input[type=search]{width:230px}
+.toolbar select{width:auto;min-width:110px}
+.toolbar .sp{flex:1}
+
+/* ---------------------------------------------------------- activity log */
+.hist{list-style:none;margin:0;padding:0;font-size:12.5px}
+.hist li{padding:6px 0 6px 16px;border-left:2px solid var(--line);position:relative}
+.hist li::before{content:"";position:absolute;left:-5px;top:12px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.hist .t{font-family:var(--mono);color:var(--muted);font-size:11.5px}
+
+/* ---------------------------------------------------------- SOP */
+.sop h4{margin:14px 0 6px;font-size:13.5px;color:var(--head)}
+.sop ol,.sop ul{margin:6px 0;padding-left:22px}
+.sop li{margin:3px 0}
+.sop code{background:var(--stripe);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-family:var(--mono);font-size:12px}
+.callout{
+  border-left:4px solid var(--run);background:#FFF9EF;border-radius:0 var(--rad-sm) var(--rad-sm) 0;
+  padding:9px 13px;margin:10px 0;font-size:13px;
+}
+.callout.warn{border-left-color:var(--neg);background:#FDF3F1}
+.callout b{color:var(--head)}
+
+/* ---------------------------------------------------------- invoice preview */
+.sheetwrap{background:#5A6B80;border-radius:var(--rad);padding:22px;overflow:auto;box-shadow:inset 0 2px 10px rgba(0,0,0,.2)}
+.sheet{
+  width:8.5in;min-height:11in;margin:0 auto;background:#fff;
+  padding:0.75in 0.7in;box-shadow:var(--elev-3);
+}
+.sheet *{box-sizing:content-box}
+.pfile{
+  font-family:var(--mono);font-size:12.5px;background:var(--stripe);border:1px dashed var(--line);
+  border-radius:var(--rad-sm);padding:7px 10px;color:var(--head);word-break:break-all;
+}
+.logobox{display:flex;align-items:center;gap:12px}
+.logobox img{max-width:170px;max-height:66px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:4px}
+
+/* ---------------------------------------------------------- modal */
+.mask{
+  position:fixed;inset:0;background:rgba(18,35,58,.58);z-index:120;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.mask.off{display:none}
+.dlg{
+  position:relative;width:min(600px,100%);max-height:90vh;overflow:auto;
+  background:var(--panel);border:3px solid #A9B8C8;border-radius:12px;
+  box-shadow:0 8px 0 #8496A9, 0 30px 60px rgba(18,35,58,.45);
+  padding:30px 22px 18px;
+}
+.dlg::before{
+  content:"";position:absolute;top:8px;left:22px;width:124px;height:18px;
+  background-image:radial-gradient(circle at 15px 9px, var(--stud) 0 8px, transparent 8.6px);
+  background-size:31px 18px;background-repeat:repeat-x;
+}
+.dlg h3{
+  margin:0 0 4px;font-size:19px;color:var(--head);font-weight:700;
+  display:flex;align-items:center;gap:9px;
+}
+.dlg .lead{margin:0 0 16px;color:var(--muted);font-size:13.5px;line-height:1.5}
+.dlg .trk{
+  font-family:var(--mono);background:var(--lego-yellow);color:#4A3300;
+  padding:1px 8px;border-radius:5px;font-size:13px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.13);
+}
+/* ---------------------------------------------------------- Toast */
+#toast{
+  position:fixed;left:50%;bottom:52px;transform:translateX(-50%) translateY(20px);
+  background:linear-gradient(180deg,#F7DA5E 0%,var(--lego-yellow) 100%);color:#3A2B00;
+  padding:11px 22px;border-radius:8px;
+  box-shadow:0 5px 0 var(--lego-yellow-d),0 18px 30px rgba(18,35,58,.3);
+  font-size:14px;font-weight:600;opacity:0;
+  pointer-events:none;transition:opacity .18s,transform .18s;z-index:99;
+}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:900px){
+  .g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sheet{width:100%;padding:18px}
+}
+@media (max-width:600px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .titlebar .sub{display:none}
+}
+
+/* ---------------------------------------------------------- print */
+@media print{
+  body{display:block;height:auto;overflow:visible;background:#fff}
+  .titlebar,.tabstrip,.statusbar,#toast,.mask,.noprint{display:none !important}
+  main{overflow:visible;padding:0}
+  .page{display:none !important}
+  .page.on{display:block !important}
+  .card,.toolbar,.tiles{display:none !important}
+  #printArea{display:block !important}
+  .sheetwrap{background:none;padding:0;box-shadow:none;overflow:visible}
+  .sheet{width:auto;min-height:0;box-shadow:none;padding:0;margin:0}
+  @page{size:letter;margin:0.75in 0.7in}
+}
+</style>
+</head>
+
+<body>
+
+<div class="titlebar">
+  <svg class="brick-logo" viewBox="0 0 44 34" aria-hidden="true">
+    <rect x="3" y="1" width="8" height="5" rx="1.6" fill="#F2CD37"/>
+    <rect x="14" y="1" width="8" height="5" rx="1.6" fill="#F2CD37"/>
+    <rect x="25" y="1" width="8" height="5" rx="1.6" fill="#F2CD37"/>
+    <rect x="1" y="5" width="42" height="20" rx="3" fill="#F2CD37"/>
+    <rect x="1" y="19" width="42" height="6" rx="3" fill="#C9A417"/>
+    <text x="22" y="19.5" text-anchor="middle" font-family="Fredoka, Segoe UI, sans-serif"
+          font-size="11" font-weight="700" fill="#7A2A00">GQ</text>
+  </svg>
+  <b>GQ CLAIM CENTER</b>
+  <span class="sub">UPS · USPS · FEDEX CLAIM MANAGEMENT</span>
+  <span class="sp"></span>
+  <span class="clock" id="clk">--:--</span>
+</div>
+
+<div class="tabstrip" role="tablist" id="tabs">
+  <button role="tab" aria-selected="true"  data-p="edit">✏️ New / Edit</button>
+  <button role="tab" aria-selected="false" data-p="list">📋 Claims</button>
+  <button role="tab" aria-selected="false" data-p="inv">🧾 Commercial Invoice</button>
+  <button role="tab" aria-selected="false" data-p="set">⚙️ Settings</button>
+</div>
+
+<main>
+
+<!-- ==================================================== new / edit -->
+<section class="page on" id="p-edit">
+  <div class="card">
+    <h3><span class="em">📦</span>Shipment &amp; reference numbers<span class="tail" id="edMeta"></span></h3>
+    <div class="grid g4">
+      <div class="f"><label>Carrier <span class="req">*</span></label>
+        <select id="e_carrier"><option>UPS</option><option>USPS</option><option>FedEx</option></select></div>
+      <div class="f"><label>Seller profile (letterhead / Market)</label><select id="e_profile"></select></div>
+      <div class="f"><label>Tracking # <span class="req">*</span></label><input id="e_tracking" class="mono" placeholder="1Z586Y510305646419"></div>
+      <div class="f"><label>Carrier Claim # <span class="tag">after filing</span></label><input id="e_claimNo" class="mono" placeholder="C-0367907680"></div>
+      <div class="f"><label>Order #</label><input id="e_orderNo" class="mono" placeholder="KTWOIS7644263404"></div>
+      <div class="f"><label>Reference #</label><input id="e_refNo" placeholder="Acaia"></div>
+      <div class="f"><label>Market</label><input id="e_market" placeholder="GENIQUA"></div>
+      <div class="f"><label>Ship date</label><input type="date" id="e_shipDate"></div>
+    </div>
+    <p class="hint" id="trkNote"></p>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">🚦</span>Claim status &amp; amounts</h3>
+    <div class="grid g4">
+      <div class="f"><label>Claim type</label><select id="e_type"></select></div>
+      <div class="f"><label>Status</label><select id="e_status"></select></div>
+      <div class="f"><label>File date (claim filed)</label><input type="date" id="e_fileDate"></div>
+      <div class="f"><label>Claim amount (USD)</label><input id="e_claimAmt" class="num" placeholder="auto = invoice total"></div>
+      <div class="f"><label>Approved amount (USD)</label><input id="e_apprAmt" class="num"></div>
+      <div class="f"><label>Paid amount (USD)</label><input id="e_paidAmt" class="num"></div>
+      <div class="f"><label>Paid date (payment received)</label><input type="date" id="e_paidDate"></div>
+      <div class="f"><label>Closed date</label><input type="date" id="e_closeDate"></div>
+    </div>
+    <div class="grid" style="margin-top:10px">
+      <div class="f"><label>Notes</label><textarea id="e_notes" placeholder="e.g. 3 damage photos uploaded; carrier asked for proof of shipment…"></textarea></div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3><span class="em">🧾</span>Bill to (customer)</h3>
+      <div class="grid g2">
+        <div class="f"><label>Name <span class="req">*</span></label><input id="b_name" placeholder="Danny Nghieu"></div>
+        <div class="f"><label>Company (optional)</label><input id="b_company"></div>
+        <div class="f" style="grid-column:1/-1"><label>Address</label><input id="b_addr1" placeholder="2313 S Hutchinson St"></div>
+        <div class="f" style="grid-column:1/-1"><label>Address line 2 (optional)</label><input id="b_addr2"></div>
+        <div class="f"><label>City</label><input id="b_city" placeholder="Philadelphia"></div>
+        <div class="f"><label>State</label><input id="b_state" placeholder="PA"></div>
+        <div class="f"><label>ZIP</label><input id="b_zip" class="mono" placeholder="19148"></div>
+        <div class="f"><label>Country</label><input id="b_country" placeholder="US"></div>
+        <div class="f"><label>Phone</label><input id="b_phone" class="mono" placeholder="(267)-809-3336"></div>
+        <div class="f"><label>Email</label><input id="b_email"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="em">📮</span>Ship to (delivery address)</h3>
+      <label class="chkline" style="margin-bottom:10px">
+        <input type="checkbox" id="s_same" checked> Same as Bill to — print <b>SAME AS BILL TO</b> on the invoice
+      </label>
+      <div class="grid g2" id="shipFields">
+        <div class="f"><label>Name</label><input id="s_name"></div>
+        <div class="f"><label>Company (optional)</label><input id="s_company"></div>
+        <div class="f" style="grid-column:1/-1"><label>Address</label><input id="s_addr1"></div>
+        <div class="f" style="grid-column:1/-1"><label>Address line 2 (optional)</label><input id="s_addr2"></div>
+        <div class="f"><label>City</label><input id="s_city"></div>
+        <div class="f"><label>State</label><input id="s_state"></div>
+        <div class="f"><label>ZIP</label><input id="s_zip" class="mono"></div>
+        <div class="f"><label>Country</label><input id="s_country"></div>
+        <div class="f"><label>Phone</label><input id="s_phone" class="mono"></div>
+        <div class="f"><label>Email</label><input id="s_email"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">📋</span>Line items<span class="tail">Leave Net Price blank = Qty × Price</span></h3>
+    <table class="items" id="tItems">
+      <thead><tr>
+        <th style="width:70px">Qty.</th><th style="width:130px">SKU</th><th>Title</th>
+        <th style="width:110px">Price</th><th style="width:110px">Net Price</th><th style="width:44px"></th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="row" style="margin-top:10px">
+      <button class="btn sm" id="bAddItem">+ Add row</button>
+      <span class="sp" style="flex:1"></span>
+      <span class="hint" id="itemSum"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">💲</span>Invoice totals</h3>
+    <div class="grid g4">
+      <div class="f"><label>Subtotal</label><input id="e_subtotal" class="num" readonly></div>
+      <div class="f"><label>Tax</label><input id="e_tax" class="num" placeholder="0"></div>
+      <div class="f"><label>Shipping and handling</label><input id="e_ship" class="num" placeholder="0"></div>
+      <div class="f"><label>Insurance</label><input id="e_ins" class="num" placeholder="0"></div>
+      <div class="f"><label>Total</label><input id="e_total" class="num" readonly></div>
+      <div class="f"><label>Invoice #</label><input id="e_invNo" class="mono"></div>
+      <div class="f"><label>Invoice date</label><input type="date" id="e_invDate"></div>
+    </div>
+  </div>
+
+  <div class="card" id="histCard" style="display:none">
+    <h3><span class="em">🕘</span>Activity log</h3>
+    <ul class="hist" id="histList"></ul>
+  </div>
+
+  <div class="row end" style="margin-bottom:26px">
+    <button class="btn dgr" id="bDel">🗑 Delete</button>
+    <span style="flex:1"></span>
+    <button class="btn" id="bReset">↺ Clear form</button>
+    <button class="btn" id="bDup">⧉ Save as new</button>
+    <button class="btn run" id="bSaveGo">💾 Save &amp; build invoice</button>
+    <button class="btn pri" id="bSave">💾 Save</button>
+  </div>
+</section>
+
+<!-- ==================================================== claims list -->
+<section class="page" id="p-list">
+  <div class="tiles" id="tiles"></div>
+
+  <div class="toolbar">
+    <input type="search" id="q" placeholder="Search tracking / claim # / order # / customer…">
+    <select id="fCar"><option value="">All carriers</option><option>UPS</option><option>USPS</option><option>FedEx</option></select>
+    <select id="fSt"><option value="">All statuses</option></select>
+    <select id="fSort">
+      <option value="upd">Last updated</option>
+      <option value="file">File date</option>
+      <option value="amt">Claim amount</option>
+      <option value="car">Carrier</option>
+    </select>
+    <span class="sp"></span>
+    <button class="btn pri" id="bNew">+ New Claim</button>
+    <button class="btn" id="bCsv">⬇ Export CSV</button>
+  </div>
+
+  <div class="tblwrap">
+    <table class="data" id="tList">
+      <thead><tr>
+        <th>Status</th><th>Carrier</th><th>Tracking #</th><th>Claim #</th><th>Order #</th>
+        <th>Customer</th><th>Type</th><th style="text-align:right">Claim Amt</th><th style="text-align:right">Paid Amt</th>
+        <th>File Date</th><th>Paid Date</th><th>Days</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p class="hint" id="listNote"></p>
+</section>
+
+<!-- ==================================================== Invoice -->
+<section class="page" id="p-inv">
+  <div class="card noprint">
+    <h3><span class="em">🧾</span>Commercial Invoice builder<span class="tail">Layout matches the Word template</span></h3>
+    <div class="row">
+      <div class="f" style="min-width:340px;flex:1">
+        <label>Claim</label>
+        <select id="invPick"></select>
+      </div>
+      <div class="f" style="min-width:200px">
+        <label>Word file name</label>
+        <div class="pfile" id="invFile">—</div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn run" id="bWord">⬇ Download Word (.doc)</button>
+      <button class="btn" id="bPrint">🖨 Print / Save PDF</button>
+      <button class="btn" id="bHtml">⬇ Download HTML</button>
+      <button class="btn" id="bEditInv">✏️ Edit this claim</button>
+    </div>
+    <p class="hint">The Word file is packed as MHTML, so the logo and table borders survive in Word. The file name follows the SOP — the template’s <code>xx</code> is replaced with the tracking number automatically.</p>
+  </div>
+
+  <div id="printArea">
+    <div class="sheetwrap">
+      <div class="sheet" id="sheet"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================== settings -->
+<section class="page" id="p-set">
+  <div class="card">
+    <h3><span class="em">🏢</span>Seller profiles (invoice letterhead)<span class="tail">Logo, address and Market</span></h3>
+    <div class="row" style="margin-bottom:12px">
+      <select id="pfPick" style="width:auto;min-width:180px"></select>
+      <button class="btn sm" id="bPfNew">+ New profile</button>
+      <button class="btn sm dgr" id="bPfDel">🗑 Delete</button>
+    </div>
+    <div class="grid g2">
+      <div class="f"><label>Profile name</label><input id="pf_name"></div>
+      <div class="f"><label>Market (printed after “Market:”)</label><input id="pf_market"></div>
+      <div class="f"><label>Company (bold first line)</label><input id="pf_company"></div>
+      <div class="f"><label>Logo</label>
+        <div class="row"><input type="file" id="pf_logoFile" accept="image/png,image/jpeg,image/gif" style="flex:1">
+        <button class="btn sm" id="bPfLogoClr">Remove</button></div>
+      </div>
+      <div class="f" style="grid-column:1/-1"><label>Address block (one line per row, printed as-is)</label>
+        <textarea id="pf_addr" rows="4"></textarea></div>
+    </div>
+    <div class="logobox" style="margin-top:10px"><span class="hint">Preview:</span><img id="pf_logoImg" alt="logo"></div>
+    <div class="row end" style="margin-top:12px"><button class="btn pri" id="bPfSave">💾 Save profile</button></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">⚙️</span>General settings</h3>
+    <div class="grid g3">
+      <div class="f"><label>Word file name pattern</label><input id="st_fname" class="mono">
+        <span class="hint">Placeholders: <code>{carrier}</code> <code>{tracking}</code> <code>{order}</code> <code>{claim}</code> <code>{date}</code></span></div>
+      <div class="f"><label>Currency symbol</label><input id="st_cur"></div>
+      <div class="f"><label>Claim contact email (FedEx form)</label><input id="st_email"></div>
+      <div class="f"><label>Claim contact phone (UPS claims communications)</label><input id="st_phone" class="mono"></div>
+      <div class="f"><label>Invoice # start</label><input id="st_invseq" class="num"></div>
+      <div class="f"><label>Zero amount format</label><select id="st_zero">
+        <option value="00">$00.00 (matches Word template)</option><option value="0">$0.00</option></select></div>
+    </div>
+    <div class="row end" style="margin-top:12px"><button class="btn pri" id="bStSave">💾 Save settings</button></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="em">💾</span>Backup &amp; restore</h3>
+    <p class="hint" style="margin-bottom:10px">All data lives in this browser only (localStorage). Export the JSON before switching computers or clearing browser data.</p>
+    <div class="row">
+      <button class="btn" id="bExpAll">⬇ Export all JSON</button>
+      <button class="btn" id="bImp">⬆ Import JSON</button>
+      <input type="file" id="impFile" accept=".json" style="display:none">
+      <button class="btn" id="bDemo">🧪 Load sample data</button>
+      <span style="flex:1"></span>
+      <button class="btn dgr" id="bWipe">⚠ Erase all data</button>
+    </div>
+    <p class="hint" id="dbNote"></p>
+  </div>
+</section>
+
+</main>
+
+<div class="statusbar">
+  <span><span class="dot"></span><span id="stMsg">Ready</span></span>
+  <span style="flex:1"></span>
+  <span id="stCount">0 claims</span>
+  <span id="stSave">—</span>
+</div>
+<!-- ============ after the invoice is built: capture the carrier claim # ============ -->
+<div class="mask off" id="modal">
+  <div class="dlg">
+    <h3>🧾 Invoice ready — file it with <span id="mCar">UPS</span></h3>
+    <p class="lead">
+      Tracking <span class="trk" id="mTrk">—</span><br>
+      The carrier hands you a claim number only <b>after</b> the claim is submitted on their site.
+      Paste it here so this record matches the carrier’s.
+    </p>
+    <div class="grid g2">
+      <div class="f"><label>Carrier Claim #</label>
+        <input id="m_claimNo" class="mono" placeholder="C-0367907680"></div>
+      <div class="f"><label>File date</label><input type="date" id="m_fileDate"></div>
+      <div class="f"><label>Status</label><select id="m_status"></select></div>
+      <div class="f"><label>Claim amount (USD)</label><input id="m_claimAmt" class="num"></div>
+    </div>
+    <div class="row end" style="margin-top:16px">
+      <button class="btn" id="mLater">Not filed yet — later</button>
+      <button class="btn ok" id="mSave">Save claim #</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   1. Constants
+   ===================================================================== */
+const LOGO_GENIQUA = "data:image/png;base64,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";
+const LOGO_K2      = "data:image/png;base64,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";
+
+const CARRIERS = {
+  UPS:   {trkLabel:'UPS Tracking #',   url:'https://www.ups.com/claims?loc=en_US',
+          re:[/^1Z[0-9A-Z]{16}$/i,/^\d{9}$/,/^\d{12}$/], hint:'1Z + 16 characters, or 9 / 12 digits'},
+  USPS:  {trkLabel:'Tracking #',       url:'https://www.usps.com/help/claims.htm',
+          re:[/^\d{20,22}$/,/^[A-Z]{2}\d{9}[A-Z]{2}$/i], hint:'20–22 digits, or EA123456789US'},
+  FedEx: {trkLabel:'FedEx Tracking #', url:'https://www.fedex.com/apps/onlineclaims/',
+          re:[/^\d{12}$/,/^\d{15}$/,/^\d{20}$/,/^\d{22}$/], hint:'12 / 15 / 20 / 22 digits'}
+};
+const STATUS = [
+  {k:'draft',    t:'Draft'},    {k:'filed',    t:'Filed'},
+  {k:'review',   t:'In review'},{k:'docs',     t:'Docs required'},
+  {k:'approved', t:'Approved'}, {k:'denied',   t:'Denied'},
+  {k:'paid',     t:'Paid'},     {k:'closed',   t:'Closed'}
+];
+const OPEN_ST = ['draft','filed','review','docs','approved'];
+const TYPES = [
+  {k:'lost',     t:'Lost'},
+  {k:'damaged',  t:'Damaged'},
+  {k:'notrecv',  t:'Not received'},
+  {k:'shortage', t:'Shortage'},
+  {k:'late',     t:'Late delivery'}
+];
+const stName = k => (STATUS.find(s=>s.k===k)||{t:k}).t;
+const tyName = k => (TYPES.find(s=>s.k===k)||{t:k||''}).t;
+
+/* =====================================================================
+   2. Storage
+   ===================================================================== */
+const KEY = 'gqclaim.v1';
+let DB = null, cur = null, dirty = false;
+
+function defaults(){
+  return {
+    claims: [],
+    profiles: [
+      {id:'geniqua', name:'GENIQUA(UPS / FedEx)', company:'GENQUA CORP', market:'GENIQUA',
+       addr:'21858 Garcia Ln\nWalnut, CA 91789\nT: 909-839-2992\nF: 909-839-2522', logo:LOGO_GENIQUA},
+      {id:'k2motor', name:'K2Motor(USPS)', company:'K2Motor', market:'K2Motor',
+       addr:'21901 Ferrero Parkway\nCity of Industry, CA 91789\nTel : 909 839 2992\nFax : 909 839 2522', logo:LOGO_K2}
+    ],
+    settings: {
+      fname:'{carrier}_Commercial_Invoice_Template{tracking}',
+      cur:'$', email:'upsclaim@geniqua.com', phone:'909-348-9811',
+      zero:'00', invseq:1001
+    }
+  };
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    DB = raw ? JSON.parse(raw) : defaults();
+  }catch(e){ DB = defaults(); }
+  const d = defaults();
+  DB.claims   = DB.claims   || [];
+  DB.profiles = (DB.profiles && DB.profiles.length) ? DB.profiles : d.profiles;
+  DB.settings = Object.assign({}, d.settings, DB.settings || {});
+}
+function save(){
+  try{
+    localStorage.setItem(KEY, JSON.stringify(DB));
+    $('#stSave').textContent = 'Saved ' + new Date().toLocaleTimeString('en-US',{hour12:false});
+  }catch(e){
+    toast('⚠ Could not save (browser storage full?): ' + e.message);
+  }
+}
+
+/* =====================================================================
+   3. Helpers
+   ===================================================================== */
+const $  = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const todayISO = () => { const d=new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10); };
+const num = v => { const n = parseFloat(String(v==null?'':v).replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; };
+const fmt2 = n => (Math.round(n*100)/100).toFixed(2);
+function money(n){ return DB.settings.cur + fmt2(num(n)); }                       /* UI */
+function invMoney(n){                                                            /* invoice */
+  const v = num(n);
+  if (v === 0 && DB.settings.zero === '00') return DB.settings.cur + '00.00';
+  return DB.settings.cur + comma(v);
+}
+function comma(n){ return fmt2(n).replace(/\B(?=(\d{3})+\.)/g, ','); }
+function daysBetween(a,b){
+  if(!a||!b) return null;
+  return Math.round((new Date(b) - new Date(a)) / 864e5);
+}
+let toastT = null;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('on'), 2400);
+}
+function setMsg(m){ $('#stMsg').textContent = m; }
+function download(name, mime, data){
+  const blob = data instanceof Blob ? data : new Blob([data], {type:mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 800);
+}
+
+/* =====================================================================
+   4. Claim model
+   ===================================================================== */
+function blankAddr(){ return {name:'',company:'',addr1:'',addr2:'',city:'',state:'',zip:'',country:'US',phone:'',email:''}; }
+function newClaim(){
+  const p = DB.profiles[0] || {};
+  return {
+    id:uid(), carrier:'UPS', profile:p.id||'', market:p.market||'',
+    tracking:'', claimNo:'', orderNo:'', refNo:'', shipDate:'',
+    type:'lost', status:'draft', fileDate:'', claimAmt:'', apprAmt:'', paidAmt:'',
+    paidDate:'', closeDate:'', notes:'',
+    bill:blankAddr(), ship:blankAddr(), sameAs:true,
+    items:[{qty:'1',sku:'',title:'',price:'',net:''}],
+    tax:'', shipping:'', insurance:'', invNo:'', invDate:'',
+    createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(),
+    history:[]
+  };
+}
+function profileOf(c){
+  return DB.profiles.find(p=>p.id===c.profile) || DB.profiles[0] || {company:'',addr:'',market:'',logo:''};
+}
+function lineNet(it){
+  const explicit = String(it.net||'').trim();
+  return explicit !== '' ? num(explicit) : num(it.qty) * num(it.price);
+}
+function subtotalOf(c){ return (c.items||[]).reduce((s,it)=>s+lineNet(it), 0); }
+function totalOf(c){ return subtotalOf(c) + num(c.tax) + num(c.shipping) + num(c.insurance); }
+function claimAmountOf(c){ const m = String(c.claimAmt||'').trim(); return m!=='' ? num(m) : totalOf(c); }
+function fileName(c){
+  const s = DB.settings.fname || '{carrier}_Commercial_Invoice_Template{tracking}';
+  return s.replace(/\{carrier\}/g, c.carrier||'')
+          .replace(/\{tracking\}/g, (c.tracking||'NO_TRACKING').replace(/\s+/g,''))
+          .replace(/\{order\}/g, c.orderNo||'')
+          .replace(/\{claim\}/g, c.claimNo||'')
+          .replace(/\{date\}/g, todayISO())
+          .replace(/[\\/:*?"<>|]/g,'_');
+}
+function logHist(c, text){
+  c.history = c.history || [];
+  c.history.unshift({ts:new Date().toISOString(), text:text});
+  if (c.history.length > 60) c.history.length = 60;
+}
+
+/* =====================================================================
+   5. Tabs
+   ===================================================================== */
+function go(p){
+  $$('#tabs button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.p===p)));
+  $$('.page').forEach(s=>s.classList.toggle('on', s.id === 'p-'+p));
+  if (p==='list') renderList();
+  if (p==='inv')  renderInvoicePage();
+  if (p==='set')  renderSettings();
+  window.scrollTo(0,0);
+  const m = $('main'); if (m) m.scrollTop = 0;
+}
+
+/* =====================================================================
+   6. Claims list
+   ===================================================================== */
+function filtered(){
+  const q  = $('#q').value.trim().toLowerCase();
+  const fc = $('#fCar').value, fs = $('#fSt').value, so = $('#fSort').value;
+  let rows = DB.claims.filter(c=>{
+    if (fc && c.carrier !== fc) return false;
+    if (fs && c.status  !== fs) return false;
+    if (!q) return true;
+    const hay = [c.tracking,c.claimNo,c.orderNo,c.refNo,c.bill.name,c.bill.company,c.bill.city,
+                 c.notes,(c.items||[]).map(i=>i.sku+' '+i.title).join(' ')].join(' ').toLowerCase();
+    return hay.indexOf(q) >= 0;
+  });
+  const by = {
+    upd:(a,b)=> String(b.updatedAt).localeCompare(String(a.updatedAt)),
+    file:(a,b)=> String(b.fileDate||'').localeCompare(String(a.fileDate||'')),
+    amt:(a,b)=> claimAmountOf(b) - claimAmountOf(a),
+    car:(a,b)=> (a.carrier+a.tracking).localeCompare(b.carrier+b.tracking)
+  }[so] || (()=>0);
+  return rows.sort(by);
+}
+function renderTiles(){
+  const cs = DB.claims;
+  const open = cs.filter(c=>OPEN_ST.indexOf(c.status)>=0);
+  const paid = cs.filter(c=>c.status==='paid'||c.status==='closed');
+  const claimSum = cs.reduce((s,c)=>s+claimAmountOf(c),0);
+  const paidSum  = cs.reduce((s,c)=>s+num(c.paidAmt),0);
+  const spans = cs.map(c=>daysBetween(c.fileDate,c.paidDate)).filter(v=>v!=null && v>=0);
+  const avg = spans.length ? Math.round(spans.reduce((a,b)=>a+b,0)/spans.length) : null;
+  const denied = cs.filter(c=>c.status==='denied').length;
+  const tiles = [
+    ['Total claims', String(cs.length), ''],
+    ['Open', String(open.length), 'warn'],
+    ['Paid / closed', String(paid.length), 'ok'],
+    ['Claimed total', DB.settings.cur + comma(claimSum), ''],
+    ['Recovered', DB.settings.cur + comma(paidSum), 'ok'],
+    ['Avg days to payment', avg==null ? '—' : avg + ' days', ''],
+    ['Denied', String(denied), denied ? 'neg' : '']
+  ];
+  $('#tiles').innerHTML = tiles.map(t=>
+    `<div class="tile ${t[2]}"><div class="k">${esc(t[0])}</div><div class="v">${esc(t[1])}</div></div>`).join('');
+}
+function renderList(){
+  renderTiles();
+  const rows = filtered();
+  const tb = $('#tList tbody');
+  if (!rows.length){
+    tb.innerHTML = `<tr><td class="empty" colspan="13">`+
+      (DB.claims.length ? 'No claim matches these filters.' : 'No claims yet — hit “+ New Claim”, or load the sample data from Settings.')+
+      `</td></tr>`;
+  } else {
+    tb.innerHTML = rows.map(c=>{
+      const openDays = (!c.paidDate && c.fileDate) ? daysBetween(c.fileDate, todayISO()) : daysBetween(c.fileDate, c.paidDate);
+      return `<tr data-id="${c.id}">
+        <td><select class="stsel st-${c.status}" data-act="st">${
+          STATUS.map(s=>`<option value="${s.k}"${s.k===c.status?' selected':''}>${s.t}</option>`).join('')}</select></td>
+        <td><span class="chip car-${c.carrier}">${esc(c.carrier)}</span></td>
+        <td class="mono">${esc(c.tracking)||'<span style="color:#9AA8B8">—</span>'}</td>
+        <td class="mono">${esc(c.claimNo)||'—'}</td>
+        <td class="mono">${esc(c.orderNo)||'—'}</td>
+        <td>${esc(c.bill.name || c.bill.company)||'—'}</td>
+        <td>${esc(tyName(c.type))}</td>
+        <td class="num">${DB.settings.cur}${comma(claimAmountOf(c))}</td>
+        <td class="num">${c.paidAmt!=='' && c.paidAmt!=null ? DB.settings.cur+comma(num(c.paidAmt)) : '—'}</td>
+        <td class="mono">${esc(c.fileDate)||'—'}</td>
+        <td class="mono">${esc(c.paidDate)||'—'}</td>
+        <td class="ctr mono">${openDays==null?'—':openDays}</td>
+        <td class="ctr" style="white-space:nowrap">
+          <button class="btn sm" data-act="edit">Edit</button>
+          <button class="btn sm" data-act="inv">Invoice</button>
+        </td></tr>`;
+    }).join('');
+  }
+  $('#stCount').textContent = DB.claims.length + ' claims';
+  const openN = DB.claims.filter(c=>OPEN_ST.indexOf(c.status)>=0).length;
+  setMsg(DB.claims.length ? `${DB.claims.length} claims · ${openN} open` : 'Ready — hit “+ New Claim” to start');
+  $('#listNote').textContent = rows.length ? `Showing ${rows.length} of ${DB.claims.length}. “Days” = file date → paid date (or today when unpaid).` : '';
+}
+</script>
+
+<script>
+"use strict";
+/* =====================================================================
+   7. Edit form
+   ===================================================================== */
+function normalizeClaim(c){
+  const b = newClaim();
+  for (const k in b) if (!(k in c)) c[k] = b[k];
+  c.bill  = Object.assign(blankAddr(), c.bill  || {});
+  c.ship  = Object.assign(blankAddr(), c.ship  || {});
+  c.items = (c.items && c.items.length) ? c.items : [{qty:'1',sku:'',title:'',price:'',net:''}];
+  c.history = c.history || [];
+  return c;
+}
+function fillSelect(sel, arr, val){
+  sel.innerHTML = arr.map(o=>`<option value="${esc(o.k)}"${o.k===val?' selected':''}>${esc(o.t)}</option>`).join('');
+}
+function openClaim(c){
+  cur = normalizeClaim(c);
+  fillSelect($('#e_type'), TYPES, c.type);
+  fillSelect($('#e_status'), STATUS.map(s=>({k:s.k,t:s.t})), c.status);
+  $('#e_profile').innerHTML = DB.profiles.map(p=>
+    `<option value="${esc(p.id)}"${p.id===c.profile?' selected':''}>${esc(p.name)}</option>`).join('');
+  const set = (id,v)=>{ const el=$(id); if(el) el.value = v==null?'':v; };
+  set('#e_carrier',c.carrier); set('#e_tracking',c.tracking); set('#e_claimNo',c.claimNo);
+  set('#e_orderNo',c.orderNo); set('#e_refNo',c.refNo); set('#e_market',c.market);
+  set('#e_shipDate',c.shipDate); set('#e_fileDate',c.fileDate); set('#e_claimAmt',c.claimAmt);
+  set('#e_apprAmt',c.apprAmt); set('#e_paidAmt',c.paidAmt); set('#e_paidDate',c.paidDate);
+  set('#e_closeDate',c.closeDate); set('#e_notes',c.notes);
+  set('#e_tax',c.tax); set('#e_ship',c.shipping); set('#e_ins',c.insurance);
+  set('#e_invNo',c.invNo); set('#e_invDate',c.invDate);
+  ['name','company','addr1','addr2','city','state','zip','country','phone','email'].forEach(k=>{
+    set('#b_'+k, c.bill[k]); set('#s_'+k, c.ship[k]);
+  });
+  $('#s_same').checked = !!c.sameAs;
+  $('#shipFields').style.opacity = c.sameAs ? .45 : 1;
+  $$('#shipFields input').forEach(i=>i.disabled = !!c.sameAs);
+  $('#edMeta').textContent = 'Created ' + new Date(c.createdAt).toLocaleString('en-US',{hour12:false});
+  renderItems(); updateTotals(); renderHist(); trackHint();
+}
+function syncForm(){
+  if (!cur) return;
+  const g = id => { const el=$(id); return el ? el.value : ''; };
+  const before = cur.status;
+  cur.carrier=g('#e_carrier'); cur.profile=g('#e_profile'); cur.tracking=g('#e_tracking').trim();
+  cur.claimNo=g('#e_claimNo').trim(); cur.orderNo=g('#e_orderNo').trim(); cur.refNo=g('#e_refNo').trim();
+  cur.market=g('#e_market'); cur.shipDate=g('#e_shipDate'); cur.type=g('#e_type');
+  cur.status=g('#e_status'); cur.fileDate=g('#e_fileDate'); cur.claimAmt=g('#e_claimAmt');
+  cur.apprAmt=g('#e_apprAmt'); cur.paidAmt=g('#e_paidAmt'); cur.paidDate=g('#e_paidDate');
+  cur.closeDate=g('#e_closeDate'); cur.notes=g('#e_notes');
+  cur.tax=g('#e_tax'); cur.shipping=g('#e_ship'); cur.insurance=g('#e_ins');
+  cur.invNo=g('#e_invNo'); cur.invDate=g('#e_invDate');
+  ['name','company','addr1','addr2','city','state','zip','country','phone','email'].forEach(k=>{
+    cur.bill[k]=g('#b_'+k); cur.ship[k]=g('#s_'+k);
+  });
+  cur.sameAs = $('#s_same').checked;
+  if (before !== cur.status){
+    logHist(cur, 'Status: ' + stName(before) + ' → ' + stName(cur.status));
+    autoDates();
+  }
+  cur.updatedAt = new Date().toISOString();
+}
+function applyAutoDates(c){
+  if ((c.status==='filed' || c.status==='review') && !c.fileDate) c.fileDate = todayISO();
+  if (c.status==='paid'){
+    if (!c.paidDate) c.paidDate = todayISO();
+    if (!String(c.paidAmt).trim()) c.paidAmt = fmt2(num(c.apprAmt) || claimAmountOf(c));
+  }
+  if (c.status==='closed' && !c.closeDate) c.closeDate = todayISO();
+}
+function autoDates(){
+  applyAutoDates(cur);
+  $('#e_fileDate').value  = cur.fileDate  || '';
+  $('#e_paidDate').value  = cur.paidDate  || '';
+  $('#e_paidAmt').value   = cur.paidAmt   || '';
+  $('#e_closeDate').value = cur.closeDate || '';
+}
+function renderItems(){
+  const tb = $('#tItems tbody');
+  tb.innerHTML = cur.items.map((it,i)=>`<tr data-i="${i}">
+    <td><input data-k="qty"   class="num" value="${esc(it.qty)}"></td>
+    <td><input data-k="sku"   class="mono" value="${esc(it.sku)}"></td>
+    <td><input data-k="title" value="${esc(it.title)}"></td>
+    <td><input data-k="price" class="num" value="${esc(it.price)}"></td>
+    <td><input data-k="net"   class="num" value="${esc(it.net)}" placeholder="${fmt2(num(it.qty)*num(it.price))}"></td>
+    <td style="text-align:center"><button class="btn sm dgr" data-act="delitem" title="Remove row">✕</button></td>
+  </tr>`).join('');
+}
+function updateTotals(){
+  const sub = subtotalOf(cur), tot = totalOf(cur);
+  $('#e_subtotal').value = fmt2(sub);
+  $('#e_total').value = fmt2(tot);
+  $('#e_claimAmt').placeholder = 'auto = ' + fmt2(tot);
+  $('#itemSum').textContent = `${cur.items.length} item(s) · Subtotal ${money(sub)} · Total ${money(tot)}`;
+}
+function renderHist(){
+  const h = cur.history || [];
+  $('#histCard').style.display = h.length ? '' : 'none';
+  $('#histList').innerHTML = h.map(x=>
+    `<li><span class="t">${new Date(x.ts).toLocaleString('en-US',{hour12:false})}</span><br>${esc(x.text)}</li>`).join('');
+}
+function trackHint(){
+  const cr = CARRIERS[cur.carrier]; const t = (cur.tracking||'').replace(/\s+/g,'');
+  const el = $('#trkNote');
+  if (!t){ el.textContent = cr ? `${cur.carrier} tracking format: ${cr.hint}` : ''; el.style.color=''; return; }
+  const ok = cr.re.some(r=>r.test(t));
+  el.textContent = ok ? `✓ Looks like a valid ${cur.carrier} tracking number` : `⚠ That does not look like a ${cur.carrier} number (${cr.hint}) — it still saves, just checking.`;
+  el.style.color = ok ? 'var(--ok)' : 'var(--warn)';
+}
+const saveSoon = (()=>{ let t=null; return ()=>{ clearTimeout(t); t=setTimeout(()=>{ save(); if($('#p-list').classList.contains('on')) renderList(); }, 250); }; })();
+function touch(){
+  if (cur && !DB.claims.some(x=>x.id===cur.id)) DB.claims.unshift(cur);
+  syncForm(); updateTotals(); trackHint(); saveSoon();
+}
+
+/* =====================================================================
+   8. Commercial Invoice
+   ===================================================================== */
+function addrBlock(a){
+  const L = [];
+  if (a.name) L.push(esc(a.name));
+  if (a.company && a.company !== a.name) L.push(esc(a.company));
+  if (a.addr1) L.push(esc(a.addr1));
+  if (a.addr2) L.push(esc(a.addr2));
+  const csz = [a.city, a.state, a.zip].filter(Boolean).join(' ');
+  if (csz) L.push(esc(csz));
+  if (a.country && String(a.country).toUpperCase() !== 'US') L.push(esc(a.country));
+  if (a.phone) L.push('PH:' + esc(a.phone));
+  if (!L.length) L.push('&nbsp;');
+  return L.map(x=>`<p style="margin:0 0 10pt 0">${x}</p>`).join('');
+}
+function grayBar(){
+  return `<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse">`+
+         `<tr><td style="background:#A6A6A6;height:7px;line-height:7px;font-size:1pt">&nbsp;</td></tr></table>`;
+}
+/* logoSrc: data URL for the preview, relative image001.png for Word */
+function invoiceHtml(c, logoSrc){
+  const p  = profileOf(c);
+  const cr = CARRIERS[c.carrier] || CARRIERS.UPS;
+  const addr = (p.addr||'').split(/\r?\n/).map(l=>esc(l)).join('<br>');
+  const logo = logoSrc ? `<img src="${logoSrc}" width="170" style="width:170px" alt="">` : '';
+  const items = (c.items||[]).map(it=>`<tr>
+      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(it.qty)}</td>
+      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(it.sku)}</td>
+      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(it.title)}</td>
+      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${invMoney(it.price)}</td>
+      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${invMoney(lineNet(it))}</td>
+    </tr>`).join('');
+  const totRow = (label, val, bold)=>`<tr>
+      <td width="60%" style="padding:1pt 0">&nbsp;</td>
+      <td width="26%" style="padding:1pt 0">${bold?'<b>':''}${esc(label)}${bold?'</b>':''}</td>
+      <td width="14%" align="right" style="padding:1pt 4pt 1pt 0;text-align:right">${bold?'<b>':''}${val}${bold?'</b>':''}</td></tr>`;
+  const trkLine = (lab, val) => val ? `<p style="margin:0">${esc(lab)} ${esc(val)}</p>` : '';
+
+  return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:10.0pt;color:#000000;line-height:1.15">
+  <p style="margin:0 0 6pt 0;text-align:center">Invoice</p>
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+    <tr>
+      <td width="45%" valign="top" style="padding:0">${logo}</td>
+      <td width="55%" valign="top" style="padding:0;font-size:9.5pt">
+        <p style="margin:0"><b>${esc(p.company)}</b></p>
+        <p style="margin:0">&nbsp;</p>
+        <p style="margin:0">${addr}</p>
+      </td>
+    </tr>
+  </table>
+
+  <p style="margin:10pt 0 0 0;font-size:1pt">&nbsp;</p>
+  ${grayBar()}
+  <p style="margin:8pt 0 0 0;font-size:1pt">&nbsp;</p>
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+    <tr>
+      <td width="47%" valign="top" style="padding:0">
+        <p style="margin:0 0 10pt 0">Bill to:</p>
+        ${addrBlock(c.bill)}
+      </td>
+      <td width="53%" valign="top" style="padding:0">
+        <p style="margin:0 0 10pt 0">Ship to:</p>
+        ${c.sameAs ? '<p style="margin:0 0 10pt 0"><b>SAME AS BILL TO</b></p>' : addrBlock(c.ship)}
+      </td>
+    </tr>
+  </table>
+
+  <p style="margin:6pt 0 0 0;font-size:1pt">&nbsp;</p>
+  ${grayBar()}
+  <p style="margin:8pt 0 0 0;font-size:1pt">&nbsp;</p>
+
+  ${trkLine(cr.trkLabel, c.tracking)}
+  ${trkLine('Order #', c.orderNo)}
+  ${trkLine('REFERENCE #', c.refNo)}
+  <p style="margin:0">Market: ${esc(c.market || p.market)}</p>
+
+  <p style="margin:14pt 0 0 0;font-size:1pt">&nbsp;</p>
+
+  <table width="100%" border="1" cellspacing="0" cellpadding="0"
+         style="border-collapse:collapse;border:1px solid #000;font-size:9.5pt">
+    <tr>
+      <td width="9%"  align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center"><b>Qty.</b></td>
+      <td width="15%" align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center"><b>SKU</b></td>
+      <td width="48%" align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center"><b>Title</b></td>
+      <td width="13%" align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center"><b>Price</b></td>
+      <td width="15%" align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center"><b>Net Price</b></td>
+    </tr>
+    ${items}
+  </table>
+
+  <p style="margin:8pt 0 0 0;font-size:1pt">&nbsp;</p>
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:9.5pt">
+    ${totRow('Subtotal', invMoney(subtotalOf(c)))}
+    ${totRow('Tax', invMoney(c.tax))}
+    ${totRow('Shipping and handling', invMoney(c.shipping))}
+    ${totRow('Insurance', invMoney(c.insurance))}
+    ${totRow('Total', invMoney(totalOf(c)), true)}
+  </table>
+</div>`;
+}
+function invoiceDoc(c, logoSrc){
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" `+
+    `xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>${esc(c.carrier)} Commercial Invoice ${esc(c.tracking)}</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]-->
+<style>
+@page WordSection1 {size:8.5in 11.0in; margin:0.75in 0.7in 0.75in 0.7in;}
+div.WordSection1 {page:WordSection1;}
+body {font-family:Arial,Helvetica,sans-serif; font-size:10.0pt; color:#000000;}
+p {margin:0; font-size:10.0pt;}
+table {border-collapse:collapse;}
+</style></head>
+<body lang="EN-US"><div class="WordSection1">${invoiceHtml(c, logoSrc)}</div></body></html>`;
+}
+/* --- MHTML so Word opens it with the logo embedded ------------------ */
+function b64Utf8(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = ''; const CH = 0x8000;
+  for (let i=0;i<bytes.length;i+=CH) bin += String.fromCharCode.apply(null, bytes.subarray(i,i+CH));
+  return btoa(bin);
+}
+const wrap76 = s => s.replace(/(.{76})/g, '$1\r\n');
+function buildMhtml(html, images){
+  const B = '----=_NextPart_GQCLAIM_01';
+  const base = 'file:///C:/GQClaim/';
+  let out = 'MIME-Version: 1.0\r\n';
+  out += 'Content-Type: multipart/related; boundary="' + B + '"; type="text/html"\r\n';
+  out += 'X-Document-Type: Word.Document\r\n\r\n';
+  out += 'This document is a Single File Web Page (Web Archive file).\r\n\r\n';
+  out += '--' + B + '\r\nContent-Location: ' + base + 'invoice.htm\r\n';
+  out += 'Content-Transfer-Encoding: base64\r\nContent-Type: text/html; charset="utf-8"\r\n\r\n';
+  out += wrap76(b64Utf8(html)) + '\r\n\r\n';
+  images.forEach(im=>{
+    out += '--' + B + '\r\nContent-Location: ' + base + im.name + '\r\n';
+    out += 'Content-Transfer-Encoding: base64\r\nContent-Type: ' + im.mime + '\r\n\r\n';
+    out += wrap76(im.b64) + '\r\n\r\n';
+  });
+  out += '--' + B + '--\r\n';
+  return out;
+}
+function splitDataUrl(u){
+  const m = /^data:([^;,]+);base64,(.*)$/.exec(u || '');
+  return m ? {mime:m[1], b64:m[2]} : null;
+}
+function exportWord(c){
+  const p = profileOf(c);
+  const img = splitDataUrl(p.logo);
+  const ext = img ? ({'image/png':'png','image/jpeg':'jpg','image/gif':'gif'}[img.mime] || 'png') : 'png';
+  const name = 'image001.' + ext;
+  const html = invoiceDoc(c, img ? name : '');
+  const mht  = buildMhtml(html, img ? [{name:name, mime:img.mime, b64:img.b64}] : []);
+  download(fileName(c) + '.doc', 'application/msword', mht);
+  logHist(c, 'Commercial Invoice generated: ' + fileName(c) + '.doc');
+  save(); toast('Downloaded ' + fileName(c) + '.doc');
+}
+function exportHtmlFile(c){
+  const html = invoiceDoc(c, profileOf(c).logo || '');
+  download(fileName(c) + '.html', 'text/html;charset=utf-8', '\ufeff' + html);
+  toast('Downloaded ' + fileName(c) + '.html');
+}
+function renderInvoicePage(pick){
+  const sel = $('#invPick');
+  if (!DB.claims.length){
+    sel.innerHTML = '<option value="">(no claims yet)</option>';
+    $('#sheet').innerHTML = '<p style="color:#888;text-align:center;padding:60px 0">Create a claim on the New / Edit tab first.</p>';
+    $('#invFile').textContent = '—';
+    return;
+  }
+  const inDb = id => DB.claims.some(x=>x.id===id);
+  const want = pick || (cur && inDb(cur.id) ? cur.id : '') || sel.value || DB.claims[0].id;
+  sel.innerHTML = DB.claims.map(c=>{
+    const lbl = `${c.carrier} · ${c.tracking||'(no tracking)'} · ${c.bill.name||c.bill.company||'—'} · ${stName(c.status)}`;
+    return `<option value="${c.id}"${c.id===want?' selected':''}>${esc(lbl)}</option>`;
+  }).join('');
+  const c = DB.claims.find(x=>x.id===sel.value) || DB.claims[0];
+  $('#sheet').innerHTML = invoiceHtml(c, profileOf(c).logo || '');
+  $('#invFile').textContent = fileName(c) + '.doc';
+}
+function invCurrent(){ return DB.claims.find(x=>x.id===$('#invPick').value); }
+
+/* --- the carrier claim # only exists after the claim is filed ---------- */
+let askFor = null;
+function askClaimNo(c){
+  if (!c) return;
+  askFor = c;
+  $('#mCar').textContent = c.carrier;
+  $('#mTrk').textContent = c.tracking || '(no tracking)';
+  $('#m_claimNo').value  = c.claimNo || '';
+  $('#m_fileDate').value = c.fileDate || todayISO();
+  $('#m_status').innerHTML = STATUS.map(s=>`<option value="${s.k}">${s.t}</option>`).join('');
+  $('#m_status').value = c.status === 'draft' ? 'filed' : c.status;
+  $('#m_claimAmt').value = String(c.claimAmt||'').trim() !== '' ? c.claimAmt : fmt2(totalOf(c));
+  $('#modal').classList.remove('off');
+  setTimeout(()=>$('#m_claimNo').focus(), 60);
+}
+function closeAsk(){ $('#modal').classList.add('off'); askFor = null; }
+function saveAsk(){
+  const c = askFor; if (!c) return closeAsk();
+  const no = $('#m_claimNo').value.trim();
+  if (no && no !== c.claimNo) logHist(c, 'Carrier claim # recorded: ' + no);
+  if (no) c.claimNo = no;
+  const st = $('#m_status').value;
+  if (st !== c.status){ logHist(c, 'Status: ' + stName(c.status) + ' → ' + stName(st)); c.status = st; }
+  c.fileDate = $('#m_fileDate').value || c.fileDate;
+  const amt = $('#m_claimAmt').value.trim();
+  if (amt !== '') c.claimAmt = amt;
+  applyAutoDates(c);
+  c.updatedAt = new Date().toISOString();
+  save(); closeAsk(); renderList(); renderInvoicePage(c.id);
+  if (cur && cur.id === c.id) openClaim(c);
+  toast(no ? 'Claim # ' + no + ' saved' : 'Claim updated');
+}
+
+</script>
+
+<script>
+"use strict";
+/* =====================================================================
+   10. Settings
+   ===================================================================== */
+let pfCur = null;
+function renderSettings(){
+  const sel = $('#pfPick');
+  sel.innerHTML = DB.profiles.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+  if (!pfCur || !DB.profiles.some(p=>p.id===pfCur)) pfCur = (DB.profiles[0]||{}).id;
+  sel.value = pfCur;
+  loadProfile();
+  const s = DB.settings;
+  $('#st_fname').value = s.fname; $('#st_cur').value = s.cur; $('#st_email').value = s.email;
+  $('#st_phone').value = s.phone; $('#st_invseq').value = s.invseq; $('#st_zero').value = s.zero;
+  const bytes = new Blob([JSON.stringify(DB)]).size;
+  $('#dbNote').textContent = `${DB.claims.length} claim(s), ${DB.profiles.length} seller profile(s) — about ${(bytes/1024).toFixed(1)} KB stored.`;
+}
+function loadProfile(){
+  const p = DB.profiles.find(x=>x.id===pfCur) || {};
+  $('#pf_name').value = p.name||''; $('#pf_market').value = p.market||'';
+  $('#pf_company').value = p.company||''; $('#pf_addr').value = p.addr||'';
+  const img = $('#pf_logoImg');
+  if (p.logo){ img.src = p.logo; img.style.display=''; } else { img.removeAttribute('src'); img.style.display='none'; }
+}
+function saveProfile(){
+  const p = DB.profiles.find(x=>x.id===pfCur); if (!p) return;
+  p.name = $('#pf_name').value.trim() || 'Untitled';
+  p.market = $('#pf_market').value.trim();
+  p.company = $('#pf_company').value.trim();
+  p.addr = $('#pf_addr').value;
+  save(); renderSettings(); toast('Seller profile saved');
+}
+
+/* =====================================================================
+   11. Export / import
+   ===================================================================== */
+function toCsv(){
+  const head = ['Status','Carrier','Tracking #','Carrier Claim #','Order #','Reference #','Market','Type',
+    'Customer','Company','Address','City','State','ZIP','Phone','Email',
+    'Subtotal','Tax','Shipping','Insurance','Total','Claim Amount','Approved Amount','Paid Amount',
+    'File Date','Paid Date','Closed Date','Days','Created','Updated','Notes'];
+  const rows = DB.claims.map(c=>[
+    stName(c.status), c.carrier, c.tracking, c.claimNo, c.orderNo, c.refNo, c.market||profileOf(c).market, tyName(c.type),
+    c.bill.name, c.bill.company, [c.bill.addr1,c.bill.addr2].filter(Boolean).join(' '), c.bill.city, c.bill.state, c.bill.zip, c.bill.phone, c.bill.email,
+    fmt2(subtotalOf(c)), fmt2(num(c.tax)), fmt2(num(c.shipping)), fmt2(num(c.insurance)), fmt2(totalOf(c)),
+    fmt2(claimAmountOf(c)), c.apprAmt===''?'':fmt2(num(c.apprAmt)), c.paidAmt===''?'':fmt2(num(c.paidAmt)),
+    c.fileDate, c.paidDate, c.closeDate,
+    (daysBetween(c.fileDate, c.paidDate || todayISO()) ?? ''),
+    new Date(c.createdAt).toLocaleString('en-US',{hour12:false}),
+    new Date(c.updatedAt).toLocaleString('en-US',{hour12:false}),
+    (c.notes||'').replace(/\r?\n/g,' ')
+  ]);
+  const q = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+  return '﻿' + [head, ...rows].map(r=>r.map(q).join(',')).join('\r\n');
+}
+function demoData(){
+  const mk = o => normalizeClaim(Object.assign(newClaim(), o));
+  const a = mk({
+    carrier:'FedEx', profile:'geniqua', market:'GENIQUA',
+    tracking:'270347144982', orderNo:'KTWOIS7644263404', refNo:'Acaia',
+    type:'notrecv', status:'filed', fileDate:todayISO(),
+    bill:Object.assign(blankAddr(),{name:'Danny Nghieu', addr1:'2313 S Hutchinson St',
+      city:'Philadelphia', state:'PA', zip:'19148', country:'US', phone:'(267)-809-3336'}),
+    sameAs:true,
+    items:[{qty:'1', sku:'AL009', title:'Acaia Lunar Coffee Scale 2021 Silver', price:'250.00', net:'250.00'}],
+    notes:'Sample data — filled in the way the FedEx template expects.'
+  });
+  logHist(a, 'Claim created (sample data)');
+  const b = mk({
+    carrier:'UPS', profile:'geniqua', market:'GENIQUA',
+    tracking:'1Z586Y510305646419', claimNo:'C-0367907680', orderNo:'KTWOIS6853184425',
+    type:'lost', status:'review', fileDate:todayISO(),
+    bill:Object.assign(blankAddr(),{name:'James D Grace', addr1:'181 Private Road 181 PR 3013',
+      city:'Altus', state:'AR', zip:'72821', country:'US', phone:'479-440-5015'}),
+    sameAs:true,
+    items:[{qty:'1', sku:'WV-1032', title:'Window Visors for car', price:'29.95', net:'29.95'}],
+    shipping:'36.42',
+    notes:'Sample data — UPS Package Search In Progress.'
+  });
+  logHist(b, 'Claim created (sample data)');
+  DB.claims.unshift(a, b); save(); openClaim(a); renderList(); go('list');
+  toast('2 sample claims loaded');
+}
+
+/* =====================================================================
+   12. Events
+   ===================================================================== */
+function bind(){
+  $('#tabs').addEventListener('click', e=>{
+    const b = e.target.closest('button[data-p]'); if (b) go(b.dataset.p);
+  });
+
+  /* --- claims list --- */
+  ['#q','#fCar','#fSt','#fSort'].forEach(s=>$(s).addEventListener('input', renderList));
+  $('#tList').addEventListener('change', e=>{
+    const sel = e.target.closest('select[data-act="st"]'); if (!sel) return;
+    const id = e.target.closest('tr').dataset.id;
+    const c = DB.claims.find(x=>x.id===id); if (!c) return;
+    const old = c.status; c.status = sel.value;
+    logHist(c, 'Status: ' + stName(old) + ' → ' + stName(c.status));
+    applyAutoDates(c);
+    c.updatedAt = new Date().toISOString();
+    save(); renderList(); toast(`${c.tracking||'Claim'} → ${stName(c.status)}`);
+  });
+  $('#tList').addEventListener('click', e=>{
+    const b = e.target.closest('button[data-act]'); if (!b) return;
+    const id = e.target.closest('tr').dataset.id;
+    const c = DB.claims.find(x=>x.id===id); if (!c) return;
+    if (b.dataset.act === 'edit'){ openClaim(c); go('edit'); }
+    if (b.dataset.act === 'inv'){ go('inv'); renderInvoicePage(c.id); }
+  });
+  $('#bNew').addEventListener('click', ()=>{
+    const c = newClaim(); logHist(c, 'Claim created');
+    DB.claims.unshift(c); save(); openClaim(c); go('edit'); $('#e_tracking').focus();
+  });
+  $('#bCsv').addEventListener('click', ()=>{
+    if (!DB.claims.length) return toast('Nothing to export yet');
+    download('GQ_Claims_' + todayISO() + '.csv', 'text/csv;charset=utf-8', toCsv());
+  });
+
+  /* --- edit form --- */
+  $('#p-edit').addEventListener('input', e=>{
+    if (e.target.closest('#tItems')) return;
+    if (e.target.closest('#p-edit .grid, #p-edit textarea')) touch();
+  });
+  $('#p-edit').addEventListener('change', e=>{
+    if (e.target.closest('#tItems')) return;
+    touch();
+  });
+  $('#e_carrier').addEventListener('change', ()=>{
+    const want = $('#e_carrier').value === 'USPS' ? 'k2motor' : 'geniqua';
+    if (DB.profiles.some(p=>p.id===want) && $('#e_profile').value !== want){
+      $('#e_profile').value = want;
+      const p = DB.profiles.find(x=>x.id===want);
+      $('#e_market').value = p.market || '';
+    }
+    touch();
+  });
+  $('#e_profile').addEventListener('change', ()=>{
+    const p = DB.profiles.find(x=>x.id===$('#e_profile').value);
+    if (p) $('#e_market').value = p.market || '';
+    touch();
+  });
+  $('#s_same').addEventListener('change', ()=>{
+    const on = $('#s_same').checked;
+    $('#shipFields').style.opacity = on ? .45 : 1;
+    $$('#shipFields input').forEach(i=>i.disabled = on);
+    if (!on && !$('#s_name').value){
+      ['name','company','addr1','addr2','city','state','zip','country','phone','email']
+        .forEach(k=>{ $('#s_'+k).value = $('#b_'+k).value; });
+    }
+    touch();
+  });
+  $('#tItems').addEventListener('input', e=>{
+    const inp = e.target.closest('input[data-k]'); if (!inp) return;
+    const i = +e.target.closest('tr').dataset.i;
+    cur.items[i][inp.dataset.k] = inp.value;
+    if (inp.dataset.k === 'qty' || inp.dataset.k === 'price'){
+      const net = $('input[data-k="net"]', e.target.closest('tr'));
+      net.placeholder = fmt2(num(cur.items[i].qty) * num(cur.items[i].price));
+    }
+    updateTotals(); cur.updatedAt = new Date().toISOString(); saveSoon();
+  });
+  $('#tItems').addEventListener('click', e=>{
+    if (!e.target.closest('button[data-act="delitem"]')) return;
+    const i = +e.target.closest('tr').dataset.i;
+    cur.items.splice(i,1);
+    if (!cur.items.length) cur.items.push({qty:'1',sku:'',title:'',price:'',net:''});
+    renderItems(); updateTotals(); save();
+  });
+  $('#bAddItem').addEventListener('click', ()=>{
+    cur.items.push({qty:'1',sku:'',title:'',price:'',net:''});
+    renderItems(); updateTotals(); save();
+    const rows = $$('#tItems tbody tr'); const last = rows[rows.length-1];
+    if (last) $('input[data-k="sku"]', last).focus();
+  });
+  $('#bSave').addEventListener('click', ()=>{ touch(); save(); toast('Saved'); });
+  $('#bSaveGo').addEventListener('click', ()=>{
+    touch(); save();
+    if (!cur.tracking) return toast('⚠ Enter a tracking number first — the file name needs it');
+    go('inv'); renderInvoicePage(cur.id);
+  });
+  $('#bDup').addEventListener('click', ()=>{
+    touch();
+    const c = JSON.parse(JSON.stringify(cur));
+    c.id = uid(); c.claimNo=''; c.status='draft'; c.fileDate=''; c.paidDate=''; c.paidAmt='';
+    c.apprAmt=''; c.closeDate=''; c.history=[];
+    c.createdAt = c.updatedAt = new Date().toISOString();
+    logHist(c, 'Copied from ' + (cur.tracking||'another claim'));
+    DB.claims.unshift(c); save(); openClaim(c); toast('Copied to a new claim');
+  });
+  $('#bReset').addEventListener('click', ()=>{
+    if (!confirm('Clear every field on this claim? (the claim itself stays)')) return;
+    const b = newClaim(); b.id = cur.id; b.createdAt = cur.createdAt; b.history = cur.history;
+    logHist(b, 'Form cleared');
+    const i = DB.claims.findIndex(x=>x.id===cur.id);
+    if (i>=0) DB.claims[i] = b;
+    save(); openClaim(b);
+  });
+  $('#bDel').addEventListener('click', ()=>{
+    if (!cur) return;
+    if (!confirm(`Delete this claim?\n${cur.carrier} ${cur.tracking||'(no tracking)'}\nThis cannot be undone.`)) return;
+    DB.claims = DB.claims.filter(x=>x.id!==cur.id);
+    save(); cur = null; renderList(); go('list'); toast('Claim deleted');
+  });
+
+  /* --- Invoice --- */
+  $('#invPick').addEventListener('change', ()=>renderInvoicePage($('#invPick').value));
+  $('#bWord').addEventListener('click', ()=>{ const c = invCurrent(); if (c){ exportWord(c); askClaimNo(c); } });
+  $('#bHtml').addEventListener('click', ()=>{ const c = invCurrent(); if (c){ exportHtmlFile(c); askClaimNo(c); } });
+  $('#bPrint').addEventListener('click', ()=>{ const c = invCurrent(); window.print(); askClaimNo(c); });
+
+  /* --- carrier claim # dialog --- */
+  $('#mSave').addEventListener('click', saveAsk);
+  $('#mLater').addEventListener('click', closeAsk);
+  $('#modal').addEventListener('click', e=>{ if (e.target.id === 'modal') closeAsk(); });
+  $('#m_claimNo').addEventListener('keydown', e=>{ if (e.key === 'Enter') saveAsk(); });
+  $('#bEditInv').addEventListener('click', ()=>{ const c = invCurrent(); if (c){ openClaim(c); go('edit'); } });
+
+  /* --- settings --- */
+  $('#pfPick').addEventListener('change', ()=>{ pfCur = $('#pfPick').value; loadProfile(); });
+  $('#bPfNew').addEventListener('click', ()=>{
+    const id = 'p' + Date.now().toString(36);
+    DB.profiles.push({id, name:'New seller profile', company:'', market:'', addr:'', logo:''});
+    pfCur = id; save(); renderSettings();
+  });
+  $('#bPfDel').addEventListener('click', ()=>{
+    if (DB.profiles.length <= 1) return toast('Keep at least one seller profile');
+    if (!confirm('Delete this seller profile?')) return;
+    DB.profiles = DB.profiles.filter(p=>p.id!==pfCur);
+    pfCur = DB.profiles[0].id; save(); renderSettings();
+  });
+  $('#bPfSave').addEventListener('click', saveProfile);
+  $('#pf_logoFile').addEventListener('change', e=>{
+    const f = e.target.files[0]; if (!f) return;
+    if (f.size > 900*1024) return toast('⚠ Logo must be under 900 KB');
+    const r = new FileReader();
+    r.onload = () => {
+      const p = DB.profiles.find(x=>x.id===pfCur);
+      p.logo = r.result; save(); loadProfile(); toast('Logo updated');
+    };
+    r.readAsDataURL(f);
+  });
+  $('#bPfLogoClr').addEventListener('click', ()=>{
+    const p = DB.profiles.find(x=>x.id===pfCur); p.logo = ''; save(); loadProfile();
+  });
+  $('#bStSave').addEventListener('click', ()=>{
+    DB.settings.fname = $('#st_fname').value.trim() || '{carrier}_Commercial_Invoice_Template{tracking}';
+    DB.settings.cur = $('#st_cur').value || '$';
+    DB.settings.email = $('#st_email').value.trim();
+    DB.settings.phone = $('#st_phone').value.trim();
+    DB.settings.invseq = num($('#st_invseq').value) || 1001;
+    DB.settings.zero = $('#st_zero').value;
+    save(); renderSettings(); toast('Settings saved');
+  });
+  $('#bExpAll').addEventListener('click', ()=>
+    download('GQ_Claim_backup_' + todayISO() + '.json', 'application/json', JSON.stringify(DB, null, 2)));
+  $('#bImp').addEventListener('click', ()=>$('#impFile').click());
+  $('#impFile').addEventListener('change', e=>{
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = ()=>{
+      try{
+        const d = JSON.parse(r.result);
+        if (!d || !Array.isArray(d.claims)) throw new Error('no claims in that file');
+        if (!confirm(`Import ${d.claims.length} claim(s)? This replaces everything currently stored.`)) return;
+        DB = d; load2(); save(); renderSettings(); renderList(); toast('Import complete');
+      }catch(err){ toast('⚠ Import failed: ' + err.message); }
+      e.target.value = '';
+    };
+    r.readAsText(f);
+  });
+  $('#bDemo').addEventListener('click', demoData);
+  $('#bWipe').addEventListener('click', ()=>{
+    if (!confirm('Erase every claim, seller profile and setting? Export a JSON backup first.')) return;
+    if (!confirm('Really erase everything? There is no undo.')) return;
+    localStorage.removeItem(KEY); DB = defaults(); load2(); save();
+    renderSettings(); renderList(); go('list'); toast('All data erased');
+  });
+
+  document.addEventListener('keydown', e=>{
+    if (e.key === 'Escape' && !$('#modal').classList.contains('off')) closeAsk();
+    if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){
+      e.preventDefault();
+      if ($('#p-edit').classList.contains('on')){ touch(); save(); toast('Saved'); }
+    }
+  });
+}
+
+/* =====================================================================
+   13. Boot
+   ===================================================================== */
+function load2(){
+  const d = defaults();
+  DB.claims = DB.claims || [];
+  DB.profiles = (DB.profiles && DB.profiles.length) ? DB.profiles : d.profiles;
+  DB.settings = Object.assign({}, d.settings, DB.settings || {});
+  DB.claims.forEach(normalizeClaim);
+}
+function clock(){
+  const d = new Date();
+  $('#clk').textContent = d.toLocaleDateString('en-US') + '  ' +
+    d.toLocaleTimeString('en-US',{hour12:false});
+}
+function init(){
+  load(); load2();
+  $('#fSt').innerHTML = '<option value="">All statuses</option>' +
+    STATUS.map(s=>`<option value="${s.k}">${s.t}</option>`).join('');
+  bind();
+  openClaim(DB.claims[0] || newClaim());
+  renderList();
+  clock(); setInterval(clock, 1000);
+  setMsg(DB.claims.length ? `${DB.claims.length} claim(s) loaded` : 'Ready — hit “+ New Claim” to start');
+  $('#stSave').textContent = 'Stored locally';
+}
+init();
+</script>
+</body>
+</html>
