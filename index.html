@@ -61,8 +61,8 @@ body{
 main{
   background-color:var(--plate);
   background-image:
-    radial-gradient(circle at 16px 14px, rgba(255,255,255,.55) 0 8px, transparent 8.5px),
-    radial-gradient(circle at 16px 16px, rgba(18,35,58,.07) 0 9px, transparent 9.5px);
+    radial-gradient(circle at 16px 14px, rgba(255,255,255,.38) 0 8px, transparent 8.5px),
+    radial-gradient(circle at 16px 16px, rgba(18,35,58,.045) 0 9px, transparent 9.5px);
   background-size:36px 36px,36px 36px;
   background-position:0 0,0 0;
 }
@@ -113,7 +113,7 @@ main{
 .tabstrip button[aria-selected="true"]::before{
   background-image:radial-gradient(circle at 10px 6px, rgba(0,0,0,.14) 0 5px, transparent 5.6px);
 }
-main{flex:1;overflow:auto;padding:16px 18px 22px}
+main{flex:1;overflow:auto;padding:20px 20px 26px}
 .statusbar{
   flex:0 0 var(--statush);display:flex;align-items:center;gap:16px;padding:0 16px;
   background:#12233A;color:rgba(234,241,248,.78);font-size:12px;
@@ -125,8 +125,8 @@ main{flex:1;overflow:auto;padding:16px 18px 22px}
 
 /* ---------------------------------------------------------- cards */
 .card{
-  position:relative;background:var(--panel);border:2px solid #B7C4D2;border-radius:var(--rad);
-  padding:28px 18px 16px;margin-bottom:15px;box-shadow:var(--elev-2);
+  position:relative;background:var(--panel);border:2px solid #C6D2DF;border-radius:14px;
+  padding:30px 20px 18px;margin-bottom:16px;box-shadow:var(--elev-2);
 }
 .card::before{
   content:"";position:absolute;top:6px;left:18px;width:96px;height:16px;
@@ -134,20 +134,25 @@ main{flex:1;overflow:auto;padding:16px 18px 22px}
   background-size:24px 16px;background-repeat:repeat-x;pointer-events:none;
 }
 .card>h3{
-  margin:0 0 12px;font-size:15.5px;color:var(--head);letter-spacing:.01em;font-weight:700;
-  display:flex;align-items:center;gap:8px;padding-bottom:9px;border-bottom:3px solid var(--line);
+  margin:0 0 16px;font-size:16px;color:var(--head);letter-spacing:.01em;font-weight:600;
+  display:flex;align-items:center;gap:10px;padding-bottom:11px;border-bottom:3px solid var(--line);
 }
-.card>h3 .em{font-size:16px}
+.card>h3 .em{
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:32px;height:32px;border-radius:9px;font-size:16px;line-height:1;
+  background:linear-gradient(180deg,#FFFFFF,#EDF2F7);border:2px solid var(--line);
+  box-shadow:0 2px 0 #C6D2DF;
+}
 .card>h3 .tail{margin-left:auto;font-weight:500;font-size:12px;color:var(--muted)}
-.hint{color:var(--muted);font-size:12.5px;margin:6px 0 0}
+.hint{color:var(--muted);font-size:12.5px;margin:8px 0 0;line-height:1.5}
 
 /* ---------------------------------------------------------- forms */
-.grid{display:grid;gap:10px 14px}
+.grid{display:grid;gap:14px 16px}
 .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
 .f{display:flex;flex-direction:column;gap:4px;min-width:0}
-.f>label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.f>label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
 .f>label .req{color:var(--neg)}
 .f>label .tag{
   display:inline-block;margin-left:5px;padding:1px 7px;border-radius:5px;
@@ -156,9 +161,10 @@ main{flex:1;overflow:auto;padding:16px 18px 22px}
 }
 input,select,textarea{
   font:inherit;font-size:14px;color:var(--text);background:#fff;
-  border:2px solid #BCC9D7;border-radius:var(--rad-sm);padding:7px 9px;width:100%;
-  box-shadow:inset 0 2px 0 rgba(18,35,58,.05);
+  border:2px solid #C9D4E0;border-radius:9px;padding:8px 11px;width:100%;min-height:38px;
+  box-shadow:inset 0 2px 0 rgba(18,35,58,.04);transition:border-color .12s, box-shadow .12s;
 }
+input:hover,select:hover,textarea:hover{border-color:#AEBDCD}
 input:focus,select:focus,textarea:focus{
   outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,85,191,.20);
 }
@@ -173,7 +179,8 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
 /* ---------------------------------------------------------- buttons */
 .btn{
   appearance:none;cursor:pointer;font:inherit;font-weight:600;font-size:13.5px;
-  padding:9px 16px;border-radius:var(--rad-sm);border:none;white-space:nowrap;
+  padding:0 17px;height:38px;display:inline-flex;align-items:center;gap:6px;
+  border-radius:9px;border:none;white-space:nowrap;
   background:linear-gradient(180deg,#FFFFFF 0%,#E7EDF3 100%);color:var(--head);
   box-shadow:0 4px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9);
   transition:transform .07s, box-shadow .07s, filter .12s;
@@ -192,13 +199,13 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
 .btn.dgr{background:linear-gradient(180deg,#DD3138 0%,var(--lego-red) 100%);color:#fff;
   box-shadow:0 4px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
 .btn.dgr:active{box-shadow:0 1px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
-.btn.sm{padding:5px 11px;font-size:12.5px;box-shadow:0 3px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9)}
+.btn.sm{padding:0 12px;height:30px;font-size:12.5px;box-shadow:0 3px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9)}
 .btn.sm:active{box-shadow:0 1px 0 #B0BECD}
 .btn.sm.dgr{box-shadow:0 3px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
 /* ---------------------------------------------------------- stat tiles */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
 .tile{
   position:relative;background:var(--panel);border:2px solid #B7C4D2;border-radius:var(--rad);
   padding:22px 14px 11px;box-shadow:var(--elev-1);border-top:7px solid var(--accent);
@@ -208,30 +215,35 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
   background-image:radial-gradient(circle at 11px 7px, rgba(18,35,58,.11) 0 6px, transparent 6.6px);
   background-size:22px 14px;background-repeat:repeat-x;
 }
-.tile .k{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.02em}
-.tile .v{font-family:var(--mono);font-size:21px;font-weight:700;color:var(--head);line-height:1.3}
-.tile.warn{border-top-color:var(--lego-orange)} .tile.ok{border-top-color:var(--lego-green)}
-.tile.neg{border-top-color:var(--lego-red)}
+.tile .k{font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+.tile .v{font-family:var(--mono);font-size:23px;font-weight:700;color:var(--head);line-height:1.25;margin-top:2px}
+.tile.warn{border-top-color:var(--lego-orange)} .tile.warn .v{color:var(--warn)}
+.tile.ok{border-top-color:var(--lego-green)}     .tile.ok .v{color:var(--ok)}
+.tile.neg{border-top-color:var(--lego-red)}      .tile.neg .v{color:var(--neg)}
 
 /* ---------------------------------------------------------- tables */
-.tblwrap{overflow-x:auto;border:2px solid #B7C4D2;border-radius:var(--rad);background:var(--panel);box-shadow:var(--elev-2)}
+.tblwrap{overflow-x:auto;border:2px solid #C6D2DF;border-radius:14px;background:var(--panel);box-shadow:var(--elev-2)}
 table.data{border-collapse:collapse;width:100%;font-size:13px}
 table.data th{
   background:linear-gradient(180deg,#2A7BE0 0%,var(--accent) 100%);color:#FFF;
-  font-size:12px;letter-spacing:.02em;border-bottom:3px solid var(--lego-blue-d);
-  text-align:left;padding:10px;white-space:nowrap;font-weight:600;position:sticky;top:0;
+  font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  border-bottom:3px solid var(--lego-blue-d);
+  text-align:left;padding:11px 10px;white-space:nowrap;font-weight:600;position:sticky;top:0;
 }
-table.data td{padding:7px 10px;border-top:1px solid var(--line);vertical-align:middle}
+table.data th:first-child{padding-left:14px} table.data td:first-child{padding-left:14px}
+table.data th:last-child{padding-right:14px} table.data td:last-child{padding-right:14px}
+table.data td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:middle}
 table.data tbody tr:nth-child(even){background:var(--stripe)}
 table.data tbody tr:hover{background:#E4EFFB}
-table.data td.num{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+table.data td.num{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.data td.mono{white-space:nowrap}
 table.data td.ctr{text-align:center}
 table.data .empty{text-align:center;color:var(--muted);padding:34px 10px}
 table.items{border-collapse:collapse;width:100%;font-size:13px}
-table.items th{background:var(--stripe);color:var(--head);font-size:11.5px;padding:6px 8px;border:1px solid var(--line)}
-table.items td{border:1px solid var(--line);padding:3px 4px}
-table.items input{border:none;border-radius:0;padding:5px 6px;background:transparent}
-table.items input:focus{box-shadow:none;background:#F0FAFB}
+table.items th{background:var(--stripe);color:var(--muted);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;padding:8px;border:2px solid var(--line);font-weight:600}
+table.items td{border:2px solid var(--line);padding:3px 4px}
+table.items input{border:none;border-radius:0;padding:6px 8px;background:transparent;min-height:34px;box-shadow:none}
+table.items input:focus{box-shadow:none;background:#EAF3FE}
 
 /* ---------------------------------------------------------- chips */
 .chip{
@@ -251,8 +263,12 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
   border-left:4px solid currentColor}
 
 /* ---------------------------------------------------------- toolbar */
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
-.toolbar input[type=search]{width:230px}
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:14px;
+  background:var(--panel);border:2px solid #C6D2DF;border-radius:14px;
+  padding:11px 13px;box-shadow:var(--elev-1);
+}
+.toolbar input[type=search]{width:260px;text-transform:none}
 .toolbar select{width:auto;min-width:110px}
 .toolbar .sp{flex:1}
 
@@ -275,6 +291,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 .callout b{color:var(--head)}
 
 /* ---------------------------------------------------------- invoice preview */
+#printArea{display:none}
 .sheetwrap{background:#5A6B80;border-radius:var(--rad);padding:22px;overflow:auto;box-shadow:inset 0 2px 10px rgba(0,0,0,.2)}
 .sheet{
   width:8.5in;min-height:11in;margin:0 auto;background:#fff;
@@ -282,9 +299,10 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 }
 .sheet *{box-sizing:content-box}
 .pfile{
-  font-family:var(--mono);font-size:12.5px;background:var(--stripe);border:1px dashed var(--line);
-  border-radius:var(--rad-sm);padding:7px 10px;color:var(--head);word-break:break-all;
+  font-family:var(--mono);font-size:13px;background:var(--stripe);
+  border:2px dashed #BCC9D7;border-radius:var(--rad-sm);padding:7px 10px;color:var(--head);
 }
+.pfile:focus{background:#fff;border-style:solid}
 .logobox{display:flex;align-items:center;gap:12px}
 .logobox img{max-width:170px;max-height:66px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:4px}
 
@@ -305,6 +323,20 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
   background-image:radial-gradient(circle at 15px 9px, var(--stud) 0 8px, transparent 8.6px);
   background-size:31px 18px;background-repeat:repeat-x;
 }
+.dlg.wide{width:min(1240px,100%);padding:30px 20px 14px}
+.dlg.wide .card{box-shadow:var(--elev-1)}
+.dlghead{
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  padding-bottom:10px;border-bottom:3px solid var(--line);
+}
+.dlghead h3{margin:0;flex:1}
+.formActions{margin:0 0 26px}
+#editHost .formActions{
+  position:sticky;bottom:-14px;z-index:5;margin:0 -20px -14px;padding:14px 20px;
+  background:linear-gradient(180deg,rgba(255,255,255,.75),#fff 40%);
+  border-top:3px solid var(--line);border-radius:0 0 12px 12px;
+}
+.dlghead .btn{padding:5px 12px}
 .dlg h3{
   margin:0 0 4px;font-size:19px;color:var(--head);font-weight:700;
   display:flex;align-items:center;gap:9px;
@@ -369,7 +401,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 </div>
 
 <div class="tabstrip" role="tablist" id="tabs">
-  <button role="tab" aria-selected="true"  data-p="edit">✏️ New / Edit</button>
+  <button role="tab" aria-selected="true"  data-p="new">✏️ New Claim</button>
   <button role="tab" aria-selected="false" data-p="list">📋 Claims</button>
   <button role="tab" aria-selected="false" data-p="inv">🧾 Commercial Invoice</button>
   <button role="tab" aria-selected="false" data-p="set">⚙️ Settings</button>
@@ -378,7 +410,8 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 <main>
 
 <!-- ==================================================== new / edit -->
-<section class="page on" id="p-edit">
+<section class="page on" id="p-new">
+<div id="formWrap">
   <div class="card">
     <h3><span class="em">📦</span>Shipment &amp; reference numbers<span class="tail" id="edMeta"></span></h3>
     <div class="grid g4">
@@ -389,8 +422,6 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       <div class="f"><label>Carrier Claim # <span class="tag">after filing</span></label><input id="e_claimNo" class="mono"></div>
       <div class="f"><label>Order #</label><input id="e_orderNo" class="mono"></div>
       <div class="f"><label>Reference #</label><input id="e_refNo"></div>
-      <div class="f"><label>Market</label><input id="e_market"></div>
-      <div class="f"><label>Ship date</label><input type="date" id="e_shipDate"></div>
     </div>
     <p class="hint" id="trkNote"></p>
   </div>
@@ -402,10 +433,8 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       <div class="f"><label>Status</label><select id="e_status"></select></div>
       <div class="f"><label>File date (claim filed)</label><input type="date" id="e_fileDate"></div>
       <div class="f"><label>Claim amount (USD)</label><input id="e_claimAmt" class="num"></div>
-      <div class="f"><label>Approved amount (USD)</label><input id="e_apprAmt" class="num"></div>
       <div class="f"><label>Paid amount (USD)</label><input id="e_paidAmt" class="num"></div>
       <div class="f"><label>Paid date (payment received)</label><input type="date" id="e_paidDate"></div>
-      <div class="f"><label>Closed date</label><input type="date" id="e_closeDate"></div>
     </div>
     <div class="grid" style="margin-top:10px">
       <div class="f"><label>Notes</label><textarea id="e_notes"></textarea></div>
@@ -417,15 +446,11 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       <h3><span class="em">🧾</span>Bill to</h3>
       <div class="grid g2">
         <div class="f"><label>Name <span class="req">*</span></label><input id="b_name"></div>
-        <div class="f"><label>Company (optional)</label><input id="b_company"></div>
         <div class="f" style="grid-column:1/-1"><label>Address</label><input id="b_addr1"></div>
-        <div class="f" style="grid-column:1/-1"><label>Address line 2 (optional)</label><input id="b_addr2"></div>
         <div class="f"><label>City</label><input id="b_city"></div>
         <div class="f"><label>State</label><input id="b_state"></div>
         <div class="f"><label>ZIP</label><input id="b_zip" class="mono"></div>
-        <div class="f"><label>Country</label><input id="b_country"></div>
         <div class="f"><label>Phone</label><input id="b_phone" class="mono"></div>
-        <div class="f"><label>Email</label><input id="b_email"></div>
       </div>
     </div>
 
@@ -436,15 +461,11 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       </label>
       <div class="grid g2" id="shipFields">
         <div class="f"><label>Name</label><input id="s_name"></div>
-        <div class="f"><label>Company (optional)</label><input id="s_company"></div>
         <div class="f" style="grid-column:1/-1"><label>Address</label><input id="s_addr1"></div>
-        <div class="f" style="grid-column:1/-1"><label>Address line 2 (optional)</label><input id="s_addr2"></div>
         <div class="f"><label>City</label><input id="s_city"></div>
         <div class="f"><label>State</label><input id="s_state"></div>
         <div class="f"><label>ZIP</label><input id="s_zip" class="mono"></div>
-        <div class="f"><label>Country</label><input id="s_country"></div>
         <div class="f"><label>Phone</label><input id="s_phone" class="mono"></div>
-        <div class="f"><label>Email</label><input id="s_email"></div>
       </div>
     </div>
   </div>
@@ -473,8 +494,6 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       <div class="f"><label>Shipping and handling</label><input id="e_ship" class="num"></div>
       <div class="f"><label>Insurance</label><input id="e_ins" class="num"></div>
       <div class="f"><label>Total</label><input id="e_total" class="num" readonly></div>
-      <div class="f"><label>Invoice #</label><input id="e_invNo" class="mono"></div>
-      <div class="f"><label>Invoice date</label><input type="date" id="e_invDate"></div>
     </div>
   </div>
 
@@ -483,7 +502,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
     <ul class="hist" id="histList"></ul>
   </div>
 
-  <div class="row end" style="margin-bottom:26px">
+  <div class="row end formActions">
     <button class="btn dgr" id="bDel">🗑 Delete</button>
     <span style="flex:1"></span>
     <button class="btn" id="bReset">↺ Clear form</button>
@@ -491,6 +510,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
     <button class="btn run" id="bSaveGo">💾 Save &amp; build invoice</button>
     <button class="btn pri" id="bSave">💾 Save</button>
   </div>
+</div>
 </section>
 
 <!-- ==================================================== claims list -->
@@ -536,7 +556,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       </div>
       <div class="f" style="min-width:200px">
         <label>Word file name</label>
-        <div class="pfile" id="invFile">—</div>
+        <input class="pfile" id="invFile" spellcheck="false">
       </div>
     </div>
     <div class="row" style="margin-top:12px">
@@ -545,10 +565,9 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
     </div>
   </div>
 
-  <div id="printArea">
-    <div class="sheetwrap">
-      <div class="sheet" id="sheet"></div>
-    </div>
+  <!-- rendered only for printing / PDF; never shown on screen -->
+  <div id="printArea" aria-hidden="true">
+    <div class="sheetwrap"><div class="sheet" id="sheet"></div></div>
   </div>
 </section>
 
@@ -584,7 +603,6 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
       <div class="f"><label>Currency symbol</label><input id="st_cur"></div>
       <div class="f"><label>Claim contact email (FedEx form)</label><input id="st_email"></div>
       <div class="f"><label>Claim contact phone (UPS claims communications)</label><input id="st_phone" class="mono"></div>
-      <div class="f"><label>Invoice # start</label><input id="st_invseq" class="num"></div>
       <div class="f"><label>Zero amount format</label><select id="st_zero">
         <option value="00">$00.00 (matches Word template)</option><option value="0">$0.00</option></select></div>
     </div>
@@ -614,6 +632,17 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
   <span id="stCount">0 claims</span>
   <span id="stSave">—</span>
 </div>
+<!-- ============ edit an existing claim, straight from the list ============ -->
+<div class="mask off" id="editModal">
+  <div class="dlg wide">
+    <div class="dlghead">
+      <h3>✏️ <span id="edTitle">Edit claim</span></h3>
+      <button class="btn sm" id="edX" title="Close">✕</button>
+    </div>
+    <div id="editHost"></div>
+  </div>
+</div>
+
 <!-- ============ after the invoice is built: capture the carrier claim # ============ -->
 <div class="mask off" id="modal">
   <div class="dlg">
@@ -750,17 +779,18 @@ function download(name, mime, data){
 /* =====================================================================
    4. Claim model
    ===================================================================== */
+const ADDR_KEYS = ['name','addr1','city','state','zip','phone'];
 function blankAddr(){ return {name:'',company:'',addr1:'',addr2:'',city:'',state:'',zip:'',country:'US',phone:'',email:''}; }
 function newClaim(){
   const p = DB.profiles[0] || {};
   return {
-    id:uid(), carrier:'UPS', profile:p.id||'', market:p.market||'',
+    id:uid(), carrier:'UPS', profile:p.id||'', market:'',
     tracking:'', claimNo:'', orderNo:'', refNo:'', shipDate:'',
     type:'lost', status:'draft', fileDate:todayISO(), claimAmt:'', apprAmt:'', paidAmt:'',
     paidDate:'', closeDate:'', notes:'',
     bill:blankAddr(), ship:blankAddr(), sameAs:true,
     items:[{qty:'1',sku:'',title:'',price:'',net:''}],
-    tax:'', shipping:'', insurance:'', invNo:'', invDate:'',
+    tax:'', shipping:'', insurance:'', invNo:'', invDate:'', fileOverride:'',
     createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(),
     history:[]
   };
@@ -796,6 +826,7 @@ function logHist(c, text){
 function go(p){
   $$('#tabs button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.p===p)));
   $$('.page').forEach(s=>s.classList.toggle('on', s.id === 'p-'+p));
+  if (p==='new')  ensureNewForm();
   if (p==='list') renderList();
   if (p==='inv')  renderInvoicePage();
   if (p==='set')  renderSettings();
@@ -831,8 +862,6 @@ function renderTiles(){
   const paid = cs.filter(c=>c.status==='paid'||c.status==='closed');
   const claimSum = cs.reduce((s,c)=>s+claimAmountOf(c),0);
   const paidSum  = cs.reduce((s,c)=>s+num(c.paidAmt),0);
-  const spans = cs.map(c=>daysBetween(c.fileDate,c.paidDate)).filter(v=>v!=null && v>=0);
-  const avg = spans.length ? Math.round(spans.reduce((a,b)=>a+b,0)/spans.length) : null;
   const denied = cs.filter(c=>c.status==='denied').length;
   const tiles = [
     ['Total claims', String(cs.length), ''],
@@ -840,7 +869,6 @@ function renderTiles(){
     ['Paid / closed', String(paid.length), 'ok'],
     ['Claimed total', DB.settings.cur + comma(claimSum), ''],
     ['Recovered', DB.settings.cur + comma(paidSum), 'ok'],
-    ['Avg days to payment', avg==null ? '—' : avg + ' days', ''],
     ['Denied', String(denied), denied ? 'neg' : '']
   ];
   $('#tiles').innerHTML = tiles.map(t=>
@@ -887,8 +915,45 @@ function renderList(){
 <script>
 "use strict";
 /* =====================================================================
-   7. Edit form
+   7. The claim form — lives on the New tab, or inside the edit dialog
    ===================================================================== */
+let newDraft = null;     /* the claim being typed on the New tab */
+let formMode = 'new';    /* 'new' | 'edit' */
+
+function mountForm(host){
+  const w = $('#formWrap');
+  if (w && w.parentNode !== host) host.appendChild(w);
+}
+function setFormMode(mode){
+  formMode = mode;
+  const edit = mode === 'edit';
+  $('#bDel').style.display   = edit ? '' : 'none';
+  $('#bDup').style.display   = edit ? '' : 'none';
+  $('#bReset').style.display = edit ? 'none' : '';
+  $('#bSave').textContent    = edit ? '💾 Save & close' : '💾 Save claim';
+}
+function ensureNewForm(){
+  if (!newDraft) newDraft = newClaim();
+  mountForm($('#p-new'));
+  setFormMode('new');
+  openClaim(newDraft);
+}
+function startFreshDraft(){ newDraft = newClaim(); ensureNewForm(); }
+function openEditDialog(c){
+  if (!c) return;
+  mountForm($('#editHost'));
+  setFormMode('edit');
+  openClaim(c);
+  $('#edTitle').textContent = `${c.carrier} · ${c.tracking || '(no tracking)'}`;
+  $('#editModal').classList.remove('off');
+  $('#editHost').scrollTop = 0;
+  const dlg = $('#editModal .dlg'); if (dlg) dlg.scrollTop = 0;
+}
+function closeEditDialog(){
+  $('#editModal').classList.add('off');
+  ensureNewForm();
+}
+const editOpen = () => !$('#editModal').classList.contains('off');
 function normalizeClaim(c){
   const b = newClaim();
   for (const k in b) if (!(k in c)) c[k] = b[k];
@@ -908,20 +973,18 @@ function openClaim(c){
   $('#e_profile').innerHTML = DB.profiles.map(p=>
     `<option value="${esc(p.id)}"${p.id===c.profile?' selected':''}>${esc(p.name)}</option>`).join('');
   const set = (id,v)=>{ const el=$(id); if(el) el.value = v==null?'':v; };
+  /* only the fields that still exist on the form are touched */
   set('#e_carrier',c.carrier); set('#e_tracking',c.tracking); set('#e_claimNo',c.claimNo);
   set('#e_orderNo',c.orderNo); set('#e_refNo',c.refNo); set('#e_market',c.market);
-  set('#e_shipDate',c.shipDate); set('#e_fileDate',c.fileDate); set('#e_claimAmt',c.claimAmt);
-  set('#e_apprAmt',c.apprAmt); set('#e_paidAmt',c.paidAmt); set('#e_paidDate',c.paidDate);
-  set('#e_closeDate',c.closeDate); set('#e_notes',c.notes);
+  set('#e_fileDate',c.fileDate); set('#e_claimAmt',c.claimAmt);
+  set('#e_paidAmt',c.paidAmt); set('#e_paidDate',c.paidDate); set('#e_notes',c.notes);
   set('#e_tax',c.tax); set('#e_ship',c.shipping); set('#e_ins',c.insurance);
-  set('#e_invNo',c.invNo); set('#e_invDate',c.invDate);
-  ['name','company','addr1','addr2','city','state','zip','country','phone','email'].forEach(k=>{
-    set('#b_'+k, c.bill[k]); set('#s_'+k, c.ship[k]);
-  });
+  ADDR_KEYS.forEach(k=>{ set('#b_'+k, c.bill[k]); set('#s_'+k, c.ship[k]); });
   $('#s_same').checked = !!c.sameAs;
   $('#shipFields').style.opacity = c.sameAs ? .45 : 1;
   $$('#shipFields input').forEach(i=>i.disabled = !!c.sameAs);
   $('#edMeta').textContent = 'Created ' + new Date(c.createdAt).toLocaleString('en-US',{hour12:false});
+  if (formMode === 'edit') $('#edTitle').textContent = `${c.carrier} · ${c.tracking || '(no tracking)'}`;
   renderItems(); updateTotals(); renderHist(); trackHint();
 }
 function syncForm(){
@@ -930,15 +993,11 @@ function syncForm(){
   const before = cur.status;
   cur.carrier=g('#e_carrier'); cur.profile=g('#e_profile'); cur.tracking=g('#e_tracking').trim();
   cur.claimNo=g('#e_claimNo').trim(); cur.orderNo=g('#e_orderNo').trim(); cur.refNo=g('#e_refNo').trim();
-  cur.market=g('#e_market'); cur.shipDate=g('#e_shipDate'); cur.type=g('#e_type');
-  cur.status=g('#e_status'); cur.fileDate=g('#e_fileDate'); cur.claimAmt=g('#e_claimAmt');
-  cur.apprAmt=g('#e_apprAmt'); cur.paidAmt=g('#e_paidAmt'); cur.paidDate=g('#e_paidDate');
-  cur.closeDate=g('#e_closeDate'); cur.notes=g('#e_notes');
+  cur.type=g('#e_type'); cur.status=g('#e_status'); cur.fileDate=g('#e_fileDate');
+  cur.claimAmt=g('#e_claimAmt'); cur.paidAmt=g('#e_paidAmt'); cur.paidDate=g('#e_paidDate');
+  cur.notes=g('#e_notes');
   cur.tax=g('#e_tax'); cur.shipping=g('#e_ship'); cur.insurance=g('#e_ins');
-  cur.invNo=g('#e_invNo'); cur.invDate=g('#e_invDate');
-  ['name','company','addr1','addr2','city','state','zip','country','phone','email'].forEach(k=>{
-    cur.bill[k]=g('#b_'+k); cur.ship[k]=g('#s_'+k);
-  });
+  ADDR_KEYS.forEach(k=>{ cur.bill[k]=g('#b_'+k); cur.ship[k]=g('#s_'+k); });
   cur.sameAs = $('#s_same').checked;
   if (before !== cur.status){
     logHist(cur, 'Status: ' + stName(before) + ' → ' + stName(cur.status));
@@ -999,6 +1058,59 @@ function touch(){
 }
 
 /* =====================================================================
+   7b. ZIP lookup — type a US ZIP and the city / state fill themselves
+   ===================================================================== */
+const ZIP_KEY = 'gqclaim.zipcache';
+let zipCache = {};
+try { zipCache = JSON.parse(localStorage.getItem(ZIP_KEY) || '{}'); } catch(e){ zipCache = {}; }
+const zipWarned = {};
+
+async function lookupZip(zip){
+  if (!/^\d{5}$/.test(zip)) return null;
+  if (Object.prototype.hasOwnProperty.call(zipCache, zip)) return zipCache[zip];
+  let out = null;
+  try{
+    const r = await fetch('https://api.zippopotam.us/us/' + zip, {mode:'cors'});
+    if (r.ok){
+      const j = await r.json();
+      const pl = j && j.places && j.places[0];
+      if (pl) out = {city: pl['place name'], state: pl['state abbreviation']};
+    } else if (r.status === 404){
+      out = null;                                   /* a real "no such ZIP" — remember it */
+    } else {
+      return undefined;                             /* transient — do not cache */
+    }
+  }catch(e){
+    return undefined;                               /* offline / blocked — do not cache */
+  }
+  zipCache[zip] = out;
+  try{ localStorage.setItem(ZIP_KEY, JSON.stringify(zipCache)); }catch(e){}
+  return out;
+}
+function bindZip(prefix){
+  const zipEl = $('#' + prefix + '_zip');
+  if (!zipEl) return;
+  let t = null;
+  zipEl.addEventListener('input', ()=>{
+    const zip = zipEl.value.trim();
+    clearTimeout(t);
+    if (!/^\d{5}$/.test(zip)) return;
+    t = setTimeout(async ()=>{
+      const hit = await lookupZip(zip);
+      if (zipEl.value.trim() !== zip) return;       /* they kept typing */
+      if (hit){
+        $('#' + prefix + '_city').value  = hit.city;
+        $('#' + prefix + '_state').value = hit.state;
+        touch();
+      } else if (hit === undefined && !zipWarned[zip]){
+        zipWarned[zip] = 1;
+        toast('No internet — type the city and state yourself');
+      }
+    }, 320);
+  });
+}
+
+/* =====================================================================
    8. Commercial Invoice
    ===================================================================== */
 function addrBlock(a){
@@ -1019,11 +1131,16 @@ function grayBar(){
          `<tr><td style="background:#A6A6A6;height:7px;line-height:7px;font-size:1pt">&nbsp;</td></tr></table>`;
 }
 /* logoSrc: data URL for the preview, relative image001.png for Word */
-function invoiceHtml(c, logoSrc){
+function invoiceHtml(c, logoSrc, logoDim){
   const p  = profileOf(c);
   const cr = CARRIERS[c.carrier] || CARRIERS.UPS;
   const addr = (p.addr||'').split(/\r?\n/).map(l=>esc(l)).join('<br>');
-  const logo = logoSrc ? `<img src="${logoSrc}" width="170" style="width:170px" alt="">` : '';
+  const LW = 150;
+  const LH = (logoDim && logoDim.w) ? Math.max(1, Math.round(LW * logoDim.h / logoDim.w)) : 0;
+  const logo = logoSrc
+    ? (LH ? `<img src="${logoSrc}" width="${LW}" height="${LH}" style="width:${LW}px;height:${LH}px" alt="">`
+          : `<img src="${logoSrc}" width="${LW}" style="width:${LW}px" alt="">`)
+    : '';
   const items = (c.items||[]).map(it=>`<tr>
       <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(it.qty)}</td>
       <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(it.sku)}</td>
@@ -1075,7 +1192,7 @@ function invoiceHtml(c, logoSrc){
   ${trkLine(cr.trkLabel, c.tracking)}
   ${trkLine('Order #', c.orderNo)}
   ${trkLine('REFERENCE #', c.refNo)}
-  <p style="margin:0">Market: ${esc(c.market || p.market)}</p>
+  <p style="margin:0">Market: ${esc(p.market || c.market)}</p>
 
   <p style="margin:14pt 0 0 0;font-size:1pt">&nbsp;</p>
 
@@ -1102,7 +1219,7 @@ function invoiceHtml(c, logoSrc){
   </table>
 </div>`;
 }
-function invoiceDoc(c, logoSrc){
+function invoiceDoc(c, logoSrc, logoDim){
   return `<html xmlns:o="urn:schemas-microsoft-com:office:office" `+
     `xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -1116,7 +1233,7 @@ body {font-family:Arial,Helvetica,sans-serif; font-size:10.0pt; color:#000000;}
 p {margin:0; font-size:10.0pt;}
 table {border-collapse:collapse;}
 </style></head>
-<body lang="EN-US"><div class="WordSection1">${invoiceHtml(c, logoSrc)}</div></body></html>`;
+<body lang="EN-US"><div class="WordSection1">${invoiceHtml(c, logoSrc, logoDim)}</div></body></html>`;
 }
 /* --- MHTML so Word opens it with the logo embedded ------------------ */
 function b64Utf8(str){
@@ -1144,27 +1261,44 @@ function buildMhtml(html, images){
   out += '--' + B + '--\r\n';
   return out;
 }
+/* Word needs BOTH width and height or it stretches the picture */
+function imgSize(dataUrl){
+  return new Promise(res=>{
+    const im = new Image();
+    im.onload  = ()=> res({w:im.naturalWidth, h:im.naturalHeight});
+    im.onerror = ()=> res(null);
+    im.src = dataUrl;
+  });
+}
 function splitDataUrl(u){
   const m = /^data:([^;,]+);base64,(.*)$/.exec(u || '');
   return m ? {mime:m[1], b64:m[2]} : null;
 }
-function exportWord(c){
+function docName(c){
+  let n = ($('#invFile').value || '').trim() || (fileName(c) + '.doc');
+  n = n.replace(/[\\/:*?"<>|]/g, '_');
+  if (!/\.doc$/i.test(n)) n += '.doc';
+  return n;
+}
+async function exportWord(c){
   const p = profileOf(c);
   const img = splitDataUrl(p.logo);
   const ext = img ? ({'image/png':'png','image/jpeg':'jpg','image/gif':'gif'}[img.mime] || 'png') : 'png';
-  const name = 'image001.' + ext;
-  const html = invoiceDoc(c, img ? name : '');
-  const mht  = buildMhtml(html, img ? [{name:name, mime:img.mime, b64:img.b64}] : []);
-  download(fileName(c) + '.doc', 'application/msword', mht);
-  logHist(c, 'Commercial Invoice generated: ' + fileName(c) + '.doc');
-  save(); toast('Downloaded ' + fileName(c) + '.doc');
+  const imgName = 'image001.' + ext;
+  const dim  = img ? await imgSize(p.logo) : null;
+  const html = invoiceDoc(c, img ? imgName : '', dim);
+  const mht  = buildMhtml(html, img ? [{name:imgName, mime:img.mime, b64:img.b64}] : []);
+  const outName = docName(c);
+  download(outName, 'application/msword', mht);
+  logHist(c, 'Commercial Invoice generated: ' + outName);
+  save(); toast('Downloaded ' + outName);
 }
 function renderInvoicePage(pick){
   const sel = $('#invPick');
   if (!DB.claims.length){
     sel.innerHTML = '<option value="">(no claims yet)</option>';
     $('#sheet').innerHTML = '<p style="color:#888;text-align:center;padding:60px 0">Create a claim on the New / Edit tab first.</p>';
-    $('#invFile').textContent = '—';
+    $('#invFile').value = '';
     return;
   }
   const inDb = id => DB.claims.some(x=>x.id===id);
@@ -1175,7 +1309,7 @@ function renderInvoicePage(pick){
   }).join('');
   const c = DB.claims.find(x=>x.id===sel.value) || DB.claims[0];
   $('#sheet').innerHTML = invoiceHtml(c, profileOf(c).logo || '');
-  $('#invFile').textContent = fileName(c) + '.doc';
+  $('#invFile').value = c.fileOverride || (fileName(c) + '.doc');
 }
 function invCurrent(){ return DB.claims.find(x=>x.id===$('#invPick').value); }
 
@@ -1228,7 +1362,7 @@ function renderSettings(){
   loadProfile();
   const s = DB.settings;
   $('#st_fname').value = s.fname; $('#st_cur').value = s.cur; $('#st_email').value = s.email;
-  $('#st_phone').value = s.phone; $('#st_invseq').value = s.invseq; $('#st_zero').value = s.zero;
+  $('#st_phone').value = s.phone; $('#st_zero').value = s.zero;
   const bytes = new Blob([JSON.stringify(DB)]).size;
   $('#dbNote').textContent = `${DB.claims.length} claim(s), ${DB.profiles.length} seller profile(s) — about ${(bytes/1024).toFixed(1)} KB stored.`;
 }
@@ -1253,15 +1387,15 @@ function saveProfile(){
    ===================================================================== */
 function toCsv(){
   const head = ['Status','Carrier','Tracking #','Carrier Claim #','Order #','Reference #','Market','Type',
-    'Customer','Company','Address','City','State','ZIP','Phone','Email',
-    'Subtotal','Tax','Shipping','Insurance','Total','Claim Amount','Approved Amount','Paid Amount',
-    'File Date','Paid Date','Closed Date','Days','Created','Updated','Notes'];
+    'Customer','Address','City','State','ZIP','Phone',
+    'Subtotal','Tax','Shipping','Insurance','Total','Claim Amount','Paid Amount',
+    'File Date','Paid Date','Days','Created','Updated','Notes'];
   const rows = DB.claims.map(c=>[
-    stName(c.status), c.carrier, c.tracking, c.claimNo, c.orderNo, c.refNo, c.market||profileOf(c).market, tyName(c.type),
-    c.bill.name, c.bill.company, [c.bill.addr1,c.bill.addr2].filter(Boolean).join(' '), c.bill.city, c.bill.state, c.bill.zip, c.bill.phone, c.bill.email,
+    stName(c.status), c.carrier, c.tracking, c.claimNo, c.orderNo, c.refNo, profileOf(c).market||c.market, tyName(c.type),
+    c.bill.name, [c.bill.addr1,c.bill.addr2].filter(Boolean).join(' '), c.bill.city, c.bill.state, c.bill.zip, c.bill.phone,
     fmt2(subtotalOf(c)), fmt2(num(c.tax)), fmt2(num(c.shipping)), fmt2(num(c.insurance)), fmt2(totalOf(c)),
-    fmt2(claimAmountOf(c)), c.apprAmt===''?'':fmt2(num(c.apprAmt)), c.paidAmt===''?'':fmt2(num(c.paidAmt)),
-    c.fileDate, c.paidDate, c.closeDate,
+    fmt2(claimAmountOf(c)), c.paidAmt===''?'':fmt2(num(c.paidAmt)),
+    c.fileDate, c.paidDate,
     (daysBetween(c.fileDate, c.paidDate || todayISO()) ?? ''),
     new Date(c.createdAt).toLocaleString('en-US',{hour12:false}),
     new Date(c.updatedAt).toLocaleString('en-US',{hour12:false}),
@@ -1273,29 +1407,29 @@ function toCsv(){
 function demoData(){
   const mk = o => normalizeClaim(Object.assign(newClaim(), o));
   const a = mk({
-    carrier:'FedEx', profile:'geniqua', market:'GENIQUA',
+    carrier:'FedEx', profile:'geniqua',
     tracking:'270347144982', orderNo:'KTWOIS7644263404', refNo:'Acaia',
     type:'notrecv', status:'filed', fileDate:todayISO(),
     bill:Object.assign(blankAddr(),{name:'Danny Nghieu', addr1:'2313 S Hutchinson St',
-      city:'Philadelphia', state:'PA', zip:'19148', country:'US', phone:'(267)-809-3336'}),
+      city:'Philadelphia', state:'PA', zip:'19148', phone:'(267)-809-3336'}),
     sameAs:true,
     items:[{qty:'1', sku:'AL009', title:'Acaia Lunar Coffee Scale 2021 Silver', price:'250.00', net:'250.00'}],
     notes:'Sample data — filled in the way the FedEx template expects.'
   });
   logHist(a, 'Claim created (sample data)');
   const b = mk({
-    carrier:'UPS', profile:'geniqua', market:'GENIQUA',
+    carrier:'UPS', profile:'geniqua',
     tracking:'1Z586Y510305646419', claimNo:'C-0367907680', orderNo:'KTWOIS6853184425',
     type:'lost', status:'review', fileDate:todayISO(),
     bill:Object.assign(blankAddr(),{name:'James D Grace', addr1:'181 Private Road 181 PR 3013',
-      city:'Altus', state:'AR', zip:'72821', country:'US', phone:'479-440-5015'}),
+      city:'Altus', state:'AR', zip:'72821', phone:'479-440-5015'}),
     sameAs:true,
     items:[{qty:'1', sku:'WV-1032', title:'Window Visors for car', price:'29.95', net:'29.95'}],
     shipping:'36.42',
     notes:'Sample data — UPS Package Search In Progress.'
   });
   logHist(b, 'Claim created (sample data)');
-  DB.claims.unshift(a, b); save(); openClaim(a); renderList(); go('list');
+  DB.claims.unshift(a, b); save(); renderList(); go('list');
   toast('2 sample claims loaded');
 }
 
@@ -1323,12 +1457,11 @@ function bind(){
     const b = e.target.closest('button[data-act]'); if (!b) return;
     const id = e.target.closest('tr').dataset.id;
     const c = DB.claims.find(x=>x.id===id); if (!c) return;
-    if (b.dataset.act === 'edit'){ openClaim(c); go('edit'); }
+    if (b.dataset.act === 'edit'){ openEditDialog(c); }
     if (b.dataset.act === 'inv'){ go('inv'); renderInvoicePage(c.id); }
   });
   $('#bNew').addEventListener('click', ()=>{
-    const c = newClaim(); logHist(c, 'Claim created');
-    DB.claims.unshift(c); save(); openClaim(c); go('edit'); $('#e_tracking').focus();
+    startFreshDraft(); go('new'); $('#e_tracking').focus();
   });
   $('#bCsv').addEventListener('click', ()=>{
     if (!DB.claims.length) return toast('Nothing to export yet');
@@ -1336,38 +1469,30 @@ function bind(){
   });
 
   /* --- edit form --- */
-  $('#p-edit').addEventListener('input', e=>{
+  $('#formWrap').addEventListener('input', e=>{
     if (e.target.closest('#tItems')) return;
-    if (e.target.closest('#p-edit .grid, #p-edit textarea')) touch();
+    if (e.target.closest('.grid, textarea')) touch();
   });
-  $('#p-edit').addEventListener('change', e=>{
+  $('#formWrap').addEventListener('change', e=>{
     if (e.target.closest('#tItems')) return;
     touch();
   });
   $('#e_carrier').addEventListener('change', ()=>{
     const want = $('#e_carrier').value === 'USPS' ? 'k2motor' : 'geniqua';
-    if (DB.profiles.some(p=>p.id===want) && $('#e_profile').value !== want){
-      $('#e_profile').value = want;
-      const p = DB.profiles.find(x=>x.id===want);
-      $('#e_market').value = p.market || '';
-    }
+    if (DB.profiles.some(p=>p.id===want)) $('#e_profile').value = want;
     touch();
   });
-  $('#e_profile').addEventListener('change', ()=>{
-    const p = DB.profiles.find(x=>x.id===$('#e_profile').value);
-    if (p) $('#e_market').value = p.market || '';
-    touch();
-  });
+  $('#e_profile').addEventListener('change', touch);
   $('#s_same').addEventListener('change', ()=>{
     const on = $('#s_same').checked;
     $('#shipFields').style.opacity = on ? .45 : 1;
     $$('#shipFields input').forEach(i=>i.disabled = on);
     if (!on && !$('#s_name').value){
-      ['name','company','addr1','addr2','city','state','zip','country','phone','email']
-        .forEach(k=>{ $('#s_'+k).value = $('#b_'+k).value; });
+      ADDR_KEYS.forEach(k=>{ $('#s_'+k).value = $('#b_'+k).value; });
     }
     touch();
   });
+  bindZip('b'); bindZip('s');
   $('#tItems').addEventListener('input', e=>{
     const inp = e.target.closest('input[data-k]'); if (!inp) return;
     const i = +e.target.closest('tr').dataset.i;
@@ -1387,11 +1512,18 @@ function bind(){
     const rows = $$('#tItems tbody tr'); const last = rows[rows.length-1];
     if (last) $('input[data-k="sku"]', last).focus();
   });
-  $('#bSave').addEventListener('click', ()=>{ touch(); save(); toast('Saved'); });
+  $('#bSave').addEventListener('click', ()=>{
+    touch(); save();
+    if (formMode === 'edit'){ closeEditDialog(); renderList(); toast('Saved'); return; }
+    if (!cur.tracking && !cur.bill.name){ toast('Nothing to save yet'); return; }
+    startFreshDraft(); renderList(); toast('Saved — form cleared for the next claim');
+  });
   $('#bSaveGo').addEventListener('click', ()=>{
     touch(); save();
     if (!cur.tracking) return toast('⚠ Enter a tracking number first — the file name needs it');
-    go('inv'); renderInvoicePage(cur.id);
+    const id = cur.id;
+    if (formMode === 'edit') closeEditDialog(); else startFreshDraft();
+    renderList(); go('inv'); renderInvoicePage(id);
   });
   $('#bDup').addEventListener('click', ()=>{
     touch();
@@ -1400,7 +1532,9 @@ function bind(){
     c.apprAmt=''; c.closeDate=''; c.history=[];
     c.createdAt = c.updatedAt = new Date().toISOString();
     logHist(c, 'Copied from ' + (cur.tracking||'another claim'));
-    DB.claims.unshift(c); save(); openClaim(c); toast('Copied to a new claim');
+    DB.claims.unshift(c); save(); openClaim(c);
+    $('#edTitle').textContent = `${c.carrier} · ${c.tracking || '(no tracking)'}`;
+    toast('Copied to a new claim');
   });
   $('#bReset').addEventListener('click', ()=>{
     if (!confirm('Clear every field on this claim? (the claim itself stays)')) return;
@@ -1414,13 +1548,30 @@ function bind(){
     if (!cur) return;
     if (!confirm(`Delete this claim?\n${cur.carrier} ${cur.tracking||'(no tracking)'}\nThis cannot be undone.`)) return;
     DB.claims = DB.claims.filter(x=>x.id!==cur.id);
-    save(); cur = null; renderList(); go('list'); toast('Claim deleted');
+    save(); closeEditDialog(); renderList(); go('list'); toast('Claim deleted');
   });
 
   /* --- Invoice --- */
   $('#invPick').addEventListener('change', ()=>renderInvoicePage($('#invPick').value));
-  $('#bWord').addEventListener('click', ()=>{ const c = invCurrent(); if (c){ exportWord(c); askClaimNo(c); } });
+  $('#bWord').addEventListener('click', async ()=>{
+    const c = invCurrent(); if (!c) return;
+    await exportWord(c); askClaimNo(c);
+  });
   $('#bPrint').addEventListener('click', ()=>{ const c = invCurrent(); window.print(); askClaimNo(c); });
+
+  /* --- edit dialog --- */
+  $('#edX').addEventListener('click', ()=>{ touch(); save(); closeEditDialog(); renderList(); });
+  $('#editModal').addEventListener('click', e=>{
+    if (e.target.id === 'editModal'){ touch(); save(); closeEditDialog(); renderList(); }
+  });
+
+  /* --- the file name is editable and sticks to the claim --- */
+  $('#invFile').addEventListener('input', ()=>{
+    const c = invCurrent(); if (!c) return;
+    const v = $('#invFile').value.trim();
+    c.fileOverride = (v && v !== fileName(c) + '.doc') ? v : '';
+    c.updatedAt = new Date().toISOString(); saveSoon();
+  });
 
   /* --- carrier claim # dialog --- */
   $('#mSave').addEventListener('click', saveAsk);
@@ -1460,7 +1611,6 @@ function bind(){
     DB.settings.cur = $('#st_cur').value || '$';
     DB.settings.email = $('#st_email').value.trim();
     DB.settings.phone = $('#st_phone').value.trim();
-    DB.settings.invseq = num($('#st_invseq').value) || 1001;
     DB.settings.zero = $('#st_zero').value;
     save(); renderSettings(); toast('Settings saved');
   });
@@ -1490,10 +1640,13 @@ function bind(){
   });
 
   document.addEventListener('keydown', e=>{
-    if (e.key === 'Escape' && !$('#modal').classList.contains('off')) closeAsk();
+    if (e.key === 'Escape'){
+      if (!$('#modal').classList.contains('off')) closeAsk();
+      else if (editOpen()){ touch(); save(); closeEditDialog(); renderList(); }
+    }
     if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){
       e.preventDefault();
-      if ($('#p-edit').classList.contains('on')){ touch(); save(); toast('Saved'); }
+      if (editOpen() || $('#p-new').classList.contains('on')){ touch(); save(); toast('Saved'); }
     }
   });
 }
@@ -1518,7 +1671,7 @@ function init(){
   $('#fSt').innerHTML = '<option value="">All statuses</option>' +
     STATUS.map(s=>`<option value="${s.k}">${s.t}</option>`).join('');
   bind();
-  openClaim(DB.claims[0] || newClaim());
+  ensureNewForm();
   renderList();
   clock(); setInterval(clock, 1000);
   setMsg(DB.claims.length ? `${DB.claims.length} claim(s) loaded` : 'Ready — hit “+ New Claim” to start');
