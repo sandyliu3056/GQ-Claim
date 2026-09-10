@@ -85,6 +85,12 @@ main{
   background-size:30px 18px;background-repeat:repeat-x;
 }
 .brick-logo{width:46px;height:38px;flex:0 0 auto;filter:drop-shadow(0 3px 0 rgba(0,0,0,.22))}
+.langbtn{
+  appearance:none;cursor:pointer;font:inherit;font-size:14px;color:#FFF3E6;
+  background:rgba(0,0,0,.22);border:2px solid rgba(255,255,255,.3);
+  border-radius:9px;padding:6px 14px;margin-right:4px;
+}
+.langbtn:hover{background:rgba(0,0,0,.34)}
 .deskset{display:flex;align-items:center;gap:10px;flex:0 0 auto}
 .deskset svg{filter:drop-shadow(0 3px 0 rgba(0,0,0,.22))}
 .deskset .cal{width:46px;height:48px}
@@ -189,43 +195,62 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
   position:relative;appearance:none;cursor:pointer;font:inherit;font-weight:400;font-size:15px;
   padding:11px 17px 0;height:44px;display:inline-flex;align-items:center;gap:6px;
   border-radius:9px;border:none;white-space:nowrap;
-  background:linear-gradient(180deg,#FFFFFF 0%,#E7EDF3 100%);color:var(--head);
-  box-shadow:0 4px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9);
+  background:linear-gradient(180deg,#FFFFFF 0%,#F4F7FA 52%,#E3EAF2 53%,#D9E2EC 100%);color:var(--head);
+  box-shadow:0 5px 0 #AEBDCD, 0 6px 10px rgba(18,35,58,.16),
+             inset 0 2px 0 rgba(255,255,255,.95), inset 0 -2px 0 rgba(18,35,58,.07);
   transition:transform .07s, box-shadow .07s, filter .12s;
 }
-/* a row of studs across the top — every button is a brick */
+/* a row of domed studs across the top — every button is a brick.
+   two stacked gradients: the shaded body of the stud, then its highlight */
 .btn::before{
-  content:"";position:absolute;top:5px;left:12px;right:12px;height:10px;
-  background-image:radial-gradient(circle at 11px 5px, rgba(18,35,58,.13) 0 6px, transparent 6.6px);
-  background-size:22px 10px;background-repeat:repeat-x;pointer-events:none;
+  content:"";position:absolute;top:4px;left:11px;right:11px;height:13px;
+  background-image:
+    radial-gradient(circle at 11px 6px, rgba(255,255,255,.95) 0 3.6px, transparent 4.2px),
+    radial-gradient(circle at 11px 7px, rgba(18,35,58,.10) 0 6.2px, transparent 6.8px),
+    radial-gradient(circle at 11px 6px, rgba(18,35,58,.22) 0 6.4px, transparent 6.9px);
+  background-size:22px 13px;background-repeat:repeat-x;pointer-events:none;
 }
 .btn.pri::before,.btn.run::before,.btn.ok::before,.btn.dgr::before{
-  background-image:radial-gradient(circle at 11px 5px, rgba(255,255,255,.30) 0 6px, transparent 6.6px);
+  background-image:
+    radial-gradient(circle at 11px 6px, rgba(255,255,255,.55) 0 3.6px, transparent 4.2px),
+    radial-gradient(circle at 11px 8px, rgba(255,255,255,.26) 0 6.2px, transparent 6.8px),
+    radial-gradient(circle at 11px 6px, rgba(0,0,0,.20) 0 6.4px, transparent 6.9px);
 }
 .btn:hover{filter:brightness(1.03)}
-.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9)}
-.btn.pri{background:linear-gradient(180deg,#2A7BE0 0%,var(--accent) 100%);color:#fff;
-  box-shadow:0 4px 0 var(--lego-blue-d), inset 0 2px 0 rgba(255,255,255,.32)}
-.btn.pri:active{box-shadow:0 1px 0 var(--lego-blue-d), inset 0 2px 0 rgba(255,255,255,.32)}
-.btn.run{background:linear-gradient(180deg,#FFA246 0%,var(--run) 100%);color:#3A2400;
-  box-shadow:0 4px 0 var(--run-hover), inset 0 2px 0 rgba(255,255,255,.45)}
-.btn.run:active{box-shadow:0 1px 0 var(--run-hover), inset 0 2px 0 rgba(255,255,255,.45)}
-.btn.ok{background:linear-gradient(180deg,#31955A 0%,var(--lego-green) 100%);color:#fff;
-  box-shadow:0 4px 0 var(--lego-green-d), inset 0 2px 0 rgba(255,255,255,.3)}
-.btn.ok:active{box-shadow:0 1px 0 var(--lego-green-d), inset 0 2px 0 rgba(255,255,255,.3)}
-.btn.dgr{background:linear-gradient(180deg,#DD3138 0%,var(--lego-red) 100%);color:#fff;
-  box-shadow:0 4px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
-.btn.dgr:active{box-shadow:0 1px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
+.btn:active{transform:translateY(4px);
+  box-shadow:0 1px 0 #AEBDCD, inset 0 2px 0 rgba(255,255,255,.95), inset 0 -2px 0 rgba(18,35,58,.07)}
+.btn.pri{background:linear-gradient(180deg,#3C89EA 0%,#2A7BE0 52%,#0A5FC6 53%,var(--accent) 100%);color:#fff;
+  box-shadow:0 5px 0 var(--lego-blue-d), 0 6px 10px rgba(18,35,58,.2),
+             inset 0 2px 0 rgba(255,255,255,.35), inset 0 -2px 0 rgba(0,0,0,.14)}
+.btn.pri:active{box-shadow:0 1px 0 var(--lego-blue-d), inset 0 2px 0 rgba(255,255,255,.35)}
+.btn.run{background:linear-gradient(180deg,#FFB061 0%,#FFA246 52%,#F98A19 53%,var(--run) 100%);color:#3A2400;
+  box-shadow:0 5px 0 var(--run-hover), 0 6px 10px rgba(18,35,58,.2),
+             inset 0 2px 0 rgba(255,255,255,.5), inset 0 -2px 0 rgba(0,0,0,.12)}
+.btn.run:active{box-shadow:0 1px 0 var(--run-hover), inset 0 2px 0 rgba(255,255,255,.5)}
+.btn.ok{background:linear-gradient(180deg,#3EA76A 0%,#31955A 52%,#1F7C46 53%,var(--lego-green) 100%);color:#fff;
+  box-shadow:0 5px 0 var(--lego-green-d), 0 6px 10px rgba(18,35,58,.2),
+             inset 0 2px 0 rgba(255,255,255,.33), inset 0 -2px 0 rgba(0,0,0,.14)}
+.btn.ok:active{box-shadow:0 1px 0 var(--lego-green-d), inset 0 2px 0 rgba(255,255,255,.33)}
+.btn.dgr{background:linear-gradient(180deg,#E8474D 0%,#DD3138 52%,#C4161C 53%,var(--lego-red) 100%);color:#fff;
+  box-shadow:0 5px 0 var(--lego-red-d), 0 6px 10px rgba(18,35,58,.2),
+             inset 0 2px 0 rgba(255,255,255,.30), inset 0 -2px 0 rgba(0,0,0,.14)}
+.btn.dgr:active{box-shadow:0 1px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.30)}
 .btn.sm{
   padding:9px 12px 0;height:34px;font-size:13px;
   box-shadow:0 3px 0 #B0BECD, inset 0 2px 0 rgba(255,255,255,.9);
 }
 .btn.sm::before{
-  top:4px;left:8px;right:8px;height:8px;
-  background-image:radial-gradient(circle at 9px 4px, rgba(18,35,58,.13) 0 5px, transparent 5.6px);
-  background-size:18px 8px;
+  top:3px;left:7px;right:7px;height:10px;
+  background-image:
+    radial-gradient(circle at 9px 5px, rgba(255,255,255,.95) 0 2.8px, transparent 3.3px),
+    radial-gradient(circle at 9px 5px, rgba(18,35,58,.20) 0 5px, transparent 5.5px);
+  background-size:18px 10px;
 }
-.btn.sm.dgr::before{background-image:radial-gradient(circle at 9px 4px, rgba(255,255,255,.30) 0 5px, transparent 5.6px)}
+.btn.sm.dgr::before{
+  background-image:
+    radial-gradient(circle at 9px 5px, rgba(255,255,255,.5) 0 2.8px, transparent 3.3px),
+    radial-gradient(circle at 9px 5px, rgba(0,0,0,.2) 0 5px, transparent 5.5px);
+}
 .btn.sm:active{box-shadow:0 1px 0 #B0BECD}
 .btn.sm.dgr{box-shadow:0 3px 0 var(--lego-red-d), inset 0 2px 0 rgba(255,255,255,.28)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
@@ -478,6 +503,7 @@ h4.sub::before{
   <b>GQ CLAIM CENTER</b>
   <span class="sub">UPS · USPS · FEDEX CLAIM MANAGEMENT</span>
   <span class="sp"></span>
+  <button class="langbtn" id="langBtn" title="English / 中文">中文</button>
   <div class="deskset">
     <svg class="cal" viewBox="0 0 46 48" aria-hidden="true">
       <rect x="2" y="6" width="42" height="40" rx="6" fill="#FFFDF6" stroke="#B8452C" stroke-width="2"/>
@@ -512,6 +538,7 @@ h4.sub::before{
   <button role="tab" aria-selected="true"  data-p="new">✏️ New Claim</button>
   <button role="tab" aria-selected="false" data-p="list">📋 Claims</button>
   <button role="tab" aria-selected="false" data-p="inv">🧾 Commercial Invoice</button>
+  <button role="tab" aria-selected="false" data-p="check">💵 Checks</button>
   <button role="tab" aria-selected="false" data-p="set">⚙️ Settings</button>
 </div>
 
@@ -538,6 +565,10 @@ h4.sub::before{
       <div class="f editOnly"><label>Claim amount (USD)</label><input id="e_claimAmt" class="num"></div>
       <div class="f editOnly"><label>Paid amount (USD)</label><input id="e_paidAmt" class="num"></div>
       <div class="f editOnly"><label>Paid date (payment received)</label><input type="date" id="e_paidDate"></div>
+      <div class="f editOnly"><label>Inquiry date</label><input type="date" id="e_inqDate"></div>
+      <div class="f editOnly"><label>Check number</label><input id="e_checkNo" class="mono"></div>
+      <div class="f editOnly"><label>Check received</label><input type="date" id="e_checkDate"></div>
+      <div class="f editOnly"><label>Credit to customer</label><input type="date" id="e_creditDate"></div>
     </div>
     <p class="hint" id="trkNote"></p>
     <div class="grid editOnly" style="margin-top:14px">
@@ -639,8 +670,7 @@ h4.sub::before{
       <option value="car">Carrier</option>
     </select>
     <span class="sp"></span>
-    <button class="btn pri" id="bNew">+ New Claim</button>
-    <button class="btn" id="bCsv">⬇ Export CSV</button>
+    <button class="btn" id="bCsv">⬇ Download listing</button>
     <button class="btn" id="bTpl">⬇ Template (.xlsx)</button>
     <button class="btn" id="bBulk">⬆ Import claims</button>
     <input type="file" id="bulkFile" accept=".xlsx,.xls,.csv" style="display:none">
@@ -683,6 +713,41 @@ h4.sub::before{
   <div id="printArea" aria-hidden="true">
     <div class="sheetwrap"><div class="sheet" id="sheet"></div></div>
   </div>
+</section>
+
+<!-- ==================================================== checks -->
+<section class="page" id="p-check">
+  <div class="card">
+    <h3><span class="em">💵</span>Check backup<span class="tail" id="ckEditing"></span></h3>
+    <div class="grid g4">
+      <div class="f"><label>Check number</label><input id="ck_no" class="mono"></div>
+      <div class="f"><label>Tracking</label><input id="ck_trk" class="mono"></div>
+      <div class="f"><label>Amount (USD)</label><input id="ck_amt" class="num"></div>
+      <div class="f"><label>Date received</label><input type="date" id="ck_date"></div>
+      <div class="f" style="grid-column:1/-1"><label>Note</label><input id="ck_note"></div>
+    </div>
+    <div class="drop" id="ckDrop" style="margin-top:14px">
+      <input type="file" id="ckFile" accept="application/pdf,image/*" multiple hidden>
+      <button class="btn sm" id="bCkPick">+ Add files</button>
+      <span class="hint" style="margin:0">the scanned check or remittance advice — PDF or image</span>
+      <span class="hint" id="ckPend" style="margin:0;font-weight:600"></span>
+    </div>
+    <div class="row end" style="margin-top:14px">
+      <button class="btn" id="bCkNew">↺ New check</button>
+      <button class="btn ok" id="bCkSave">💾 Save check</button>
+    </div>
+  </div>
+
+  <div class="tblwrap">
+    <table class="data" id="tChecks">
+      <thead><tr>
+        <th>Check #</th><th>Received</th><th style="text-align:right">Amount</th>
+        <th>Files</th><th>Claims covered</th><th style="text-align:right">Paid on claims</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p class="hint" id="ckNote"></p>
 </section>
 
 <!-- ==================================================== settings -->
@@ -746,6 +811,18 @@ h4.sub::before{
   <span id="stCount">0 claims</span>
   <span id="stSave">—</span>
 </div>
+<!-- ============ check / PDF viewer ============ -->
+<div class="mask off" id="pdfModal">
+  <div class="dlg wide" style="height:88vh;display:flex;flex-direction:column">
+    <div class="dlghead">
+      <h3 id="pdfTitle">Check</h3>
+      <button class="btn sm" id="pdfDl">⬇ Save a copy</button>
+      <button class="btn sm" id="pdfX">✕</button>
+    </div>
+    <iframe id="pdfFrame" title="check" style="flex:1;width:100%;border:2px solid var(--line);border-radius:10px;background:#fff"></iframe>
+  </div>
+</div>
+
 <!-- ============ photo viewer ============ -->
 <div class="mask off" id="lightbox">
   <button class="lbx" id="lbX" title="Close">✕</button>
@@ -769,11 +846,10 @@ h4.sub::before{
 <!-- ============ after the invoice is built: capture the carrier claim # ============ -->
 <div class="mask off" id="modal">
   <div class="dlg">
-    <h3>🧾 Invoice ready — file it with <span id="mCar">UPS</span></h3>
+    <h3><span id="mLead0">🧾 Invoice ready — file it with</span> <span id="mCar">UPS</span></h3>
     <p class="lead">
-      Tracking <span class="trk" id="mTrk">—</span><br>
-      The carrier hands you a claim number only <b>after</b> the claim is submitted on their site.
-      Paste it here so this record matches the carrier’s.
+      <span id="mLead1">Tracking</span> <span class="trk" id="mTrk">—</span><br>
+      <span id="mLead2">The carrier only issues a claim number after the claim is submitted on their site — paste it here so this record matches theirs.</span>
     </p>
     <div class="grid g2">
       <div class="f"><label>Carrier Claim #</label>
@@ -793,6 +869,159 @@ h4.sub::before{
 <script src="xlsx-0.18.5.full.min.js"></script>
 <script>
 "use strict";
+/* =====================================================================
+   0. Language — the interface flips between English and 繁體中文.
+      The invoice itself always stays English: it goes to US carriers.
+   ===================================================================== */
+let LANG = 'en';
+const I18N = { zh: {
+  /* chrome */
+  'UPS · USPS · FEDEX CLAIM MANAGEMENT':'UPS · USPS · FEDEX 理賠管理',
+  '✏️ New Claim':'✏️ 新增理賠', '📋 Claims':'📋 理賠列表',
+  '🧾 Commercial Invoice':'🧾 商業發票', '⚙️ Settings':'⚙️ 設定',
+  'Ready':'就緒', 'Stored locally':'存在本機', '0 claims':'0 筆',
+  /* card headings */
+  'Claim':'理賠單', 'Customer':'客戶', 'Items & totals':'商品與金額',
+  'Photos':'照片', 'Activity log':'異動紀錄',
+  '💵 Checks':'💵 支票', 'Check backup':'支票備份', 'Check number':'支票號碼',
+  'Date received':'收到日期', 'Amount (USD)':'金額(USD)', 'Note':'備註', 'Tracking':'追蹤單號',
+  'the scanned check or remittance advice — PDF or image':'支票掃描檔或匯款通知 —— PDF 或圖片',
+  '+ Add files':'+ 加檔案', '↺ New check':'↺ 清空重填', '💾 Save check':'💾 儲存支票',
+  'Check #':'支票號碼', 'Received':'收到日期', 'Amount':'金額', 'Files':'檔案',
+  'Claims covered':'對應的理賠單', 'Paid on claims':'理賠單賠付合計',
+  'No checks yet — add the check number and drop its PDF above.':'還沒有支票 —— 在上面填支票號碼、把 PDF 拖進來。',
+  'Check saved':'支票已儲存', 'Check deleted':'支票已刪除', 'New check':'開新的一張',
+  'Enter a check number first':'請先填支票號碼',
+  'Delete this check and its files?':'刪除這張支票和它的檔案?',
+  'Editing':'編輯中:', '⬇ Save a copy':'⬇ 另存一份',
+  'Commercial Invoice builder':'商業發票產生器',
+  'Seller profiles (invoice letterhead)':'賣家檔案(發票抬頭)',
+  'General settings':'一般設定', 'Backup & restore':'備份與還原',
+  'Logo, address and Market':'Logo、地址、Market',
+  'Bill to':'帳單客戶 Bill to', 'Ship to':'收件地址 Ship to',
+  /* form labels */
+  'Carrier':'運輸商', 'Seller profile (letterhead / Market)':'賣家檔案(抬頭 / Market)',
+  'Tracking #':'追蹤單號', 'Reason for claim':'索賠原因', 'Order #':'訂單編號',
+  'Reference #':'參考編號', 'Carrier Claim #':'運輸商理賠編號', 'after filing':'提交後才有',
+  'Status':'狀態', 'File date (claim filed)':'提出理賠日期', 'File date':'提出日期',
+  'Claim amount (USD)':'索賠金額(USD)', 'Paid amount (USD)':'賠付金額(USD)',
+  'Paid date (payment received)':'賠償日期(收到款項)', 'Notes':'備註',
+  'Inquiry date':'查詢日期', 'Check number':'支票號碼',
+  'Check received':'支票收到日', 'Credit to customer':'退款給客戶日',
+  'Name':'姓名', 'Address':'地址', 'ZIP':'郵遞區號', 'City':'城市', 'State':'州',
+  'Phone':'電話', 'Same as Bill to — print':'同帳單地址 —— 發票印',
+  'Tax':'稅金', 'Shipping and handling':'運費與處理費', 'Insurance':'保險',
+  'Subtotal':'小計', 'Total':'總計', 'Qty.':'數量', 'SKU':'貨號', 'Title':'品名',
+  'Price':'單價', 'Net Price':'金額',
+  'File name':'檔案名稱',
+  /* settings */
+  'Profile name':'檔案名稱', 'Market (printed after “Market:”)':'Market(印在 Market: 後面)',
+  'Company (bold first line)':'公司抬頭(粗體第一行)', 'Logo':'Logo',
+  'Address block (one line per row, printed as-is)':'地址區塊(一行一列,原樣印上發票)',
+  'Word file name pattern':'檔名格式', 'Currency symbol':'幣別符號',
+  'Claim contact email (FedEx form)':'理賠聯絡信箱(FedEx 表單用)',
+  'Claim contact phone (UPS claims communications)':'理賠聯絡電話(UPS 表單用)',
+  'Zero amount format':'零金額顯示', 'Preview:':'預覽:',
+  '$00.00 (matches Word template)':'$00.00(照 Word 範本)',
+  'Placeholders: {carrier} {tracking} {order} {claim} {date}':'可用變數:{carrier} {tracking} {order} {claim} {date}',
+  'All data lives in this browser only (localStorage). Export the JSON before switching computers or clearing browser data.':
+    '所有資料只存在這台電腦的瀏覽器。換電腦或清除瀏覽器資料前,請先匯出 JSON。',
+  /* buttons */
+  '+ Add row':'+ 新增一列', '+ Add photos':'+ 加照片',
+  'or drag them in — damage shots, the box, the label':'或直接拖進來 —— 破損照、外箱、標籤',
+  '🗑 Delete':'🗑 刪除', '⧉ Save as new':'⧉ 另存新單',
+  '💾 Save & build invoice':'💾 儲存並產生發票', '💾 Save':'💾 儲存',
+  '💾 Save claim':'💾 儲存理賠單', '💾 Save & close':'💾 儲存並關閉',
+  '⬇ Download listing':'⬇ 下載清單', '⬇ Template (.xlsx)':'⬇ 下載匯入範本',
+  '⬆ Import claims':'⬆ 批量匯入', '⬇ Download Word (.doc)':'⬇ 下載 Word (.doc)',
+  '⬇ Download PDF':'⬇ 下載 PDF', '+ New profile':'+ 新增檔案', 'Remove':'移除',
+  '💾 Save profile':'💾 儲存檔案', '💾 Save settings':'💾 儲存設定',
+  '⬇ Export all JSON':'⬇ 匯出全部 JSON', '⬆ Import JSON':'⬆ 匯入 JSON',
+  '🧪 Load sample data':'🧪 載入示範資料', '⚠ Erase all data':'⚠ 清空所有資料',
+  'Edit':'編輯', 'Invoice':'發票',
+  /* filters */
+  'All carriers':'全部運輸商', 'All statuses':'全部狀態', 'Last updated':'最近更新',
+  'Claim amount':'索賠金額', 'Search tracking / claim # / order # / customer…':'搜尋 單號 / 理賠編號 / 訂單 / 客戶…',
+  /* table headers */
+  'Claim #':'理賠編號', 'Type':'原因', 'Claim Amt':'索賠金額', 'Paid Amt':'賠付金額',
+  'File Date':'提出日期', 'Paid Date':'賠償日期', 'Days':'天數', 'Actions':'操作',
+  /* tiles */
+  'Total claims':'理賠總筆數', 'Open':'進行中', 'Paid / closed':'已賠付 / 結案',
+  'Claimed total':'索賠總額', 'Recovered':'實收賠款', 'Denied claims':'被拒件數',
+  /* statuses & reasons */
+  'Draft':'草稿', 'Filed':'已提交', 'In review':'審核中', 'Docs required':'需補件',
+  'Approved':'已核准', 'Denied':'已拒絕', 'Paid':'已賠付', 'Closed':'已結案',
+  'Lost':'包裹遺失', 'Damaged':'貨品破損', 'Not received':'未收到',
+  'Shortage':'短少', 'Late delivery':'延遲送達',
+  /* dialogs */
+  'Edit claim':'編輯理賠單', 'Not filed yet — later':'還沒送件 —— 稍後再填',
+  'Save claim #':'儲存理賠編號',
+  'Tracking':'追蹤單號',
+  'The carrier only issues a claim number after the claim is submitted on their site — paste it here so this record matches theirs.':
+    '運輸商要等你在他們網站送出理賠後才會給理賠編號 —— 貼進來,系統紀錄才會跟運輸商一致。',
+  '🧾 Invoice ready — file it with':'🧾 發票已產生 —— 接著去這家送件:',
+  'Invoice ready — file it with':'發票已產生 —— 接著去這家送件:',
+  /* messages */
+  'Saved':'已儲存', 'Nothing to save yet':'還沒有東西可以存',
+  'Claim deleted':'理賠單已刪除', 'Copied to a new claim':'已複製成新的一單',
+  'Listing downloaded':'清單已下載', 'Settings saved':'設定已儲存',
+  'Seller profile saved':'賣家檔案已儲存', 'Logo updated':'Logo 已更新',
+  'Import complete':'匯入完成', 'All data erased':'資料已全部清空',
+  'Nothing to export yet':'目前沒有資料可以下載',
+  'Saved — form cleared for the next claim':'已儲存 —— 表單已清空,可以繼續下一筆',
+  'No photos yet.':'還沒有照片。',
+  'No claim matches these filters.':'沒有符合條件的理賠單。',
+  'No claims yet — hit the New Claim tab to start.':'還沒有任何理賠單 —— 到「新增理賠」開始。',
+  'Keep at least one seller profile':'至少要保留一個賣家檔案',
+  'Template downloaded — one row per line item':'範本已下載 —— 一列一項商品',
+  'No internet — type the city and state yourself':'沒有網路 —— 城市和州請自己填',
+} };
+function t(s){
+  if (LANG === 'en') return s;
+  const d = I18N[LANG];
+  return (d && d[s] !== undefined && d[s] !== '') ? d[s] : s;
+}
+/* dynamic areas are rebuilt by their render functions, so the walker skips them */
+const DYN = '#tList tbody, #tiles, #shots, #histList, #sheet, #e_status, #e_type, #fSt, #invPick, #pfPick, #e_profile, #m_status';
+function applyLang(){
+  document.documentElement.lang = LANG === 'zh' ? 'zh-Hant' : 'en';
+  const skip = new Set();
+  $$(DYN).forEach(el => skip.add(el));
+  const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+  const nodes = [];
+  while (walk.nextNode()) nodes.push(walk.currentNode);
+  nodes.forEach(n=>{
+    const par = n.parentNode;
+    if (!par || par.nodeName === 'SCRIPT' || par.nodeName === 'STYLE') return;
+    for (const s of skip) if (s.contains(n)) return;
+    if (n.__en === undefined) n.__en = n.nodeValue;
+    const key = String(n.__en).trim();
+    if (!key) return;
+    const v = t(key);
+    n.nodeValue = v === key ? n.__en : String(n.__en).replace(key, v);
+  });
+  /* attributes that carry text of their own */
+  $$('[placeholder]').forEach(el=>{
+    if (el.__ph === undefined) el.__ph = el.getAttribute('placeholder');
+    el.setAttribute('placeholder', t(el.__ph));
+  });
+  $('#langBtn').textContent = LANG === 'zh' ? 'EN' : '中文';
+  if (cur) openClaim(cur);
+  const fs = $('#fSt'); const keepSt = fs.value;
+  fs.innerHTML = `<option value="">${esc(t('All statuses'))}</option>` +
+    STATUS.map(s=>`<option value="${s.k}">${esc(stName(s.k))}</option>`).join('');
+  fs.value = keepSt;
+  renderList();
+  if ($('#p-set').classList.contains('on')) renderSettings();
+  if ($('#p-inv').classList.contains('on')) renderInvoicePage();
+}
+function setLang(l){
+  LANG = l;
+  DB.settings.lang = l;
+  save();
+  applyLang();
+}
+
 /* =====================================================================
    1. Constants
    ===================================================================== */
@@ -821,8 +1050,8 @@ const TYPES = [
   {k:'shortage', t:'Shortage'},
   {k:'late',     t:'Late delivery'}
 ];
-const stName = k => (STATUS.find(s=>s.k===k)||{t:k}).t;
-const tyName = k => (TYPES.find(s=>s.k===k)||{t:k||''}).t;
+const stName = k => t((STATUS.find(s=>s.k===k)||{t:k}).t);
+const tyName = k => t((TYPES.find(s=>s.k===k)||{t:k||''}).t);
 
 /* =====================================================================
    2. Storage
@@ -833,6 +1062,7 @@ let DB = null, cur = null, dirty = false;
 function defaults(){
   return {
     claims: [],
+    checks: [],
     profiles: [
       {id:'geniqua', name:'GENIQUA(UPS / FedEx)', company:'GENQUA CORP', market:'GENIQUA',
        addr:'21858 Garcia Ln\nWalnut, CA 91789\nT: 909-839-2992\nF: 909-839-2522', logo:LOGO_GENIQUA},
@@ -840,6 +1070,7 @@ function defaults(){
        addr:'21901 Ferrero Parkway\nCity of Industry, CA 91789\nTel : 909 839 2992\nFax : 909 839 2522', logo:LOGO_K2}
     ],
     settings: {
+      lang:'en',
       fname:'{carrier}_Commercial_Invoice_Template{tracking}',
       cur:'$', email:'upsclaim@geniqua.com', phone:'909-348-9811',
       zero:'00', invseq:1001
@@ -859,7 +1090,8 @@ function load(){
 function save(){
   try{
     localStorage.setItem(KEY, JSON.stringify(DB));
-    $('#stSave').textContent = 'Saved ' + new Date().toLocaleTimeString('en-US',{hour12:false});
+    $('#stSave').textContent = (LANG === 'zh' ? '已存 ' : 'Saved ') +
+      new Date().toLocaleTimeString(LANG === 'zh' ? 'zh-TW' : 'en-US', {hour12:false});
   }catch(e){
     toast('⚠ Could not save (browser storage full?): ' + e.message);
   }
@@ -910,7 +1142,8 @@ function newClaim(){
   return {
     id:uid(), carrier:'UPS', profile:p.id||'', market:'',
     tracking:'', claimNo:'', orderNo:'', refNo:'', shipDate:'',
-    type:'lost', status:'draft', fileDate:todayISO(), claimAmt:'', apprAmt:'', paidAmt:'',
+    type:'lost', status:'draft', fileDate:todayISO(), inquiryDate:'', claimAmt:'', apprAmt:'', paidAmt:'',
+    checkNo:'', checkDate:'', creditDate:'', client:'',
     paidDate:'', closeDate:'', notes:'',
     bill:blankAddr(), ship:blankAddr(), sameAs:true,
     items:[{qty:'1',sku:'',title:'',price:'',net:''}],
@@ -952,6 +1185,7 @@ function go(p){
   $$('.page').forEach(s=>s.classList.toggle('on', s.id === 'p-'+p));
   if (p==='new')  ensureNewForm();
   if (p==='list') renderList();
+  if (p==='check') renderChecks();
   if (p==='inv')  renderInvoicePage();
   if (p==='set')  renderSettings();
   window.scrollTo(0,0);
@@ -993,10 +1227,10 @@ function renderTiles(){
     ['Paid / closed', String(paid.length), 'ok'],
     ['Claimed total', DB.settings.cur + comma(claimSum), ''],
     ['Recovered', DB.settings.cur + comma(paidSum), 'ok'],
-    ['Denied', String(denied), denied ? 'neg' : '']
+    ['Denied claims', String(denied), denied ? 'neg' : '']
   ];
-  $('#tiles').innerHTML = tiles.map(t=>
-    `<div class="tile ${t[2]}"><div class="k">${esc(t[0])}</div><div class="v">${esc(t[1])}</div></div>`).join('');
+  $('#tiles').innerHTML = tiles.map(x=>
+    `<div class="tile ${x[2]}"><div class="k">${esc(t(x[0]))}</div><div class="v">${esc(x[1])}</div></div>`).join('');
 }
 function renderList(){
   renderTiles();
@@ -1004,14 +1238,14 @@ function renderList(){
   const tb = $('#tList tbody');
   if (!rows.length){
     tb.innerHTML = `<tr><td class="empty" colspan="14">`+
-      (DB.claims.length ? 'No claim matches these filters.' : 'No claims yet — hit “+ New Claim”, or load the sample data from Settings.')+
+      t(DB.claims.length ? 'No claim matches these filters.' : 'No claims yet — hit the New Claim tab to start.')+
       `</td></tr>`;
   } else {
     tb.innerHTML = rows.map(c=>{
       const openDays = (!c.paidDate && c.fileDate) ? daysBetween(c.fileDate, todayISO()) : daysBetween(c.fileDate, c.paidDate);
       return `<tr data-id="${c.id}">
         <td><select class="stsel st-${c.status}" data-act="st">${
-          STATUS.map(s=>`<option value="${s.k}"${s.k===c.status?' selected':''}>${s.t}</option>`).join('')}</select></td>
+          STATUS.map(s=>`<option value="${s.k}"${s.k===c.status?' selected':''}>${esc(stName(s.k))}</option>`).join('')}</select></td>
         <td><span class="chip car-${c.carrier}">${esc(c.carrier)}</span></td>
         <td class="mono">${esc(c.tracking)||'<span style="color:#9AA8B8">—</span>'}</td>
         <td class="mono">${esc(c.claimNo)||'—'}</td>
@@ -1026,15 +1260,21 @@ function renderList(){
         <td class="mono">${esc(c.paidDate)||'—'}</td>
         <td class="ctr mono">${openDays==null?'—':openDays}</td>
         <td class="ctr" style="white-space:nowrap">
-          <button class="btn sm" data-act="edit">Edit</button>
-          <button class="btn sm" data-act="inv">Invoice</button>
+          <button class="btn sm" data-act="edit">${t('Edit')}</button>
+          <button class="btn sm" data-act="inv">${t('Invoice')}</button>
         </td></tr>`;
     }).join('');
   }
-  $('#stCount').textContent = DB.claims.length + ' claims';
   const openN = DB.claims.filter(c=>OPEN_ST.indexOf(c.status)>=0).length;
-  setMsg(DB.claims.length ? `${DB.claims.length} claims · ${openN} open` : 'Ready — hit “+ New Claim” to start');
-  $('#listNote').textContent = rows.length ? `Showing ${rows.length} of ${DB.claims.length}. “Days” = file date → paid date (or today when unpaid).` : '';
+  if (LANG === 'zh'){
+    $('#stCount').textContent = DB.claims.length + ' 筆';
+    setMsg(DB.claims.length ? `${DB.claims.length} 筆 · ${openN} 筆進行中` : '就緒');
+    $('#listNote').textContent = rows.length ? `顯示 ${rows.length} / ${DB.claims.length} 筆。「天數」= 提出日到賠償日(未賠付則算到今天)。` : '';
+  } else {
+    $('#stCount').textContent = DB.claims.length + ' claims';
+    setMsg(DB.claims.length ? `${DB.claims.length} claims · ${openN} open` : 'Ready');
+    $('#listNote').textContent = rows.length ? `Showing ${rows.length} of ${DB.claims.length}. “Days” = file date → paid date (or today when unpaid).` : '';
+  }
 }
 </script>
 
@@ -1078,6 +1318,13 @@ function closeEditDialog(){
   $('#editModal').classList.add('off');
   ensureNewForm();
 }
+/* after a wipe / import / delete, cur and newDraft must not point at a claim
+   that no longer exists — the next keystroke would re-insert it */
+function resetDraft(){
+  newDraft = null; cur = null;
+  $('#editModal').classList.add('off');
+  ensureNewForm();
+}
 const editOpen = () => !$('#editModal').classList.contains('off');
 function normalizeClaim(c){
   const b = newClaim();
@@ -1090,7 +1337,7 @@ function normalizeClaim(c){
   return c;
 }
 function fillSelect(sel, arr, val){
-  sel.innerHTML = arr.map(o=>`<option value="${esc(o.k)}"${o.k===val?' selected':''}>${esc(o.t)}</option>`).join('');
+  sel.innerHTML = arr.map(o=>`<option value="${esc(o.k)}"${o.k===val?' selected':''}>${esc(t(o.t))}</option>`).join('');
 }
 function openClaim(c){
   cur = normalizeClaim(c);
@@ -1104,12 +1351,15 @@ function openClaim(c){
   set('#e_orderNo',c.orderNo); set('#e_refNo',c.refNo); set('#e_market',c.market);
   set('#e_fileDate',c.fileDate); set('#e_claimAmt',c.claimAmt);
   set('#e_paidAmt',c.paidAmt); set('#e_paidDate',c.paidDate); set('#e_notes',c.notes);
+  set('#e_inqDate',c.inquiryDate); set('#e_checkNo',c.checkNo);
+  set('#e_checkDate',c.checkDate); set('#e_creditDate',c.creditDate);
   set('#e_tax',c.tax); set('#e_ship',c.shipping); set('#e_ins',c.insurance);
   ADDR_KEYS.forEach(k=>{ set('#b_'+k, c.bill[k]); set('#s_'+k, c.ship[k]); });
   $('#s_same').checked = !!c.sameAs;
   $('#shipFields').style.opacity = c.sameAs ? .45 : 1;
   $$('#shipFields input').forEach(i=>i.disabled = !!c.sameAs);
-  $('#edMeta').textContent = 'Created ' + new Date(c.createdAt).toLocaleString('en-US',{hour12:false});
+  $('#edMeta').textContent = (LANG === 'zh' ? '建立於 ' : 'Created ') +
+    new Date(c.createdAt).toLocaleString(LANG === 'zh' ? 'zh-TW' : 'en-US', {hour12:false});
   if (formMode === 'edit') $('#edTitle').textContent = `${c.carrier} · ${c.tracking || '(no tracking)'}`;
   renderItems(); updateTotals(); renderHist(); trackHint(); renderPhotos();
 }
@@ -1122,6 +1372,10 @@ function syncForm(){
   cur.type=g('#e_type'); cur.status=g('#e_status'); cur.fileDate=g('#e_fileDate');
   cur.claimAmt=g('#e_claimAmt'); cur.paidAmt=g('#e_paidAmt'); cur.paidDate=g('#e_paidDate');
   cur.notes=g('#e_notes');
+  if ($('#e_inqDate'))    cur.inquiryDate = g('#e_inqDate');
+  if ($('#e_checkNo'))    cur.checkNo     = g('#e_checkNo');
+  if ($('#e_checkDate'))  cur.checkDate   = g('#e_checkDate');
+  if ($('#e_creditDate')) cur.creditDate  = g('#e_creditDate');
   cur.tax=g('#e_tax'); cur.shipping=g('#e_ship'); cur.insurance=g('#e_ins');
   ADDR_KEYS.forEach(k=>{ cur.bill[k]=g('#b_'+k); cur.ship[k]=g('#s_'+k); });
   cur.sameAs = $('#s_same').checked;
@@ -1161,7 +1415,9 @@ function updateTotals(){
   const sub = subtotalOf(cur), tot = totalOf(cur);
   $('#e_subtotal').value = fmt2(sub);
   $('#e_total').value = fmt2(tot);
-  $('#itemSum').textContent = `${cur.items.length} item(s) · Subtotal ${money(sub)} · Total ${money(tot)}`;
+  $('#itemSum').textContent = LANG === 'zh'
+    ? `${cur.items.length} 項 · 小計 ${money(sub)} · 總計 ${money(tot)}`
+    : `${cur.items.length} item(s) · Subtotal ${money(sub)} · Total ${money(tot)}`;
 }
 function renderHist(){
   const h = cur.history || [];
@@ -1287,8 +1543,8 @@ async function dropAllPhotos(c){
 async function renderPhotos(){
   const box = $('#shots'); if (!box || !cur) return;
   const list = cur.photos || [];
-  $('#shotCount').textContent = list.length ? list.length + ' photo(s)' : '';
-  if (!list.length){ box.innerHTML = '<p class="hint" style="margin:0">No photos yet.</p>'; return; }
+  $('#shotCount').textContent = list.length ? (LANG === 'zh' ? list.length + ' 張' : list.length + ' photo(s)') : '';
+  if (!list.length){ box.innerHTML = `<p class="hint" style="margin:0">${t('No photos yet.')}</p>`; return; }
   box.innerHTML = list.map(ph=>
     `<figure class="shot" data-id="${esc(ph.id)}">
        <img alt="${esc(ph.name)}">
@@ -1317,6 +1573,183 @@ function lbStep(d){
   if (!lbList.length) return;
   lbAt = (lbAt + d + lbList.length) % lbList.length;
   lbShow();
+}
+
+/* =====================================================================
+   7a2. Checks — the paper trail for money that actually arrived
+   ===================================================================== */
+let ckPending = [];      /* files picked but not saved yet */
+let ckEditId  = null;    /* the check being edited, if any */
+
+function ckClear(){
+  ckEditId = null; ckPending = [];
+  ['#ck_no','#ck_trk','#ck_date','#ck_amt','#ck_note'].forEach(id=>{ const el=$(id); if (el) el.value=''; });
+  $('#ckPend').textContent = '';
+  $('#ckEditing').textContent = '';
+}
+function ckLoad(id){
+  const k = (DB.checks||[]).find(x=>x.id===id); if (!k) return;
+  ckEditId = id; ckPending = [];
+  $('#ck_no').value = k.no || ''; $('#ck_date').value = k.date || '';
+  $('#ck_amt').value = k.amount || ''; $('#ck_note').value = k.note || '';
+  $('#ck_trk').value = (k.trackings || []).join(', ');
+  $('#ckPend').textContent = '';
+  $('#ckEditing').textContent = t('Editing') + ' ' + (k.no || '');
+  go('check'); window.scrollTo(0,0);
+}
+function readFileData(f){
+  return new Promise(res=>{
+    const r = new FileReader();
+    r.onload = ()=> res(r.result);
+    r.onerror = ()=> res('');
+    r.readAsDataURL(f);
+  });
+}
+async function ckPick(files){
+  for (const f of files || []){
+    if (f.size > 12*1024*1024){ toast('⚠ ' + f.name + ' is over 12 MB'); continue; }
+    const data = await readFileData(f);
+    if (!data) continue;
+    ckPending.push({id:'ck' + Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+                    name:f.name, type:f.type || 'application/pdf', size:f.size, data});
+  }
+  $('#ckPend').textContent = ckPending.length ? ckPending.length + ' file(s) ready' : '';
+}
+async function ckSave(){
+  const no = $('#ck_no').value.trim();
+  if (!no && !ckPending.length) return toast(t('Enter a check number first'));
+  DB.checks = DB.checks || [];
+  let k = ckEditId ? DB.checks.find(x=>x.id===ckEditId) : null;
+  if (!k){
+    k = {id:'k' + Date.now().toString(36) + Math.random().toString(36).slice(2,6), files:[],
+         createdAt:new Date().toISOString()};
+    DB.checks.unshift(k);
+  }
+  k.no = no; k.date = $('#ck_date').value; k.amount = $('#ck_amt').value.trim();
+  k.note = $('#ck_note').value; k.updatedAt = new Date().toISOString();
+  k.trackings = String($('#ck_trk').value || '').split(/[\s,;]+/).map(s=>s.trim()).filter(Boolean);
+  k.files = k.files || [];
+  for (const f of ckPending){
+    try{ await idbPut(f.id, f.data); }catch(e){ toast('⚠ ' + e.message); continue; }
+    shotCache.set(f.id, f.data);
+    k.files.push({id:f.id, name:f.name, type:f.type, size:f.size});
+  }
+  ckPending = [];
+  /* a check that names a tracking number closes that claim out */
+  const hit = matchClaims(k);
+  hit.forEach(c=>{
+    const before = c.status;
+    if (k.no)   c.checkNo   = k.no;
+    if (k.date){ c.checkDate = k.date; if (!c.paidDate) c.paidDate = k.date; }
+    if (hit.length === 1 && k.amount && !String(c.paidAmt).trim()) c.paidAmt = fmt2(num(k.amount));
+    if (c.status !== 'paid' && c.status !== 'closed'){
+      c.status = 'paid';
+      logHist(c, 'Status: ' + (STATUS.find(s=>s.k===before)||{t:before}).t + ' → Paid (check ' + (k.no||'') + ')');
+    } else {
+      logHist(c, 'Check ' + (k.no||'') + ' recorded');
+    }
+    applyAutoDates(c);
+    c.updatedAt = new Date().toISOString();
+  });
+  save(); ckClear(); renderChecks(); renderList();
+  toast(hit.length
+    ? (LANG === 'zh' ? `支票已存,並更新 ${hit.length} 筆理賠單` : `Check saved — ${hit.length} claim(s) marked paid`)
+    : t('Check saved'));
+}
+async function ckDropFile(checkId, fileId){
+  const k = (DB.checks||[]).find(x=>x.id===checkId); if (!k) return;
+  k.files = (k.files||[]).filter(f=>f.id!==fileId);
+  try{ await idbDel(fileId); }catch(e){}
+  shotCache.delete(fileId);
+  save(); renderChecks();
+}
+async function ckDelete(id){
+  const k = (DB.checks||[]).find(x=>x.id===id); if (!k) return;
+  if (!confirm(t('Delete this check and its files?') + '\n' + (k.no||''))) return;
+  for (const f of (k.files||[])){ try{ await idbDel(f.id); }catch(e){} shotCache.delete(f.id); }
+  DB.checks = DB.checks.filter(x=>x.id!==id);
+  if (ckEditId === id) ckClear();
+  save(); renderChecks(); toast(t('Check deleted'));
+}
+function matchClaims(k){
+  const no = String(k.no||'').trim().toLowerCase();
+  const trk = (k.trackings || []).map(s=>s.toLowerCase());
+  return DB.claims.filter(c=>{
+    const ct = String(c.tracking||'').trim().toLowerCase();
+    if (ct && trk.indexOf(ct) >= 0) return true;
+    return !!no && String(c.checkNo||'').trim().toLowerCase() === no;
+  });
+}
+function renderChecks(){
+  const tb = $('#tChecks tbody'); if (!tb) return;
+  const list = DB.checks || [];
+  if (!list.length){
+    tb.innerHTML = `<tr><td class="empty" colspan="7">${t('No checks yet — add the check number and drop its PDF above.')}</td></tr>`;
+    $('#ckNote').textContent = '';
+    return;
+  }
+  tb.innerHTML = list.map(k=>{
+    const on = matchClaims(k);
+    const paid = on.reduce((s,c)=>s+num(c.paidAmt), 0);
+    const files = (k.files||[]).map(f=>
+      `<button class="pcount" data-act="ckopen" data-id="${esc(k.id)}" data-f="${esc(f.id)}"
+        title="${esc(f.name)}">${/pdf/i.test(f.type)?'📄':'🖼'} ${esc(f.name.slice(0,18))}</button>`).join(' ') || '—';
+    const listed = on.length ? on.map(c=>c.tracking||'—') : (k.trackings || []);
+    const claims = listed.length
+      ? listed.map(x=>`<span class="mono" style="font-size:12.5px">${esc(x)}</span>`).join('<br>')
+      : '<span style="color:#9AA8B8">—</span>';
+    return `<tr data-id="${k.id}">
+      <td class="mono">${esc(k.no)||'—'}</td>
+      <td class="mono">${esc(k.date)||'—'}</td>
+      <td class="num">${k.amount ? DB.settings.cur + comma(num(k.amount)) : '—'}</td>
+      <td>${files}</td>
+      <td>${claims}</td>
+      <td class="num">${paid ? DB.settings.cur + comma(paid) : '—'}</td>
+      <td class="ctr" style="white-space:nowrap">
+        <button class="btn sm" data-act="ckedit">${t('Edit')}</button>
+        <button class="btn sm dgr" data-act="ckdel">✕</button>
+      </td></tr>`;
+  }).join('');
+  const tot = list.reduce((s,k)=>s+num(k.amount),0);
+  $('#ckNote').textContent = LANG === 'zh'
+    ? `${list.length} 張支票,合計 ${DB.settings.cur}${comma(tot)}。支票號碼和理賠單的「支票號碼」欄位相同就會自動對起來。`
+    : `${list.length} check(s), ${DB.settings.cur}${comma(tot)} in total. A check is matched to claims by the check number on the claim.`;
+}
+function dataUrlToBlob(u){
+  const m = /^data:([^;,]+)(;base64)?,(.*)$/.exec(u || '');
+  if (!m) return null;
+  const mime = m[1];
+  if (m[2]){
+    const bin = atob(m[3]);
+    const a = new Uint8Array(bin.length);
+    for (let i=0;i<bin.length;i++) a[i] = bin.charCodeAt(i);
+    return new Blob([a], {type:mime});
+  }
+  return new Blob([decodeURIComponent(m[3])], {type:mime});
+}
+let pdfUrl = '', pdfName = '';
+async function openCheckFile(checkId, fileId){
+  const k = (DB.checks||[]).find(x=>x.id===checkId); if (!k) return;
+  const f = (k.files||[]).find(x=>x.id===fileId); if (!f) return;
+  const data = await shotUrl(fileId);
+  if (!data) return toast('⚠ file missing');
+  if (!/pdf/i.test(f.type)){
+    lbList = [{id:fileId, name:f.name}]; lbAt = 0;
+    $('#lightbox').classList.remove('off'); lbShow();
+    return;
+  }
+  const blob = dataUrlToBlob(data);
+  if (!blob) return toast('⚠ file missing');
+  if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+  pdfUrl = URL.createObjectURL(blob); pdfName = f.name;
+  $('#pdfTitle').textContent = f.name;
+  $('#pdfFrame').src = pdfUrl;
+  $('#pdfModal').classList.remove('off');
+}
+function closePdf(){
+  $('#pdfModal').classList.add('off');
+  $('#pdfFrame').src = 'about:blank';
+  if (pdfUrl){ URL.revokeObjectURL(pdfUrl); pdfUrl = ''; }
 }
 
 /* =====================================================================
@@ -1366,7 +1799,7 @@ function bindZip(prefix){
         touch();
       } else if (hit === undefined && !zipWarned[zip]){
         zipWarned[zip] = 1;
-        toast('No internet — type the city and state yourself');
+        toast(t('No internet — type the city and state yourself'));
       }
     }, 320);
   });
@@ -1407,13 +1840,13 @@ function invoiceHtml(c, logoSrc, logoDim){
       <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(it.qty)}</td>
       <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(it.sku)}</td>
       <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(it.title)}</td>
-      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${invMoney(it.price)}</td>
-      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${invMoney(lineNet(it))}</td>
+      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(invMoney(it.price))}</td>
+      <td align="center" style="border:1px solid #000;padding:2pt 3pt;text-align:center">${esc(invMoney(lineNet(it)))}</td>
     </tr>`).join('');
   const totRow = (label, val, bold)=>`<tr>
       <td width="60%" style="padding:1pt 0">&nbsp;</td>
       <td width="26%" style="padding:1pt 0">${bold?'<b>':''}${esc(label)}${bold?'</b>':''}</td>
-      <td width="14%" align="right" style="padding:1pt 4pt 1pt 0;text-align:right">${bold?'<b>':''}${val}${bold?'</b>':''}</td></tr>`;
+      <td width="14%" align="right" style="padding:1pt 4pt 1pt 0;text-align:right">${bold?'<b>':''}${esc(val)}${bold?'</b>':''}</td></tr>`;
   const trkLine = (lab, val) => val ? `<p style="margin:0">${esc(lab)} ${esc(val)}</p>` : '';
 
   return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:10.0pt;color:#000000;line-height:1.15">
@@ -1423,9 +1856,9 @@ function invoiceHtml(c, logoSrc, logoDim){
     <tr>
       <td width="45%" valign="top" style="padding:0">${logo}</td>
       <td width="55%" valign="top" style="padding:0;font-size:9.5pt">
-        <p style="margin:0"><b>${esc(p.company)}</b></p>
-        <p style="margin:0">&nbsp;</p>
-        <p style="margin:0">${addr}</p>
+        <p style="margin:0;font-size:9.5pt"><b>${esc(p.company)}</b></p>
+        <p style="margin:0;font-size:9.5pt">&nbsp;</p>
+        <p style="margin:0;font-size:9.5pt">${addr}</p>
       </td>
     </tr>
   </table>
@@ -1454,7 +1887,7 @@ function invoiceHtml(c, logoSrc, logoDim){
   ${trkLine(cr.trkLabel, c.tracking)}
   ${trkLine('Order #', c.orderNo)}
   ${trkLine('REFERENCE #', c.refNo)}
-  <p style="margin:0">Market: ${esc(p.market || c.market)}</p>
+  ${(p.market || c.market) ? `<p style="margin:0">Market: ${esc(p.market || c.market)}</p>` : ''}
 
   <p style="margin:14pt 0 0 0;font-size:1pt">&nbsp;</p>
 
@@ -1536,11 +1969,11 @@ function splitDataUrl(u){
   const m = /^data:([^;,]+);base64,(.*)$/.exec(u || '');
   return m ? {mime:m[1], b64:m[2]} : null;
 }
-function docName(c){
-  let n = ($('#invFile').value || '').trim() || (fileName(c) + '.doc');
-  n = n.replace(/[\\/:*?"<>|]/g, '_');
-  if (!/\.doc$/i.test(n)) n += '.doc';
-  return n;
+function docName(c, ext){
+  ext = ext || 'doc';
+  let n = ($('#invFile').value || '').trim() || fileName(c);
+  n = n.replace(/[\\/:*?"<>|]/g, '_').replace(/\.(doc|docx|pdf|html?)$/i, '');
+  return n + '.' + ext;
 }
 async function exportWord(c){
   const p = profileOf(c);
@@ -1581,6 +2014,29 @@ function pdfW(s, size, bold){
   return w * size / 1000;
 }
 const pdfNum = n => (Math.round(n*100)/100).toString();
+/* wrap on spaces, then hard-break anything still too wide */
+function pdfWrap(s, size, bold, maxW){
+  s = String(s == null ? '' : s).trim();
+  if (!s) return [''];
+  const out = [];
+  let line = '';
+  const flush = ()=>{ if (line){ out.push(line); line = ''; } };
+  for (const word of s.split(/\s+/)){
+    const test = line ? line + ' ' + word : word;
+    if (pdfW(test, size, bold) <= maxW){ line = test; continue; }
+    flush();
+    let w = word;
+    while (pdfW(w, size, bold) > maxW && w.length > 1){
+      let cut = w.length;
+      while (cut > 1 && pdfW(w.slice(0, cut), size, bold) > maxW) cut--;
+      out.push(w.slice(0, cut));
+      w = w.slice(cut);
+    }
+    line = w;
+  }
+  flush();
+  return out.length ? out : [''];
+}
 function pdfEsc(s){
   let out = '';
   for (const ch of String(s)){
@@ -1732,11 +2188,18 @@ async function invoicePdf(c){
     return L;
   };
   let ly = P.y, ry = P.y;
+  const colW = half - 12;
   P.txt('Bill to:', M, ly, 10, false); ly += PARA;
-  lines(c.bill).forEach(l=>{ P.txt(l, M, ly, 10, false); ly += PARA; });
+  lines(c.bill).forEach(l=>{
+    pdfWrap(l, 10, false, colW).forEach((w,k)=>{ P.txt(w, M, ly, 10, false); if (k) ly += LEAD; });
+    ly += PARA;
+  });
   P.txt('Ship to:', M+half, ry, 10, false); ry += PARA;
   if (c.sameAs){ P.txt('SAME AS BILL TO', M+half, ry, 10, true); ry += PARA; }
-  else lines(c.ship).forEach(l=>{ P.txt(l, M+half, ry, 10, false); ry += PARA; });
+  else lines(c.ship).forEach(l=>{
+    pdfWrap(l, 10, false, colW).forEach((w,k)=>{ P.txt(w, M+half, ry, 10, false); if (k) ry += LEAD; });
+    ry += PARA;
+  });
   P.y = Math.max(ly, ry) + 2;
 
   P.fill(M, P.y, CW, 5.25, GREY); P.y += 13;
@@ -1745,7 +2208,8 @@ async function invoicePdf(c){
   if (c.tracking) { P.txt(`${cr.trkLabel} ${c.tracking}`, M, P.y, 10, false); P.y += LEAD; }
   if (c.orderNo)  { P.txt(`Order # ${c.orderNo}`,         M, P.y, 10, false); P.y += LEAD; }
   if (c.refNo)    { P.txt(`REFERENCE # ${c.refNo}`,       M, P.y, 10, false); P.y += LEAD; }
-  P.txt(`Market: ${p.market || c.market || ''}`, M, P.y, 10, false); P.y += LEAD + 14;
+  if (p.market || c.market){ P.txt(`Market: ${p.market || c.market}`, M, P.y, 10, false); P.y += LEAD; }
+  P.y += 14;
 
   /* --- items ------------------------------------------------------ */
   const cols = [0.09, 0.15, 0.48, 0.13, 0.15].map(f => CW*f);
@@ -1760,15 +2224,15 @@ async function invoicePdf(c){
   };
   head();
   (c.items||[]).forEach(it=>{
-    if (P.y + RH > BOT){ P.add(); head(); }
     const cells = [it.qty, it.sku, it.title, invMoney(it.price), invMoney(lineNet(it))];
-    cells.forEach((t,i)=>{
-      P.box(xs[i], P.y, cols[i], RH);
-      let s = String(t == null ? '' : t);
-      while (s && pdfW(s, 9.5, false) > cols[i] - 6) s = s.slice(0, -1);
-      P.txt(s, xs[i], P.y + 2.6, 9.5, false, 'center', cols[i]);
+    const wrapped = cells.map((t,i)=> pdfWrap(t, 9.5, false, cols[i] - 6));
+    const rowH = Math.max(RH, 4 + 11 * Math.max(...wrapped.map(w=>w.length)));
+    if (P.y + rowH > BOT){ P.add(); head(); }
+    wrapped.forEach((wl,i)=>{
+      P.box(xs[i], P.y, cols[i], rowH);
+      wl.forEach((w,k)=> P.txt(w, xs[i], P.y + 2.6 + k*11, 9.5, false, 'center', cols[i]));
     });
-    P.y += RH;
+    P.y += rowH;
   });
   P.y += 10;
 
@@ -1789,7 +2253,7 @@ async function invoicePdf(c){
   return buildPdf(P, img);
 }
 async function exportPdf(c){
-  const name = docName(c).replace(/\.doc$/i, '') + '.pdf';
+  const name = docName(c, 'pdf');
   const bytes = await invoicePdf(c);
   download(name, 'application/pdf', new Blob([bytes], {type:'application/pdf'}));
   logHist(c, 'Commercial Invoice PDF generated: ' + name);
@@ -1825,7 +2289,7 @@ function askClaimNo(c){
   $('#mTrk').textContent = c.tracking || '(no tracking)';
   $('#m_claimNo').value  = c.claimNo || '';
   $('#m_fileDate').value = c.fileDate || todayISO();
-  $('#m_status').innerHTML = STATUS.map(s=>`<option value="${s.k}">${s.t}</option>`).join('');
+  $('#m_status').innerHTML = STATUS.map(s=>`<option value="${s.k}">${esc(stName(s.k))}</option>`).join('');
   $('#m_status').value = c.status === 'draft' ? 'filed' : c.status;
   $('#m_claimAmt').value = String(c.claimAmt||'').trim() !== '' ? c.claimAmt : fmt2(totalOf(c));
   $('#modal').classList.remove('off');
@@ -1867,7 +2331,9 @@ function renderSettings(){
   $('#st_fname').value = s.fname; $('#st_cur').value = s.cur; $('#st_email').value = s.email;
   $('#st_phone').value = s.phone; $('#st_zero').value = s.zero;
   const bytes = new Blob([JSON.stringify(DB)]).size;
-  $('#dbNote').textContent = `${DB.claims.length} claim(s), ${DB.profiles.length} seller profile(s) — about ${(bytes/1024).toFixed(1)} KB stored.`;
+  $('#dbNote').textContent = LANG === 'zh'
+    ? `目前 ${DB.claims.length} 筆理賠單、${DB.profiles.length} 個賣家檔案,約佔 ${(bytes/1024).toFixed(1)} KB。`
+    : `${DB.claims.length} claim(s), ${DB.profiles.length} seller profile(s) — about ${(bytes/1024).toFixed(1)} KB stored.`;
 }
 function loadProfile(){
   const p = DB.profiles.find(x=>x.id===pfCur) || {};
@@ -1882,30 +2348,51 @@ function saveProfile(){
   p.market = $('#pf_market').value.trim();
   p.company = $('#pf_company').value.trim();
   p.addr = $('#pf_addr').value;
-  save(); renderSettings(); toast('Seller profile saved');
+  save(); renderSettings(); toast(t('Seller profile saved'));
 }
 
 /* =====================================================================
    11. Export / import
    ===================================================================== */
-function toCsv(){
-  const head = ['Status','Carrier','Tracking #','Carrier Claim #','Order #','Reference #','Market','Type',
-    'Customer','Address','City','State','ZIP','Phone',
-    'Subtotal','Tax','Shipping','Insurance','Total','Claim Amount','Paid Amount',
-    'File Date','Paid Date','Days','Created','Updated','Notes'];
+function listingRows(){
+  const head = ['Client','Claim Type','Sys Order.','Tracking','Inquiry Date','Claim Number',
+    'Status','Paid Amount','Check Number','Check received','Credit to customer',
+    'Carrier','Market','Reference','Claim Amount','File Date','Paid Date','Days',
+    'Address','City','State','ZIP','Phone','Subtotal','Tax','Shipping','Insurance','Total',
+    'Photos','Created','Updated','Notes'];
   const rows = DB.claims.map(c=>[
-    stName(c.status), c.carrier, c.tracking, c.claimNo, c.orderNo, c.refNo, profileOf(c).market||c.market, tyName(c.type),
-    c.bill.name, [c.bill.addr1,c.bill.addr2].filter(Boolean).join(' '), c.bill.city, c.bill.state, c.bill.zip, c.bill.phone,
-    fmt2(subtotalOf(c)), fmt2(num(c.tax)), fmt2(num(c.shipping)), fmt2(num(c.insurance)), fmt2(totalOf(c)),
-    fmt2(claimAmountOf(c)), c.paidAmt===''?'':fmt2(num(c.paidAmt)),
-    c.fileDate, c.paidDate,
+    c.client || c.bill.name, (TYPES.find(x=>x.k===c.type)||{t:''}).t, c.orderNo, c.tracking,
+    c.inquiryDate, c.claimNo,
+    (STATUS.find(x=>x.k===c.status)||{t:''}).t, c.paidAmt===''?'':fmt2(num(c.paidAmt)),
+    c.checkNo, c.checkDate, c.creditDate,
+    c.carrier, profileOf(c).market||c.market, c.refNo,
+    fmt2(claimAmountOf(c)), c.fileDate, c.paidDate,
     (daysBetween(c.fileDate, c.paidDate || todayISO()) ?? ''),
+    [c.bill.addr1,c.bill.addr2].filter(Boolean).join(' '), c.bill.city, c.bill.state, c.bill.zip, c.bill.phone,
+    fmt2(subtotalOf(c)), fmt2(num(c.tax)), fmt2(num(c.shipping)), fmt2(num(c.insurance)), fmt2(totalOf(c)),
+    (c.photos||[]).length,
     new Date(c.createdAt).toLocaleString('en-US',{hour12:false}),
     new Date(c.updatedAt).toLocaleString('en-US',{hour12:false}),
     (c.notes||'').replace(/\r?\n/g,' ')
   ]);
-  const q = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
-  return '﻿' + [head, ...rows].map(r=>r.map(q).join(',')).join('\r\n');
+  return [head, ...rows];
+}
+function downloadListing(){
+  const rows = listingRows();
+  if (typeof XLSX === 'undefined'){
+    const q = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+    download('GQ_Claims_' + todayISO() + '.csv', 'text/csv;charset=utf-8',
+             '﻿' + rows.map(r=>r.map(q).join(',')).join('\r\n'));
+    return;
+  }
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = rows[0].map((hd,i)=>({wch: Math.min(30, Math.max(String(hd).length + 2,
+    ...rows.slice(1, 200).map(r => String(r[i] == null ? '' : r[i]).length + 2)))}));
+  ws['!autofilter'] = {ref: XLSX.utils.encode_range({s:{r:0,c:0}, e:{r:rows.length-1, c:rows[0].length-1}})};
+  ws['!freeze'] = {xSplit:'0', ySplit:'1'};
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Claims');
+  XLSX.writeFile(wb, 'GQ_Claims_' + todayISO() + '.xlsx');
 }
 function demoData(){
   const mk = o => normalizeClaim(Object.assign(newClaim(), o));
@@ -1933,27 +2420,26 @@ function demoData(){
   });
   logHist(b, 'Claim created (sample data)');
   DB.claims.unshift(a, b); save(); renderList(); go('list');
-  toast('2 sample claims loaded');
+  toast(LANG === 'zh' ? '已載入 2 筆示範資料' : '2 sample claims loaded');
 }
 
 /* =====================================================================
    11b. Bulk import — one CSV row per line item, rows sharing a tracking
         number become one claim with several items
    ===================================================================== */
-const TPL_HEAD = ['Carrier','Tracking #','Order #','Reference #','Reason','Name','Address',
-  'ZIP','City','State','Phone','Qty','SKU','Title','Price','Net Price','Tax','Shipping',
-  'Insurance','Notes'];
+/* the same columns the team already keeps in UPS_Claim_Listing */
+const TPL_HEAD = ['Client','Claim Type','Sys Order.','Tracking','Inquiry Date','Claim Number',
+  'Status','Paid Amount','Check Number','Check received','Credit to customer'];
+/* columns the importer also understands if you add them yourself */
+const TPL_EXTRA = ['Carrier','Market','Reference','Claim Amount','File Date','Paid Date','Notes',
+  'Name','Address','ZIP','City','State','Phone',
+  'Qty','SKU','Title','Price','Net Price','Tax','Shipping','Insurance'];
 function templateRows(){
   return [
     TPL_HEAD,
-    ['UPS','1Z586Y510305646419','KTWOIS6853184425','','Lost','James D Grace',
-     '181 Private Road 3013','72821','Altus','AR','479-440-5015',
-     '1','WV-1032','Window Visors for car','29.95','29.95','0','36.42','0','damage photos on file'],
-    ['FedEx','270347144982','KTWOIS7644263404','Acaia','Not received','Danny Nghieu',
-     '2313 S Hutchinson St','19148','Philadelphia','PA','(267)-809-3336',
-     '1','AL009','Acaia Lunar Coffee Scale 2021 Silver','250.00','250.00','0','0','0',''],
-    ['FedEx','270347144982','','','','','','','','','',
-     '2','AL010','Spare tray','12.50','25.00','','','',''],
+    ['JLConcept','lost','KTWOIS6853184425','1Z586Y510305646419','','0364131078','Paid','55.03','0006306088','2026-07-06','2026-07-06'],
+    ['IKON','damaged','KTWOIS2643054636','1Z586Y510320527297','2026-08-02','0366419837','In review','','','',''],
+    ['James Wang','lost','KTWOIS5789244156','1Z586Y510337500168','','','Draft','','','',''],
   ];
 }
 /* the template staff download and fill in */
@@ -1965,13 +2451,12 @@ function downloadTemplate(){
     return toast('xlsx library missing — sent a CSV instead');
   }
   const ws = XLSX.utils.aoa_to_sheet(templateRows());
-  ws['!cols'] = [{wch:9},{wch:22},{wch:20},{wch:13},{wch:14},{wch:20},{wch:26},{wch:8},
-                 {wch:15},{wch:7},{wch:16},{wch:6},{wch:12},{wch:34},{wch:10},{wch:11},
-                 {wch:8},{wch:10},{wch:10},{wch:26}];
+  ws['!cols'] = [{wch:16},{wch:12},{wch:20},{wch:24},{wch:14},{wch:16},
+                 {wch:13},{wch:13},{wch:15},{wch:15},{wch:18}];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Claims');
   XLSX.writeFile(wb, 'GQ_Claim_import_template.xlsx');
-  toast('Template downloaded — one row per line item');
+  toast(t('Template downloaded — one row per line item'));
 }
 /* rows sharing a tracking number become one claim with several items */
 function readWorkbook(buf, name){
@@ -2006,8 +2491,16 @@ function bulkImport(rows){
   const head = rows[0].map(x => String(x==null?'':x).trim().toLowerCase());
   const at = name => head.indexOf(name.toLowerCase());
   const idx = {};
-  TPL_HEAD.forEach(k => idx[k] = at(k));
-  if (idx['Tracking #'] < 0) return toast('⚠ No "Tracking #" column — start from the template');
+  TPL_HEAD.concat(TPL_EXTRA).forEach(k => idx[k] = at(k));
+  /* accept the older header spellings too */
+  const alias = {
+    'Tracking':['Tracking #'], 'Sys Order.':['Order #','Sys Order','Order'],
+    'Claim Number':['Carrier Claim #','Claim #'], 'Claim Type':['Type','Reason'],
+    'Reference':['Reference #'], 'Client':['Name','Customer'],
+    'Check received':['Check Received'], 'Credit to customer':['Credit To Customer'],
+  };
+  for (const k in alias){ if (idx[k] < 0) for (const a of alias[k]){ const i = at(a); if (i >= 0){ idx[k] = i; break; } } }
+  if (idx['Tracking'] < 0) return toast('⚠ No "Tracking" column — start from the template');
   const stripe = s => String(s==null?'':s).trim();
   const carrierOf = v => {
     const s = String(v||'').trim().toLowerCase();
@@ -2017,15 +2510,42 @@ function bulkImport(rows){
   };
   const typeOf = v => {
     const s = String(v||'').trim().toLowerCase();
-    const hit = TYPES.find(t => t.t.toLowerCase() === s || t.k === s);
+    const hit = TYPES.find(x => x.t.toLowerCase() === s || x.k === s);
     return hit ? hit.k : 'lost';
+  };
+  const statusOf = v => {
+    const s = String(v||'').trim().toLowerCase();
+    const hit = STATUS.find(x => x.t.toLowerCase() === s || x.k === s);
+    return hit ? hit.k : 'draft';
+  };
+  /* Excel hands back all sorts of date shapes */
+  const dateOf = v => {
+    const s = String(v||'').trim();
+    if (!s) return '';
+    /* Excel keeps dates as a serial number of days since 1899-12-30 */
+    if (/^\d{5}(\.\d+)?$/.test(s)){
+      const n = parseFloat(s);
+      if (n > 20000 && n < 60000){
+        const d = new Date(Date.UTC(1899, 11, 30) + Math.round(n) * 864e5);
+        return d.toISOString().slice(0,10);
+      }
+    }
+    let m = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/.exec(s);
+    if (m) return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+    m = /^(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})/.exec(s);
+    if (m){
+      let y = m[3].length === 2 ? '20' + m[3] : m[3];
+      return `${y}-${String(m[1]).padStart(2,'0')}-${String(m[2]).padStart(2,'0')}`;
+    }
+    const d = new Date(s);
+    return isNaN(d) ? '' : new Date(d.getTime() - d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
   };
   const get = (r, k) => idx[k] >= 0 ? String(r[idx[k]] == null ? '' : r[idx[k]]).trim() : '';
   const made = new Map();
   let dup = 0, items = 0;
   for (let i = 1; i < rows.length; i++){
     const r = rows[i];
-    const trk = get(r, 'Tracking #');
+    const trk = get(r, 'Tracking');
     if (!trk) continue;
     let c = made.get(trk);
     if (!c){
@@ -2035,13 +2555,38 @@ function bulkImport(rows){
       const want = c.carrier === 'USPS' ? 'k2motor' : 'geniqua';
       if (DB.profiles.some(x => x.id === want)) c.profile = want;
       c.tracking = trk;
-      c.orderNo  = get(r,'Order #');
-      c.refNo    = get(r,'Reference #');
-      c.type     = typeOf(get(r,'Reason'));
+      c.claimNo  = get(r,'Claim Number');
+      c.orderNo  = get(r,'Sys Order.');
+      c.refNo    = get(r,'Reference');
+      c.type     = typeOf(get(r,'Claim Type'));
+      c.status   = statusOf(get(r,'Status'));
+      c.claimAmt = get(r,'Claim Amount');
+      c.paidAmt  = get(r,'Paid Amount');
+      if (!c.claimAmt && c.paidAmt) c.claimAmt = c.paidAmt;
+      c.fileDate = dateOf(get(r,'File Date')) || todayISO();
+      c.paidDate = dateOf(get(r,'Paid Date'));
+      c.checkNo  = get(r,'Check Number');
+      c.checkDate  = dateOf(get(r,'Check received'));
+      c.creditDate = dateOf(get(r,'Credit to customer'));
       c.notes    = get(r,'Notes');
+      c.client   = get(r,'Client');
+      if (c.client && !get(r,'Name')) c.bill.name = c.client;
+      /* their sheet often carries the claim number in the Inquiry Date column */
+      const inq = get(r,'Inquiry Date');
+      const inqD = dateOf(inq);
+      if (inqD) c.inquiryDate = inqD;
+      else if (inq && !c.claimNo) c.claimNo = inq;
+      if (c.paidDate === '' && c.checkDate) c.paidDate = c.checkDate;
+      if (idx['Carrier'] >= 0 && get(r,'Carrier')) c.carrier = carrierOf(get(r,'Carrier'));
+      const mk = get(r,'Market');
+      if (mk){
+        c.market = mk;
+        const byMk = DB.profiles.find(x => (x.market||'').toLowerCase() === mk.toLowerCase());
+        if (byMk) c.profile = byMk.id;
+      }
       c.tax = get(r,'Tax'); c.shipping = get(r,'Shipping'); c.insurance = get(r,'Insurance');
       c.bill = Object.assign(blankAddr(), {
-        name:  get(r,'Name'),  addr1: get(r,'Address'), zip: get(r,'ZIP'),
+        name:  get(r,'Name') || get(r,'Client'), addr1: get(r,'Address'), zip: get(r,'ZIP'),
         city:  get(r,'City'),  state: get(r,'State'),   phone: get(r,'Phone')
       });
       c.sameAs = true;
@@ -2067,6 +2612,7 @@ function bulkImport(rows){
    12. Events
    ===================================================================== */
 function bind(){
+  $('#langBtn').addEventListener('click', ()=> setLang(LANG === 'zh' ? 'en' : 'zh'));
   $('#tabs').addEventListener('click', e=>{
     const b = e.target.closest('button[data-p]'); if (b) go(b.dataset.p);
   });
@@ -2091,12 +2637,10 @@ function bind(){
     if (b.dataset.act === 'shots'){ openLightbox(c.photos || [], 0); }
     if (b.dataset.act === 'inv'){ go('inv'); renderInvoicePage(c.id); }
   });
-  $('#bNew').addEventListener('click', ()=>{
-    startFreshDraft(); go('new'); $('#e_tracking').focus();
-  });
   $('#bCsv').addEventListener('click', ()=>{
-    if (!DB.claims.length) return toast('Nothing to export yet');
-    download('GQ_Claims_' + todayISO() + '.csv', 'text/csv;charset=utf-8', toCsv());
+    if (!DB.claims.length) return toast(t('Nothing to export yet'));
+    downloadListing();
+    toast(t('Listing downloaded'));
   });
 
   $('#bTpl').addEventListener('click', downloadTemplate);
@@ -2140,6 +2684,7 @@ function bind(){
   $('#tItems').addEventListener('input', e=>{
     const inp = e.target.closest('input[data-k]'); if (!inp) return;
     const i = +e.target.closest('tr').dataset.i;
+    if (cur && !DB.claims.some(x=>x.id===cur.id)) DB.claims.unshift(cur);
     cur.items[i][inp.dataset.k] = inp.value;
     updateTotals(); cur.updatedAt = new Date().toISOString(); saveSoon();
   });
@@ -2157,14 +2702,18 @@ function bind(){
     if (last) $('input[data-k="sku"]', last).focus();
   });
   $('#bSave').addEventListener('click', ()=>{
+    if (formMode !== 'edit' && !$('#e_tracking').value.trim() && !$('#b_name').value.trim()){
+      return toast(t('Nothing to save yet'));
+    }
     touch(); save();
-    if (formMode === 'edit'){ closeEditDialog(); renderList(); toast('Saved'); return; }
-    if (!cur.tracking && !cur.bill.name){ toast('Nothing to save yet'); return; }
-    startFreshDraft(); renderList(); toast('Saved — form cleared for the next claim');
+    if (formMode === 'edit'){ closeEditDialog(); renderList(); toast(t('Saved')); return; }
+    startFreshDraft(); renderList(); toast(t('Saved — form cleared for the next claim'));
   });
   $('#bSaveGo').addEventListener('click', ()=>{
+    if (!$('#e_tracking').value.trim()){
+      return toast('⚠ Enter a tracking number first — the file name needs it');
+    }
     touch(); save();
-    if (!cur.tracking) return toast('⚠ Enter a tracking number first — the file name needs it');
     const id = cur.id;
     if (formMode === 'edit') closeEditDialog(); else startFreshDraft();
     renderList(); go('inv'); renderInvoicePage(id);
@@ -2172,20 +2721,20 @@ function bind(){
   $('#bDup').addEventListener('click', ()=>{
     touch();
     const c = JSON.parse(JSON.stringify(cur));
-    c.id = uid(); c.claimNo=''; c.status='draft'; c.fileDate=''; c.paidDate=''; c.paidAmt='';
-    c.apprAmt=''; c.closeDate=''; c.history=[];
+    c.id = uid(); c.claimNo=''; c.status='draft'; c.fileDate=todayISO(); c.paidDate=''; c.paidAmt='';
+    c.apprAmt=''; c.closeDate=''; c.history=[]; c.fileOverride=''; c.photos=[];
     c.createdAt = c.updatedAt = new Date().toISOString();
     logHist(c, 'Copied from ' + (cur.tracking||'another claim'));
     DB.claims.unshift(c); save(); openClaim(c);
     $('#edTitle').textContent = `${c.carrier} · ${c.tracking || '(no tracking)'}`;
-    toast('Copied to a new claim');
+    toast(t('Copied to a new claim'));
   });
   $('#bDel').addEventListener('click', ()=>{
     if (!cur) return;
     if (!confirm(`Delete this claim?\n${cur.carrier} ${cur.tracking||'(no tracking)'}\nThis cannot be undone.`)) return;
     dropAllPhotos(cur);
     DB.claims = DB.claims.filter(x=>x.id!==cur.id);
-    save(); closeEditDialog(); renderList(); go('list'); toast('Claim deleted');
+    save(); resetDraft(); renderList(); go('list'); toast(t('Claim deleted'));
   });
 
   /* --- Invoice --- */
@@ -2197,6 +2746,30 @@ function bind(){
   $('#bPdf').addEventListener('click', async ()=>{
     const c = invCurrent(); if (!c) return;
     await exportPdf(c); askClaimNo(c);
+  });
+
+  /* --- checks --- */
+  $('#bCkPick').addEventListener('click', ()=>$('#ckFile').click());
+  $('#ckFile').addEventListener('change', async e=>{ await ckPick(e.target.files); e.target.value=''; });
+  const ckd = $('#ckDrop');
+  ['dragenter','dragover'].forEach(ev=>ckd.addEventListener(ev, e=>{ e.preventDefault(); ckd.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev=>ckd.addEventListener(ev, e=>{ e.preventDefault(); ckd.classList.remove('over'); }));
+  ckd.addEventListener('drop', async e=>{ await ckPick(e.dataTransfer.files); });
+  $('#bCkSave').addEventListener('click', ckSave);
+  $('#bCkNew').addEventListener('click', ()=>{ ckClear(); toast(t('New check')); });
+  $('#tChecks').addEventListener('click', e=>{
+    const btn = e.target.closest('button[data-act]'); if (!btn) return;
+    const id = e.target.closest('tr').dataset.id;
+    if (btn.dataset.act === 'ckopen') openCheckFile(btn.dataset.id, btn.dataset.f);
+    if (btn.dataset.act === 'ckedit') ckLoad(id);
+    if (btn.dataset.act === 'ckdel')  ckDelete(id);
+  });
+  $('#pdfX').addEventListener('click', closePdf);
+  $('#pdfModal').addEventListener('click', e=>{ if (e.target.id === 'pdfModal') closePdf(); });
+  $('#pdfDl').addEventListener('click', ()=>{
+    if (!pdfUrl) return;
+    const a = document.createElement('a'); a.href = pdfUrl; a.download = pdfName || 'check.pdf';
+    document.body.appendChild(a); a.click(); a.remove();
   });
 
   /* --- photos --- */
@@ -2225,8 +2798,11 @@ function bind(){
 
   /* --- edit dialog --- */
   $('#edX').addEventListener('click', ()=>{ touch(); save(); closeEditDialog(); renderList(); });
+  let maskDown = false;
+  $('#editModal').addEventListener('mousedown', e=>{ maskDown = (e.target.id === 'editModal'); });
   $('#editModal').addEventListener('click', e=>{
-    if (e.target.id === 'editModal'){ touch(); save(); closeEditDialog(); renderList(); }
+    if (e.target.id === 'editModal' && maskDown){ touch(); save(); closeEditDialog(); renderList(); }
+    maskDown = false;
   });
 
   /* --- the file name is editable and sticks to the claim --- */
@@ -2251,7 +2827,7 @@ function bind(){
     pfCur = id; save(); renderSettings();
   });
   $('#bPfDel').addEventListener('click', ()=>{
-    if (DB.profiles.length <= 1) return toast('Keep at least one seller profile');
+    if (DB.profiles.length <= 1) return toast(t('Keep at least one seller profile'));
     if (!confirm('Delete this seller profile?')) return;
     DB.profiles = DB.profiles.filter(p=>p.id!==pfCur);
     pfCur = DB.profiles[0].id; save(); renderSettings();
@@ -2262,8 +2838,21 @@ function bind(){
     if (f.size > 900*1024) return toast('⚠ Logo must be under 900 KB');
     const r = new FileReader();
     r.onload = () => {
-      const p = DB.profiles.find(x=>x.id===pfCur);
-      p.logo = r.result; save(); loadProfile(); toast('Logo updated');
+      const im = new Image();
+      im.onload = ()=>{
+        /* re-encode to PNG so the Word export always gets a format it can show */
+        const cv = document.createElement('canvas');
+        const scale = Math.min(1, 900 / Math.max(im.naturalWidth, im.naturalHeight));
+        cv.width  = Math.max(1, Math.round(im.naturalWidth  * scale));
+        cv.height = Math.max(1, Math.round(im.naturalHeight * scale));
+        cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+        const prof = DB.profiles.find(x=>x.id===pfCur);
+        try { prof.logo = cv.toDataURL('image/png'); }
+        catch(err){ return toast('⚠ Could not read that image'); }
+        save(); loadProfile(); toast(t('Logo updated'));
+      };
+      im.onerror = ()=> toast('⚠ That file is not an image the browser can show');
+      im.src = r.result;
     };
     r.readAsDataURL(f);
   });
@@ -2276,11 +2865,17 @@ function bind(){
     DB.settings.email = $('#st_email').value.trim();
     DB.settings.phone = $('#st_phone').value.trim();
     DB.settings.zero = $('#st_zero').value;
-    save(); renderSettings(); toast('Settings saved');
+    save(); renderSettings(); toast(t('Settings saved'));
   });
   $('#bExpAll').addEventListener('click', async ()=>{
     const out = JSON.parse(JSON.stringify(DB));
     out.photoData = {};
+    for (const k of (out.checks || [])){
+      for (const f of (k.files || [])){
+        const data = await shotUrl(f.id);
+        if (data) out.photoData[f.id] = data;
+      }
+    }
     for (const c of out.claims){
       for (const ph of (c.photos || [])){
         const full = await shotUrl(ph.id), thumb = await shotUrl(ph.id + ':t');
@@ -2299,11 +2894,13 @@ function bind(){
       try{
         const d = JSON.parse(r.result);
         if (!d || !Array.isArray(d.claims)) throw new Error('no claims in that file');
-        if (!confirm(`Import ${d.claims.length} claim(s)? This replaces everything currently stored.`)) return;
+        if (!confirm(`Import ${d.claims.length} claim(s)? This replaces everything currently stored.`)){
+          e.target.value = ''; return;
+        }
         const shots = d.photoData || {}; delete d.photoData;
         DB = d; load2(); save();
         for (const k in shots){ try{ await idbPut(k, shots[k]); shotCache.set(k, shots[k]); }catch(err){} }
-        renderSettings(); renderList(); toast('Import complete');
+        resetDraft(); renderSettings(); renderList(); toast(t('Import complete'));
       }catch(err){ toast('⚠ Import failed: ' + err.message); }
       e.target.value = '';
     };
@@ -2313,8 +2910,10 @@ function bind(){
   $('#bWipe').addEventListener('click', ()=>{
     if (!confirm('Erase every claim, seller profile and setting? Export a JSON backup first.')) return;
     if (!confirm('Really erase everything? There is no undo.')) return;
-    localStorage.removeItem(KEY); DB = defaults(); load2(); save();
-    renderSettings(); renderList(); go('list'); toast('All data erased');
+    localStorage.removeItem(KEY); localStorage.removeItem(ZIP_KEY);
+    zipCache = {}; shotCache.clear();
+    DB = defaults(); load2(); save();
+    resetDraft(); renderSettings(); renderList(); go('list'); toast(t('All data erased'));
   });
 
   document.addEventListener('keydown', e=>{
@@ -2324,13 +2923,14 @@ function bind(){
       if (e.key === 'ArrowRight') lbStep(1);
       if (e.key === 'Escape' || e.key.startsWith('Arrow')) return;
     }
+    if (e.key === 'Escape' && !$('#pdfModal').classList.contains('off')){ closePdf(); return; }
     if (e.key === 'Escape'){
       if (!$('#modal').classList.contains('off')) closeAsk();
       else if (editOpen()){ touch(); save(); closeEditDialog(); renderList(); }
     }
     if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){
       e.preventDefault();
-      if (editOpen() || $('#p-new').classList.contains('on')){ touch(); save(); toast('Saved'); }
+      if (editOpen() || $('#p-new').classList.contains('on')){ touch(); save(); toast(t('Saved')); }
     }
   });
 }
@@ -2341,6 +2941,7 @@ function bind(){
 function load2(){
   const d = defaults();
   DB.claims = DB.claims || [];
+  DB.checks = DB.checks || [];
   DB.profiles = (DB.profiles && DB.profiles.length) ? DB.profiles : d.profiles;
   DB.settings = Object.assign({}, d.settings, DB.settings || {});
   DB.claims.forEach(normalizeClaim);
@@ -2359,14 +2960,16 @@ function clock(){
 }
 function init(){
   load(); load2();
-  $('#fSt').innerHTML = '<option value="">All statuses</option>' +
-    STATUS.map(s=>`<option value="${s.k}">${s.t}</option>`).join('');
+  $('#fSt').innerHTML = `<option value="">${esc(t('All statuses'))}</option>` +
+    STATUS.map(s=>`<option value="${s.k}">${esc(stName(s.k))}</option>`).join('');
   bind();
+  LANG = DB.settings.lang === 'zh' ? 'zh' : 'en';
   ensureNewForm();
+  applyLang();
   renderList();
   clock(); setInterval(clock, 1000);
   setMsg(DB.claims.length ? `${DB.claims.length} claim(s) loaded` : 'Ready — hit “+ New Claim” to start');
-  $('#stSave').textContent = 'Stored locally';
+  $('#stSave').textContent = t('Stored locally');
 }
 init();
 </script>
