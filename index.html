@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 /* =====================================================================
    GQ Claim Center — UPS / USPS / FedEx claim management
@@ -29,18 +29,21 @@
 
   --chrome:#C4161C; --chrome-2:#D8262C; --chrome-ink:#FFF6E9;
   --chrome-mut:rgba(255,246,233,.72); --chrome-line:rgba(0,0,0,.22);
-  --plate:#CBD5DE; --bg:#DCE4EA; --panel:#FFFFFF; --stripe:#F2F5F8; --line:#C3CEDA;
+  --plate:#E2E8EE; --bg:#DCE4EA; --panel:#FFFFFF; --stripe:#F2F5F8; --line:#C3CEDA;
   --text:#1B2A3D; --muted:#64768B; --head:#12233A;
   --accent:#0055BF; --accent-2:#2A7BE0;
   --run:#FE8A18; --run-hover:#C86500;
   --ok:#237841; --warn:#C86500; --neg:#C4161C;
   --fedex:#4D148C; --ups:#8A5B12; --usps:#0055BF;
-  --stud:rgba(18,35,58,.15);
+  --stud:rgba(18,35,58,.10);
   --elev-1:0 3px 0 #B9C6D3;
   --elev-2:0 4px 0 #A9B8C8, 0 10px 18px rgba(18,35,58,.14);
   --elev-3:0 6px 0 #90A2B5, 0 22px 40px rgba(18,35,58,.28);
   --rad:10px; --rad-sm:7px; --titleh:60px; --statush:32px;
-  --sans:"Fredoka","Segoe UI",-apple-system,"Microsoft JhengHei UI","PingFang TC",sans-serif;
+  /* handwriting first, with the fonts Windows / mac already ship as backup */
+  --sans:"Patrick Hand","Segoe Print","Chalkboard SE","Comic Sans MS",
+         "Microsoft JhengHei UI","PingFang TC",sans-serif;
+  --hand:"Caveat","Segoe Script","Bradley Hand","Comic Sans MS",var(--sans);
   --mono:"JetBrains Mono","Cascadia Mono",Consolas,"SF Mono",Menlo,monospace;
 }
 /* stud row — drawn inside the element so nothing clips it */
@@ -55,14 +58,14 @@ html,body{margin:0;height:100%;max-width:100%}
 body{
   display:flex;flex-direction:column;height:100%;overflow:hidden;
   background:var(--bg);color:var(--text);font-family:var(--sans);
-  font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
 }
 /* work canvas = LEGO baseplate */
 main{
   background-color:var(--plate);
   background-image:
-    radial-gradient(circle at 16px 14px, rgba(255,255,255,.38) 0 8px, transparent 8.5px),
-    radial-gradient(circle at 16px 16px, rgba(18,35,58,.045) 0 9px, transparent 9.5px);
+    radial-gradient(circle at 16px 14px, rgba(255,255,255,.16) 0 8px, transparent 8.5px),
+    radial-gradient(circle at 16px 16px, rgba(18,35,58,.018) 0 9px, transparent 9.5px);
   background-size:36px 36px,36px 36px;
   background-position:0 0,0 0;
 }
@@ -78,12 +81,13 @@ main{
 /* studs along the bottom-right of the title bar */
 .titlebar::after{
   content:"";position:absolute;right:16px;bottom:5px;width:120px;height:18px;
-  background-image:radial-gradient(circle at 15px 9px, rgba(255,255,255,.26) 0 8px, transparent 8.6px);
+  background-image:radial-gradient(circle at 15px 9px, rgba(255,255,255,.15) 0 8px, transparent 8.6px);
   background-size:30px 18px;background-repeat:repeat-x;
 }
-.brick-logo{width:44px;height:34px;flex:0 0 auto;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
-.titlebar b{font-size:19px;letter-spacing:.1em;font-weight:700;text-shadow:0 2px 0 rgba(0,0,0,.22)}
-.titlebar .sub{font-size:11px;letter-spacing:.16em;color:var(--chrome-mut);text-transform:uppercase}
+.brick-logo{width:46px;height:38px;flex:0 0 auto;filter:drop-shadow(0 3px 0 rgba(0,0,0,.22))}
+.titlebar b{font-family:var(--hand);font-size:29px;letter-spacing:.02em;font-weight:700;
+  text-shadow:0 2px 0 rgba(0,0,0,.22);line-height:1}
+.titlebar .sub{font-size:13px;letter-spacing:.1em;color:var(--chrome-mut);text-transform:uppercase}
 .titlebar .sp{flex:1}
 .titlebar .clock{font-family:var(--mono);font-size:13px;color:var(--chrome-mut)}
 .tabstrip{
@@ -95,7 +99,7 @@ main{
   background:linear-gradient(180deg,#5D7burn 0%,#4A6480 100%);
   background:linear-gradient(180deg,#5E7896 0%,#48607C 100%);
   color:#EAF1F8;padding:15px 20px 10px;border-radius:8px;
-  font:inherit;font-weight:600;font-size:14px;letter-spacing:.01em;
+  font:inherit;font-weight:400;font-size:16px;letter-spacing:.01em;
   box-shadow:0 4px 0 #33465C, inset 0 2px 0 rgba(255,255,255,.22);
   transition:transform .08s, box-shadow .08s;
 }
@@ -134,7 +138,7 @@ main{flex:1;overflow:auto;padding:20px 20px 26px}
   background-size:24px 16px;background-repeat:repeat-x;pointer-events:none;
 }
 .card>h3{
-  margin:0 0 16px;font-size:16px;color:var(--head);letter-spacing:.01em;font-weight:600;
+  margin:0 0 16px;font-family:var(--hand);font-size:23px;color:var(--head);letter-spacing:.01em;font-weight:700;
   display:flex;align-items:center;gap:10px;padding-bottom:11px;border-bottom:3px solid var(--line);
 }
 .card>h3 .em{
@@ -144,7 +148,7 @@ main{flex:1;overflow:auto;padding:20px 20px 26px}
   box-shadow:0 2px 0 #C6D2DF;
 }
 .card>h3 .tail{margin-left:auto;font-weight:500;font-size:12px;color:var(--muted)}
-.hint{color:var(--muted);font-size:12.5px;margin:8px 0 0;line-height:1.5}
+.hint{color:var(--muted);font-size:14px;margin:8px 0 0;line-height:1.5}
 
 /* ---------------------------------------------------------- forms */
 .grid{display:grid;gap:14px 16px}
@@ -152,7 +156,7 @@ main{flex:1;overflow:auto;padding:20px 20px 26px}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
 .f{display:flex;flex-direction:column;gap:4px;min-width:0}
-.f>label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.f>label{font-size:13px;font-weight:400;color:var(--muted);letter-spacing:.02em}
 .f>label .req{color:var(--neg)}
 .f>label .tag{
   display:inline-block;margin-left:5px;padding:1px 7px;border-radius:5px;
@@ -160,7 +164,7 @@ main{flex:1;overflow:auto;padding:20px 20px 26px}
   box-shadow:inset 0 -2px 0 rgba(0,0,0,.12);letter-spacing:0;text-transform:none;
 }
 input,select,textarea{
-  font:inherit;font-size:14px;color:var(--text);background:#fff;
+  font:inherit;font-size:15px;color:var(--text);background:#fff;
   border:2px solid #C9D4E0;border-radius:9px;padding:8px 11px;width:100%;min-height:38px;
   box-shadow:inset 0 2px 0 rgba(18,35,58,.04);transition:border-color .12s, box-shadow .12s;
 }
@@ -178,7 +182,7 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
 
 /* ---------------------------------------------------------- buttons */
 .btn{
-  appearance:none;cursor:pointer;font:inherit;font-weight:600;font-size:13.5px;
+  appearance:none;cursor:pointer;font:inherit;font-weight:400;font-size:15px;
   padding:0 17px;height:38px;display:inline-flex;align-items:center;gap:6px;
   border-radius:9px;border:none;white-space:nowrap;
   background:linear-gradient(180deg,#FFFFFF 0%,#E7EDF3 100%);color:var(--head);
@@ -215,7 +219,7 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
   background-image:radial-gradient(circle at 11px 7px, rgba(18,35,58,.11) 0 6px, transparent 6.6px);
   background-size:22px 14px;background-repeat:repeat-x;
 }
-.tile .k{font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+.tile .k{font-size:13px;color:var(--muted);font-weight:400;letter-spacing:.02em}
 .tile .v{font-family:var(--mono);font-size:23px;font-weight:700;color:var(--head);line-height:1.25;margin-top:2px}
 .tile.warn{border-top-color:var(--lego-orange)} .tile.warn .v{color:var(--warn)}
 .tile.ok{border-top-color:var(--lego-green)}     .tile.ok .v{color:var(--ok)}
@@ -223,12 +227,12 @@ input.num,td.num input{font-family:var(--mono);text-align:right}
 
 /* ---------------------------------------------------------- tables */
 .tblwrap{overflow-x:auto;border:2px solid #C6D2DF;border-radius:14px;background:var(--panel);box-shadow:var(--elev-2)}
-table.data{border-collapse:collapse;width:100%;font-size:13px}
+table.data{border-collapse:collapse;width:100%;font-size:14.5px}
 table.data th{
   background:linear-gradient(180deg,#2A7BE0 0%,var(--accent) 100%);color:#FFF;
-  font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  font-size:13.5px;letter-spacing:.02em;
   border-bottom:3px solid var(--lego-blue-d);
-  text-align:left;padding:11px 10px;white-space:nowrap;font-weight:600;position:sticky;top:0;
+  text-align:left;padding:10px;white-space:nowrap;font-weight:400;position:sticky;top:0;
 }
 table.data th:first-child{padding-left:14px} table.data td:first-child{padding-left:14px}
 table.data th:last-child{padding-right:14px} table.data td:last-child{padding-right:14px}
@@ -239,8 +243,8 @@ table.data td.num{font-family:var(--mono);text-align:right;font-variant-numeric:
 table.data td.mono{white-space:nowrap}
 table.data td.ctr{text-align:center}
 table.data .empty{text-align:center;color:var(--muted);padding:34px 10px}
-table.items{border-collapse:collapse;width:100%;font-size:13px}
-table.items th{background:var(--stripe);color:var(--muted);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;padding:8px;border:2px solid var(--line);font-weight:600}
+table.items{border-collapse:collapse;width:100%;font-size:14.5px}
+table.items th{background:var(--stripe);color:var(--muted);font-size:13px;padding:7px 8px;border:2px solid var(--line);font-weight:400}
 table.items td{border:2px solid var(--line);padding:3px 4px}
 table.items input{border:none;border-radius:0;padding:6px 8px;background:transparent;min-height:34px;box-shadow:none}
 table.items input:focus{box-shadow:none;background:#EAF3FE}
@@ -338,7 +342,7 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 }
 .dlghead .btn{padding:5px 12px}
 .dlg h3{
-  margin:0 0 4px;font-size:19px;color:var(--head);font-weight:700;
+  margin:0 0 4px;font-family:var(--hand);font-size:26px;color:var(--head);font-weight:700;
   display:flex;align-items:center;gap:9px;
 }
 .dlg .lead{margin:0 0 16px;color:var(--muted);font-size:13.5px;line-height:1.5}
@@ -385,14 +389,18 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 <body>
 
 <div class="titlebar">
-  <svg class="brick-logo" viewBox="0 0 44 34" aria-hidden="true">
-    <rect x="3" y="1" width="8" height="5" rx="1.6" fill="#F2CD37"/>
-    <rect x="14" y="1" width="8" height="5" rx="1.6" fill="#F2CD37"/>
-    <rect x="25" y="1" width="8" height="5" rx="1.6" fill="#F2CD37"/>
-    <rect x="1" y="5" width="42" height="20" rx="3" fill="#F2CD37"/>
-    <rect x="1" y="19" width="42" height="6" rx="3" fill="#C9A417"/>
-    <text x="22" y="19.5" text-anchor="middle" font-family="Fredoka, Segoe UI, sans-serif"
-          font-size="11" font-weight="700" fill="#7A2A00">GQ</text>
+  <svg class="brick-logo" viewBox="0 0 46 38" aria-hidden="true">
+    <!-- studs -->
+    <rect x="5"  y="1" width="10" height="7" rx="3" fill="#FFE06A"/>
+    <rect x="18" y="1" width="10" height="7" rx="3" fill="#FFE06A"/>
+    <rect x="31" y="1" width="10" height="7" rx="3" fill="#FFE06A"/>
+    <rect x="5"  y="4.5" width="10" height="3.5" fill="#F2CD37"/>
+    <rect x="18" y="4.5" width="10" height="3.5" fill="#F2CD37"/>
+    <rect x="31" y="4.5" width="10" height="3.5" fill="#F2CD37"/>
+    <!-- body -->
+    <rect x="2" y="7" width="42" height="29" rx="7" fill="#F2CD37"/>
+    <path d="M2 28h42v1a7 7 0 0 1-7 7H9a7 7 0 0 1-7-7z" fill="#DFB62A"/>
+    <rect x="6" y="10" width="12" height="4" rx="2" fill="#FFF0A8" opacity=".75"/>
   </svg>
   <b>GQ CLAIM CENTER</b>
   <span class="sub">UPS · USPS · FEDEX CLAIM MANAGEMENT</span>
@@ -549,19 +557,19 @@ select.stsel{padding:3px 6px 3px 8px;font-size:12px;font-weight:700;width:auto;m
 <section class="page" id="p-inv">
   <div class="card noprint">
     <h3><span class="em">🧾</span>Commercial Invoice builder</h3>
-    <div class="row">
-      <div class="f" style="min-width:340px;flex:1">
+    <div class="grid g2">
+      <div class="f">
         <label>Claim</label>
         <select id="invPick"></select>
       </div>
-      <div class="f" style="min-width:200px">
-        <label>Word file name</label>
+      <div class="f">
+        <label>File name</label>
         <input class="pfile" id="invFile" spellcheck="false">
       </div>
     </div>
     <div class="row" style="margin-top:12px">
       <button class="btn run" id="bWord">⬇ Download Word (.doc)</button>
-      <button class="btn" id="bPrint">🖨 Print / Save PDF</button>
+      <button class="btn" id="bPdf">⬇ Download PDF</button>
     </div>
   </div>
 
@@ -1293,6 +1301,246 @@ async function exportWord(c){
   logHist(c, 'Commercial Invoice generated: ' + outName);
   save(); toast('Downloaded ' + outName);
 }
+/* =====================================================================
+   8b. PDF — written by hand, no library, so it works offline too.
+       Helvetica (a PDF base font, metrically Arial) + the logo as JPEG.
+   ===================================================================== */
+const HELV_W = [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,
+  556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,
+  667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,
+  278,278,278,469,556,333,
+  556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,
+  334,260,334,584];
+const HELVB_W = [278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,
+  556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,
+  722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,
+  333,278,333,584,556,333,
+  556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,
+  389,280,389,584];
+function pdfW(s, size, bold){
+  const T = bold ? HELVB_W : HELV_W;
+  let w = 0;
+  for (let i=0;i<s.length;i++){
+    const c = s.charCodeAt(i);
+    w += (c >= 32 && c <= 126) ? T[c-32] : 556;
+  }
+  return w * size / 1000;
+}
+const pdfNum = n => (Math.round(n*100)/100).toString();
+function pdfEsc(s){
+  let out = '';
+  for (const ch of String(s)){
+    const c = ch.charCodeAt(0);
+    if (ch === '\\' || ch === '(' || ch === ')') out += '\\' + ch;
+    else if (c < 32) out += ' ';
+    else if (c > 255) out += '?';
+    else out += ch;
+  }
+  return out;
+}
+function pdfPage(){
+  const P = {W:612, H:792, pages:[], ops:null, y:54};
+  P.add = () => { P.ops = []; P.pages.push(P.ops); P.y = 54; };
+  P.txt = (s, x, yTop, size, bold, align, boxW) => {
+    s = String(s==null ? '' : s);
+    if (!s) return;
+    let X = x;
+    if (align === 'center') X = x + (boxW - pdfW(s,size,bold))/2;
+    if (align === 'right')  X = x + boxW - pdfW(s,size,bold);
+    P.ops.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${pdfNum(X)} ${pdfNum(P.H - yTop - size*0.82)} Tm (${pdfEsc(s)}) Tj ET`);
+  };
+  P.fill = (x, yTop, w, h, rgb) =>
+    P.ops.push(`${rgb} rg ${pdfNum(x)} ${pdfNum(P.H - yTop - h)} ${pdfNum(w)} ${pdfNum(h)} re f`);
+  P.box = (x, yTop, w, h) =>
+    P.ops.push(`0 0 0 RG 0.7 w ${pdfNum(x)} ${pdfNum(P.H - yTop - h)} ${pdfNum(w)} ${pdfNum(h)} re S`);
+  P.img = (x, yTop, w, h) =>
+    P.ops.push(`q ${pdfNum(w)} 0 0 ${pdfNum(h)} ${pdfNum(x)} ${pdfNum(P.H - yTop - h)} cm /Im0 Do Q`);
+  return P;
+}
+function strBytes(s){
+  const a = new Uint8Array(s.length);
+  for (let i=0;i<s.length;i++) a[i] = s.charCodeAt(i) & 0xFF;
+  return a;
+}
+function buildPdf(P, img){
+  const nP   = P.pages.length;
+  const IM   = img ? 5 : 0;
+  const base = img ? 6 : 5;
+  const pageId = i => base + i*2;
+  const contId = i => base + i*2 + 1;
+  const kids = P.pages.map((_,i)=>`${pageId(i)} 0 R`).join(' ');
+  const res  = `<< /Font << /F1 3 0 R /F2 4 0 R >>${img ? ' /XObject << /Im0 5 0 R >>' : ''} >>`;
+
+  const objs = [];
+  objs[1] = `<< /Type /Catalog /Pages 2 0 R >>`;
+  objs[2] = `<< /Type /Pages /Count ${nP} /Kids [${kids}] >>`;
+  objs[3] = `<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>`;
+  objs[4] = `<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>`;
+  if (img) objs[5] = {dict:`<< /Type /XObject /Subtype /Image /Width ${img.w} /Height ${img.h}`+
+                           ` /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${img.bytes.length} >>`,
+                      bytes: img.bytes};
+  P.pages.forEach((ops,i)=>{
+    objs[pageId(i)] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${P.W} ${P.H}] /Resources ${res} /Contents ${contId(i)} 0 R >>`;
+    const stream = ops.join('\n');
+    objs[contId(i)] = {dict:`<< /Length ${strBytes(stream).length} >>`, bytes: strBytes(stream)};
+  });
+
+  const parts = [];
+  const offs  = [];
+  let pos = 0;
+  const push = s => { const b = (s instanceof Uint8Array) ? s : strBytes(s); parts.push(b); pos += b.length; };
+  push('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+  for (let n = 1; n < objs.length; n++){
+    const o = objs[n];
+    if (o === undefined) continue;
+    offs[n] = pos;
+    if (typeof o === 'string'){ push(`${n} 0 obj\n${o}\nendobj\n`); }
+    else {
+      push(`${n} 0 obj\n${o.dict}\nstream\n`);
+      push(o.bytes);
+      push('\nendstream\nendobj\n');
+    }
+  }
+  const xref = pos;
+  const max  = objs.length;
+  let x = `xref\n0 ${max}\n0000000000 65535 f \n`;
+  for (let n = 1; n < max; n++){
+    x += (offs[n] === undefined ? '0000000000 65535 f \n'
+                                : String(offs[n]).padStart(10,'0') + ' 00000 n \n');
+  }
+  push(x);
+  push(`trailer\n<< /Size ${max} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+
+  let len = 0; parts.forEach(b => len += b.length);
+  const out = new Uint8Array(len);
+  let o = 0; parts.forEach(b => { out.set(b, o); o += b.length; });
+  return out;
+}
+/* the logo, flattened onto white and re-encoded as JPEG for /DCTDecode */
+async function logoJpeg(dataUrl){
+  if (!dataUrl) return null;
+  const im = await new Promise(res=>{ const i = new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src = dataUrl; });
+  if (!im || !im.naturalWidth) return null;
+  const cv = document.createElement('canvas');
+  cv.width = im.naturalWidth; cv.height = im.naturalHeight;
+  const g = cv.getContext('2d');
+  g.fillStyle = '#FFFFFF'; g.fillRect(0,0,cv.width,cv.height);
+  g.drawImage(im,0,0);
+  let url;
+  try { url = cv.toDataURL('image/jpeg', 0.94); } catch(e){ return null; }
+  const bin = atob(url.split(',')[1]);
+  const bytes = new Uint8Array(bin.length);
+  for (let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return {bytes, w:cv.width, h:cv.height};
+}
+/* the same invoice, laid out in points instead of HTML */
+async function invoicePdf(c){
+  const p    = profileOf(c);
+  const cr   = CARRIERS[c.carrier] || CARRIERS.UPS;
+  const img  = await logoJpeg(p.logo);
+  const P    = pdfPage();
+  const M    = 50.4, TOP = 54, BOT = 738;          /* 0.7in / 0.75in margins */
+  const CW   = P.W - M*2;
+  const GREY = '0.65 0.65 0.65';
+  const LEAD = 11.5, PARA = 21.5;
+  P.add();
+
+  P.txt('Invoice', M, P.y, 10, false, 'center', CW); P.y += 16;
+
+  /* --- letterhead ------------------------------------------------ */
+  const colX = M + CW*0.45;
+  let hy = P.y;
+  P.txt(p.company, colX, hy, 9.5, true); hy += LEAD*2;
+  (p.addr||'').split(/\r?\n/).forEach(l=>{ P.txt(l, colX, hy, 9.5, false); hy += LEAD; });
+  let logoBottom = P.y;
+  if (img){
+    const w = 112.5, h = Math.round(w * img.h / img.w * 100)/100;
+    P.img(M, P.y, w, h);
+    logoBottom = P.y + h;
+  }
+  P.y = Math.max(hy, logoBottom) + 10;
+
+  P.fill(M, P.y, CW, 5.25, GREY); P.y += 13;
+
+  /* --- bill to / ship to ----------------------------------------- */
+  const half = CW*0.47;
+  const lines = a => {
+    const L = [];
+    if (a.name) L.push(a.name);
+    if (a.company && a.company !== a.name) L.push(a.company);
+    if (a.addr1) L.push(a.addr1);
+    if (a.addr2) L.push(a.addr2);
+    const csz = [a.city,a.state,a.zip].filter(Boolean).join(' ');
+    if (csz) L.push(csz);
+    if (a.country && String(a.country).toUpperCase() !== 'US') L.push(a.country);
+    if (a.phone) L.push('PH:' + a.phone);
+    return L;
+  };
+  let ly = P.y, ry = P.y;
+  P.txt('Bill to:', M, ly, 10, false); ly += PARA;
+  lines(c.bill).forEach(l=>{ P.txt(l, M, ly, 10, false); ly += PARA; });
+  P.txt('Ship to:', M+half, ry, 10, false); ry += PARA;
+  if (c.sameAs){ P.txt('SAME AS BILL TO', M+half, ry, 10, true); ry += PARA; }
+  else lines(c.ship).forEach(l=>{ P.txt(l, M+half, ry, 10, false); ry += PARA; });
+  P.y = Math.max(ly, ry) + 2;
+
+  P.fill(M, P.y, CW, 5.25, GREY); P.y += 13;
+
+  /* --- tracking block -------------------------------------------- */
+  if (c.tracking) { P.txt(`${cr.trkLabel} ${c.tracking}`, M, P.y, 10, false); P.y += LEAD; }
+  if (c.orderNo)  { P.txt(`Order # ${c.orderNo}`,         M, P.y, 10, false); P.y += LEAD; }
+  if (c.refNo)    { P.txt(`REFERENCE # ${c.refNo}`,       M, P.y, 10, false); P.y += LEAD; }
+  P.txt(`Market: ${p.market || c.market || ''}`, M, P.y, 10, false); P.y += LEAD + 14;
+
+  /* --- items ------------------------------------------------------ */
+  const cols = [0.09, 0.15, 0.48, 0.13, 0.15].map(f => CW*f);
+  const xs = []; let cx = M; cols.forEach(w=>{ xs.push(cx); cx += w; });
+  const RH = 14;
+  const head = ()=>{
+    ['Qty.','SKU','Title','Price','Net Price'].forEach((t,i)=>{
+      P.box(xs[i], P.y, cols[i], RH);
+      P.txt(t, xs[i], P.y + 2.6, 9.5, true, 'center', cols[i]);
+    });
+    P.y += RH;
+  };
+  head();
+  (c.items||[]).forEach(it=>{
+    if (P.y + RH > BOT){ P.add(); head(); }
+    const cells = [it.qty, it.sku, it.title, invMoney(it.price), invMoney(lineNet(it))];
+    cells.forEach((t,i)=>{
+      P.box(xs[i], P.y, cols[i], RH);
+      let s = String(t == null ? '' : t);
+      while (s && pdfW(s, 9.5, false) > cols[i] - 6) s = s.slice(0, -1);
+      P.txt(s, xs[i], P.y + 2.6, 9.5, false, 'center', cols[i]);
+    });
+    P.y += RH;
+  });
+  P.y += 10;
+
+  /* --- totals ------------------------------------------------------ */
+  if (P.y + LEAD*5 > BOT) { P.add(); }
+  const labX = M + CW*0.60, labW = CW*0.26, amtX = M + CW*0.86, amtW = CW*0.14 - 4;
+  const row = (lab, val, bold)=>{
+    P.txt(lab, labX, P.y, 9.5, !!bold);
+    P.txt(val, amtX, P.y, 9.5, !!bold, 'right', amtW);
+    P.y += LEAD;
+  };
+  row('Subtotal', invMoney(subtotalOf(c)));
+  row('Tax', invMoney(c.tax));
+  row('Shipping and handling', invMoney(c.shipping));
+  row('Insurance', invMoney(c.insurance));
+  row('Total', invMoney(totalOf(c)), true);
+
+  return buildPdf(P, img);
+}
+async function exportPdf(c){
+  const name = docName(c).replace(/\.doc$/i, '') + '.pdf';
+  const bytes = await invoicePdf(c);
+  download(name, 'application/pdf', new Blob([bytes], {type:'application/pdf'}));
+  logHist(c, 'Commercial Invoice PDF generated: ' + name);
+  save(); toast('Downloaded ' + name);
+}
+
 function renderInvoicePage(pick){
   const sel = $('#invPick');
   if (!DB.claims.length){
@@ -1557,7 +1805,10 @@ function bind(){
     const c = invCurrent(); if (!c) return;
     await exportWord(c); askClaimNo(c);
   });
-  $('#bPrint').addEventListener('click', ()=>{ const c = invCurrent(); window.print(); askClaimNo(c); });
+  $('#bPdf').addEventListener('click', async ()=>{
+    const c = invCurrent(); if (!c) return;
+    await exportPdf(c); askClaimNo(c);
+  });
 
   /* --- edit dialog --- */
   $('#edX').addEventListener('click', ()=>{ touch(); save(); closeEditDialog(); renderList(); });

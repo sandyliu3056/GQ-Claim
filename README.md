@@ -27,9 +27,9 @@ docker build -t gq-claim . && docker run -p 8080:8080 gq-claim
 
 | Tab | What it does |
 |---|---|
-| ✏️ New / Edit | Tracking, carrier, order # / reference #, Bill to / Ship to, line items, tax / shipping / insurance, claim amount, file date, paid date, notes and the activity log |
-| 📋 Claims | Every claim at a glance — tiles for open / paid / claimed total / recovered / average days to payment; search, filter by carrier and status, change status inline, export CSV |
-| 🧾 Commercial Invoice | Live preview of the invoice; download Word (.doc), print / save PDF, download HTML |
+| ✏️ New Claim | A blank claim: carrier, tracking, order # / reference #, Bill to / Ship to, line items, tax / shipping / insurance, claim amount, file date, notes. Saving clears it for the next one |
+| 📋 Claims | Every claim at a glance — **Edit opens the same form in a dialog** — tiles for open / paid / claimed total / recovered / average days to payment; search, filter by carrier and status, change status inline, export CSV |
+| 🧾 Commercial Invoice | Pick a claim, adjust the file name, download Word (.doc) or PDF |
 | ⚙️ Settings | Seller profiles (letterhead, address, logo, Market), file-name pattern, contact email / phone, backup and restore |
 
 ## The Commercial Invoice
@@ -47,8 +47,11 @@ Insurance / Total.
 * **Zero amounts print as `$00.00`**, exactly like the Word template (switchable to `$0.00`).
 * **The Word file is packed as MHTML**, so the logo and table borders survive in Word — the
   recipient opens a complete invoice.
-* File name defaults to `{carrier}_Commercial_Invoice_Template{tracking}.doc`.
-  Placeholders: `{carrier}` `{tracking}` `{order}` `{claim}` `{date}`.
+* File name defaults to `{carrier}_Commercial_Invoice_Template{tracking}.doc` and is
+  editable per claim. Placeholders: `{carrier}` `{tracking}` `{order}` `{claim}` `{date}`.
+* **PDF is generated in the browser without any library** — Helvetica text plus the
+  logo as an embedded JPEG — so it works offline and the text stays selectable.
+  Long item lists flow onto extra pages with the header repeated.
 
 ### After the invoice is generated
 
@@ -61,10 +64,18 @@ it in on the claim itself whenever the number arrives.
 
 `Draft → Filed → In review → Docs required → Approved / Denied → Paid → Closed`
 
+* A new claim starts with today's date in File date.
 * Moving to **Filed / In review** fills in today's file date when it is still blank.
 * Moving to **Paid** fills in the paid date and the paid amount (approved amount, or the
   claim amount when there is none).
 * Status changes and invoice generation are written to that claim's activity log.
+
+## Little things
+
+* Type a 5-digit US ZIP and the City / State fill themselves (looked up once, then
+  cached locally). No internet — it says so once and leaves the fields to you.
+* The seller profile switches with the carrier, and the invoice's `Market:` line
+  always follows the profile.
 
 ## Where the data lives
 
