@@ -1347,12 +1347,13 @@ function pdfPage(){
     let X = x;
     if (align === 'center') X = x + (boxW - pdfW(s,size,bold))/2;
     if (align === 'right')  X = x + boxW - pdfW(s,size,bold);
-    P.ops.push(`BT /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${pdfNum(X)} ${pdfNum(P.H - yTop - size*0.82)} Tm (${pdfEsc(s)}) Tj ET`);
+    /* 0 g every time — a grey bar's fill colour would otherwise bleed into the text */
+    P.ops.push(`BT 0 g /${bold?'F2':'F1'} ${size} Tf 1 0 0 1 ${pdfNum(X)} ${pdfNum(P.H - yTop - size*0.82)} Tm (${pdfEsc(s)}) Tj ET`);
   };
   P.fill = (x, yTop, w, h, rgb) =>
     P.ops.push(`${rgb} rg ${pdfNum(x)} ${pdfNum(P.H - yTop - h)} ${pdfNum(w)} ${pdfNum(h)} re f`);
   P.box = (x, yTop, w, h) =>
-    P.ops.push(`0 0 0 RG 0.7 w ${pdfNum(x)} ${pdfNum(P.H - yTop - h)} ${pdfNum(w)} ${pdfNum(h)} re S`);
+    P.ops.push(`0 0 0 RG 0.9 w ${pdfNum(x)} ${pdfNum(P.H - yTop - h)} ${pdfNum(w)} ${pdfNum(h)} re S`);
   P.img = (x, yTop, w, h) =>
     P.ops.push(`q ${pdfNum(w)} 0 0 ${pdfNum(h)} ${pdfNum(x)} ${pdfNum(P.H - yTop - h)} cm /Im0 Do Q`);
   return P;
